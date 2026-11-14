@@ -145,6 +145,8 @@ const infoPanel = document.querySelector("#info-panel");
 const categoryDrawer = document.querySelector("#category-drawer");
 const panelContent = document.querySelector("#panel-content");
 const panelKicker = document.querySelector("#panel-kicker");
+const leftDock = document.querySelector(".left-dock");
+const dockToggle = document.querySelector("#dock-toggle");
 const searchInput = document.querySelector("#search-input");
 const searchResults = document.querySelector("#search-results");
 const coordinatesText = document.querySelector("#coordinates-text");
@@ -344,6 +346,13 @@ function toggleCategories(force) {
   if (open) infoPanel.hidden = true;
 }
 
+function setMobileDockOpen(open) {
+  leftDock.classList.toggle("is-open", open);
+  dockToggle.classList.toggle("is-open", open);
+  dockToggle.setAttribute("aria-expanded", String(open));
+  dockToggle.setAttribute("aria-label", open ? "Hide Earth controls and stats" : "Show Earth controls and stats");
+}
+
 function showToast(message) {
   toast.textContent = message;
   toast.classList.add("is-visible");
@@ -458,6 +467,33 @@ document.querySelector("#timeline-events").addEventListener("click", (event) => 
 document.querySelector("#timeline-left").addEventListener("click", () => document.querySelector("#timeline-track").scrollBy({ left: -380, behavior: "smooth" }));
 document.querySelector("#timeline-right").addEventListener("click", () => document.querySelector("#timeline-track").scrollBy({ left: 380, behavior: "smooth" }));
 
+dockToggle.addEventListener("click", () => setMobileDockOpen(!leftDock.classList.contains("is-open")));
+window.addEventListener("resize", () => {
+  if (!window.matchMedia("(max-width: 620px)").matches) setMobileDockOpen(false);
+});
+
+let dockSwipeStart = null;
+const stage = document.querySelector(".stage");
+stage.addEventListener("pointerdown", (event) => {
+  if (event.pointerType !== "touch" || !window.matchMedia("(max-width: 620px)").matches) return;
+  const isOpen = leftDock.classList.contains("is-open");
+  const startsAtLeftEdge = event.clientX <= 28 && !isOpen;
+  const startsInsideDock = isOpen && leftDock.contains(event.target) && !event.target.closest("button");
+  if (!startsAtLeftEdge && !startsInsideDock) return;
+  dockSwipeStart = { x: event.clientX, y: event.clientY, pointerId: event.pointerId, mode: startsAtLeftEdge ? "open" : "close" };
+  event.stopPropagation();
+}, true);
+stage.addEventListener("pointerup", (event) => {
+  if (!dockSwipeStart || event.pointerId !== dockSwipeStart.pointerId) return;
+  const deltaX = event.clientX - dockSwipeStart.x;
+  const deltaY = event.clientY - dockSwipeStart.y;
+  if (Math.abs(deltaY) < 80 && dockSwipeStart.mode === "open" && deltaX > 56) setMobileDockOpen(true);
+  if (Math.abs(deltaY) < 80 && dockSwipeStart.mode === "close" && deltaX < -56) setMobileDockOpen(false);
+  dockSwipeStart = null;
+  event.stopPropagation();
+}, true);
+stage.addEventListener("pointercancel", () => { dockSwipeStart = null; }, true);
+
 function searchableItems() {
   return [
     ...categories.map((item, index) => ({ label: item.title, detail: "EARTH FIELD GUIDE", action: () => showCategory(categories[index]) })),
@@ -508,6 +544,7 @@ document.addEventListener("keydown", (event) => {
     infoPanel.hidden = true;
     categoryDrawer.hidden = true;
     searchResults.hidden = true;
+    setMobileDockOpen(false);
   }
 });
 

@@ -180,6 +180,7 @@ button { color: inherit; }
   width: 236px;
   gap: 10px;
 }
+.dock-toggle { display: none; }
 .globe-controls {
   position: relative;
   display: flex;
@@ -348,7 +349,51 @@ button { color: inherit; }
   .stage-heading { top: 25px; }
   .stage-heading h1 { margin-top: 10px; font-size: 26px; }
   .stage-caption { max-width: 280px; margin: 0 auto; font-size: 10px; line-height: 1.5; }
-  .left-dock { bottom: 12px; left: 12px; width: 195px; gap: 8px; }
+  .left-dock {
+    z-index: 18;
+    top: 50%;
+    bottom: auto;
+    left: 12px;
+    width: 195px;
+    gap: 8px;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    touch-action: pan-y;
+    transform: translateX(calc(-100% - 24px)) translateY(-50%);
+    transition: transform .46s cubic-bezier(.22, 1, .36, 1), opacity .24s ease, visibility 0s linear .46s;
+  }
+  .left-dock.is-open {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0) translateY(-50%);
+    transition: transform .46s cubic-bezier(.22, 1, .36, 1), opacity .24s ease, visibility 0s;
+  }
+  .dock-toggle {
+    position: absolute;
+    z-index: 19;
+    top: 50%;
+    left: 0;
+    display: grid;
+    width: 24px;
+    height: 62px;
+    place-items: center;
+    border: 1px solid rgba(153, 183, 208, .22);
+    border-left: 0;
+    border-radius: 0 6px 6px 0;
+    color: var(--cyan);
+    background: rgba(9, 19, 30, .84);
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    touch-action: pan-y;
+    transition: left .46s cubic-bezier(.22, 1, .36, 1), background .2s ease;
+  }
+  .dock-toggle:hover { background: rgba(20, 42, 59, .96); }
+  .dock-toggle span { transition: transform .3s ease; }
+  .dock-toggle.is-open { left: 215px; }
+  .dock-toggle.is-open span { transform: rotate(180deg); }
   .globe-controls { height: 36px; padding: 1px 4px; }
   .control-button { width: 29px; height: 29px; flex-basis: 29px; }
   .control-separator { height: 18px; margin: 0 1px; }
