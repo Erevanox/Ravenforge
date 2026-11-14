@@ -29,7 +29,7 @@
     {name:'Saturn',key:'saturn',orbitRadius:27.4,angle:2.3,r:1.48,texture:'2k_saturn.jpg',color:0xd7c08e,spin:.36,orbitSpeed:.009},
     {name:'Uranus',key:'uranus',orbitRadius:33.4,angle:4.3,r:1.13,texture:'2k_uranus.jpg',color:0x79bdc8,spin:.3,orbitSpeed:.005},
     {name:'Neptune',key:'neptune',orbitRadius:40.5,angle:1.9,r:1.1,texture:'2k_neptune.jpg',color:0x4c69bd,spin:.28,orbitSpeed:.003},
-    {name:'Moon',key:'moon',orbitRadius:1.55,angle:1.15,r:.3,texture:'assets/2k_moon.jpg',color:0xb0b9bd,spin:.09,orbitSpeed:.12,type:'EARTH’S MOON',number:'LUNA',coordinate:'EARTH / 384,400 KM',intro:'A silent record of our first steps beyond Earth. Bootprints, descent stages and experiments remain where the Apollo crews left them.',history:'Six Apollo crews walked here between 1969 and 1972. Their hardware and footprints remain in a landscape with no rain or wind to erase them.',objects:['apollo','lrv','survey']}
+    {name:'Moon',key:'moon',orbitRadius:2.15,angle:1.15,r:.3,texture:'assets/2k_moon.jpg',color:0xb0b9bd,spin:.09,orbitSpeed:.3,type:'EARTH’S MOON',number:'LUNA',coordinate:'EARTH / 384,400 KM',intro:'A silent record of our first steps beyond Earth. Bootprints, descent stages and experiments remain where the Apollo crews left them.',history:'Six Apollo crews walked here between 1969 and 1972. Their hardware and footprints remain in a landscape with no rain or wind to erase them.',objects:['apollo','lrv','survey']}
   ];
   // Planet-name markers are HTML HUD labels projected over their 3D bodies.
   const markerHost=document.getElementById('space-view');
@@ -192,14 +192,25 @@
       indicator.position.copy(sphere.position);indicator.position.z+=.08;worldRoot.add(indicator);targetRings.set(world.name,indicator);
     }
   });
-  const moonOrbitLine=new THREE.Mesh(new THREE.RingGeometry(worlds[9].orbitRadius-.018,worlds[9].orbitRadius+.018,96),new THREE.MeshBasicMaterial({color:0x7ac8e5,transparent:true,opacity:.24,side:THREE.DoubleSide,depthWrite:false}));
+  const moonOrbitLine=new THREE.Mesh(new THREE.RingGeometry(worlds.find(world=>world.name==='Moon').orbitRadius-.018,worlds.find(world=>world.name==='Moon').orbitRadius+.018,96),new THREE.MeshBasicMaterial({color:0x7ac8e5,transparent:true,opacity:.24,side:THREE.DoubleSide,depthWrite:false}));
   moonOrbitLine.position.copy(meshes.get('Earth').position);moonOrbitLine.position.z=-.16;moonOrbitLine.scale.set(0,0,1);worldRoot.add(moonOrbitLine);
-  const moonOrbitGlow=new THREE.Mesh(new THREE.RingGeometry(worlds[9].orbitRadius-.04,worlds[9].orbitRadius+.04,96),new THREE.MeshBasicMaterial({color:0x76cbee,transparent:true,opacity:.06,side:THREE.DoubleSide,depthWrite:false,blending:THREE.AdditiveBlending}));
+  const moonOrbitGlow=new THREE.Mesh(new THREE.RingGeometry(worlds.find(world=>world.name==='Moon').orbitRadius-.04,worlds.find(world=>world.name==='Moon').orbitRadius+.04,96),new THREE.MeshBasicMaterial({color:0x76cbee,transparent:true,opacity:.06,side:THREE.DoubleSide,depthWrite:false,blending:THREE.AdditiveBlending}));
   moonOrbitGlow.position.copy(moonOrbitLine.position);moonOrbitGlow.position.z=-.13;moonOrbitGlow.scale.set(0,0,1);worldRoot.add(moonOrbitGlow);
+  function updateMoonOrbit(dt){
+    const earth=meshes.get('Earth').position,moon=meshes.get('Moon'),moonData=worlds.find(world=>world.name==='Moon');
+    moonData.angle+=dt*moonData.orbitSpeed*1.2;
+    moon.position.set(earth.x+Math.cos(moonData.angle)*moonData.orbitRadius,earth.y+Math.sin(moonData.angle)*moonData.orbitRadius,.18);
+    moonOrbitLine.position.set(earth.x,earth.y,-.16);
+    moonOrbitGlow.position.set(earth.x,earth.y,-.13);
+    if(moon.userData.halo)moon.userData.halo.position.copy(moon.position);
+    const marker=targetRings.get('Moon');marker.position.copy(moon.position);marker.position.z+=.08;
+  }
   function setFocusedScene(active){
-    asteroidBelt.visible=!mobileFocus;
+    asteroidBelt.visible=!active&&!mobileFocus;
     meshes.forEach((mesh,name)=>{
-      const keep=active?destinations.includes(name):(!mobileFocus||destinations.includes(name));
+      // Keep the destination meshes and their original textures in the scene.
+      // Focus framing, rather than hiding the worlds, determines what is in view.
+      const keep=!mobileFocus||destinations.includes(name);
       mesh.visible=keep;
       if(mesh.userData.halo)mesh.userData.halo.visible=keep;
       if(mesh.userData.clouds)mesh.userData.clouds.visible=keep;
@@ -208,10 +219,10 @@
     });
     orbitLines.forEach((line,name)=>{line.visible=!active&&(!mobileFocus||destinations.includes(name));});
     orbitGlows.forEach((line,name)=>{line.visible=!active&&(!mobileFocus||destinations.includes(name));});
-    moonOrbitLine.visible=active||mobileFocus;
-    moonOrbitGlow.visible=active||mobileFocus;
+    moonOrbitLine.visible=!active&&mobileFocus;
+    moonOrbitGlow.visible=!active&&mobileFocus;
     sunGlow.visible=!active&&!mobileFocus;
-    document.querySelectorAll('.planet-label').forEach(label=>{label.hidden=(active||mobileFocus)&&!destinations.includes(label.dataset.planetLabel);});
+    document.querySelectorAll('.planet-label').forEach(label=>{label.hidden=active?label.dataset.planetLabel!==selected?.name:mobileFocus&&!destinations.includes(label.dataset.planetLabel);});
     document.getElementById('space-view').classList.toggle('destination-selected',active);
   }
 
@@ -281,12 +292,12 @@
   function ease(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;}
   function easeZoom(t){return ease(t);}
   function lerpPose(a,b,t){return{x:THREE.MathUtils.lerp(a.x,b.x,t),y:THREE.MathUtils.lerp(a.y,b.y,t),z:THREE.MathUtils.lerp(a.z,b.z,t),tx:THREE.MathUtils.lerp(a.tx,b.tx,t),ty:THREE.MathUtils.lerp(a.ty,b.ty,t)};}
-  function worldPose(world){const mesh=meshes.get(world.name),position=worldRoot.localToWorld(mesh.position.clone());const x=position.x,y=position.y;return{x,y:y+1.2,z:world.name==='Moon'?6.4:world.name==='Mars'?8.5:9.5,tx:x,ty:y};}
+  function worldPose(world){const mesh=meshes.get(world.name);worldRoot.updateMatrixWorld(true);const position=mesh.getWorldPosition(new THREE.Vector3());const x=position.x,y=position.y;const distance=world.name==='Moon'?1:world.name==='Earth'?3.6:3.2;return{x,y,z:distance,tx:x,ty:y};}
   function moveCameraTo(pose,duration=1.7){focusTween={from:{x:camera.position.x,y:camera.position.y,z:camera.position.z,tx:camera.lookTargetX||0,ty:camera.lookTargetY||0},to:pose,time:0,duration};}
   function chooseDestination(world){
     if(!flightComplete||!world||!destinations.includes(world.name))return;
     setHoveredPlanet(null);
-    selected=world;setFocusedScene(true);prompt.classList.remove('visible');
+    selected=world;setFocusedScene(true);prompt.classList.add('visible');
     document.querySelectorAll('.planet-label').forEach(el=>el.classList.toggle('selected',el.dataset.planetLabel===world.name));
     document.getElementById('destination-class').innerHTML=`${world.type}<span> · </span>${world.number}`;
     document.getElementById('destination-name').textContent=world.name.toUpperCase();
@@ -427,14 +438,9 @@
         if(mesh.userData.planetRings)mesh.userData.planetRings.position.copy(mesh.position);
         if(orbitLines.has(world.name))orbitLines.get(world.name).rotation.z=0;
       });
-      const earth=meshes.get('Earth').position,moon=meshes.get('Moon'),moonData=worlds[9];
-      moonData.angle+=dt*moonData.orbitSpeed*1.2;
-      moon.position.set(earth.x+Math.cos(moonData.angle)*moonData.orbitRadius,earth.y+Math.sin(moonData.angle)*moonData.orbitRadius,.18);
-      moonOrbitLine.position.set(earth.x,earth.y,-.16);
-      moonOrbitGlow.position.set(earth.x,earth.y,-.13);
-      const moonHalo=moon.userData.halo;if(moonHalo)moonHalo.position.copy(moon.position);
       ['Earth','Moon','Mars'].forEach(name=>{const marker=targetRings.get(name);marker.position.copy(meshes.get(name).position);marker.position.z+=.08;});
     }
+    if(!paused&&(!selected||selected.name==='Earth'))updateMoonOrbit(dt);
     if(!paused){
       meshes.forEach(mesh=>{const world=mesh.userData.world;mesh.rotation.y+=dt*world.spin*.30;if(mesh.userData.clouds)mesh.userData.clouds.rotation.y+=dt*world.spin*.30*1.12;});
       stars.rotation.y+=dt*.003;
