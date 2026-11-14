@@ -1,27 +1,22 @@
 # LUNAR LEGACY
 
-An interactive 3D archive of lunar missions and surface history, built with React, TypeScript, Vite, and Three.js.
+An interactive 3D archive of lunar missions and surface history. The site is
+packaged as three browser-ready files: `index.html`, `style.css`, and
+`script.js`. No package installation or build step is required.
+
+Keep the `lunar/` folder beside those files. It contains the Moon textures and
+mission images used by the site.
 
 ## Run locally
 
-```sh
-npm ci
-npm run dev
-```
+Open `index.html` in a browser, or serve the project folder with any static
+file server.
 
-## Build
+## Deploy to GitHub Pages
 
-```sh
-npm run build
-npm run preview
-```
+1. Push the repository to GitHub on the `main` or `master` branch.
+2. In **Settings → Pages**, choose **GitHub Actions** as the deployment source.
+3. The included workflow publishes the static site whenever you push to either
+   branch. You can also start it from the repository's **Actions** tab.
 
-The production build is written to `dist/`. Vite is configured with relative asset paths so the site works both at a domain root and under a GitHub Pages project path.
-
-## GitHub Pages
-
-1. Push this repository to GitHub on the `main` or `master` branch.
-2. In **Settings → Pages**, set the build and deployment source to **GitHub Actions**.
-3. The included workflow builds the site and publishes `dist/` on pushes to either branch. You can also start it manually from the repository’s **Actions** tab.
-
-The lunar textures and record images are stored locally under `public/lunar/` and are included in the Pages build.
+The workflow does not install packages or run a build.
