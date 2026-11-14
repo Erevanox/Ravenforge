@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#03070d">
+  <meta name="description" content="An interactive archive of humanity's traces across the solar system.">
+  <title>Home | Cosmic Horizon</title>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://play.solarsystemscope.com">
+  <!-- Planet surface maps: Solar System Scope, CC BY 4.0. -->
+  <link rel="stylesheet" href="style.css?v=20261115-01">
+  <link rel="stylesheet" href="shared/site-nav.css">
+  <script src="shared/site-nav.js"></script>
+</head>
+<body class="intro-pending">
+  <main class="home" id="home">
+    <div id="space-view" class="space-view" aria-label="Interactive three-dimensional solar system">
+      <div id="solar-system"></div>
+      <div class="space-effects" aria-hidden="true">
+        <span class="space-nebula"></span>
+        <span class="space-particles"></span>
+        <span class="shooting-star"></span>
+      </div>
+      <div class="vignette"></div>
+      <header class="topbar">
+        <div class="brand-group"><a class="credits-trigger about-link" href="about.html">ABOUT</a><button class="credits-trigger" id="open-credits" type="button" aria-haspopup="dialog" aria-controls="credits-dialog">CREDITS <span>↗</span></button></div>
+        <button id="reset-view" class="reset-button" type="button"><span>↺</span> RESET VIEW</button>
+      </header>
+
+      <section class="opening-copy" aria-label="Introduction">
+        <div class="eyebrow"><span class="eyebrow-line"></span> HUMANITY'S OUTER FRONTIER <span class="eyebrow-line"></span></div>
+        <h1>COSMIC <em>HORIZON</em></h1>
+        <p class="tagline">ABANDONED BUT NOT FORGOTTEN</p>
+        <p class="opening-note">Every world remembers that we were here.</p>
+      </section>
+
+      <div class="flight-readout" aria-live="polite">
+        <span class="readout-index" id="stage-index">01</span>
+        <span class="readout-rule"></span>
+        <span><b id="stage-title">THE SOLAR SYSTEM</b><small id="stage-caption">A HUMAN STORY, WRITTEN ACROSS WORLDS</small></span>
+      </div>
+
+      <div class="planet-label label-earth" data-planet-label="Earth"><i></i> EARTH</div>
+      <div class="planet-label label-moon" data-planet-label="Moon"><i></i> MOON</div>
+      <div class="planet-label label-mars" data-planet-label="Mars"><i></i> MARS</div>
+      <section class="destination-card" id="destination-card" aria-live="polite" aria-hidden="true">
+        <button class="card-close" id="close-destination" aria-label="Close destination details">×</button>
+        <p class="eyebrow" id="destination-class">TERRESTRIAL WORLD <span>·</span> 003</p>
+        <h2 id="destination-name">EARTH</h2>
+        <p class="destination-description" id="destination-description"></p>
+        <div class="card-footer"><span id="destination-coordinate">SOL / 1.00 AU</span><button id="explore-button" class="explore-button" type="button">EXPLORE <span>↗</span></button></div>
+      </section>
+      <section class="planet-hover-card" id="planet-hover-card" aria-live="polite" aria-hidden="true">
+        <span class="planet-hover-kicker">DESTINATION SIGNAL</span>
+        <h2 id="planet-hover-name"></h2>
+        <p id="planet-hover-description"></p>
+        <button id="enter-destination" type="button">ENTER DESTINATION <span>↗</span></button>
+      </section>
+
+      <div class="view-controls"><button id="pause-button" type="button" aria-label="Pause planet rotation">Ⅱ</button><span>REVOLUTION</span><span class="control-separator"></span><span class="drag-hint">DRAG TO ROTATE</span><span class="scroll-icon">⌕</span></div>
+      <div class="system-scale"><span>0</span><i></i><span>30 AU</span></div>
+      <div class="bottomline"><a href="https://play.solarsystemscope.com/textures/" target="_blank" rel="noreferrer" title="Local surface maps used by COSMIC HORIZON">MARS + MOON · LOCAL SURFACE MAPS</a><div class="destination-prompt" id="destination-prompt"><span class="prompt-pulse"></span><span class="prompt-title">SELECT A DESTINATION</span><button type="button" data-destination="Earth">EARTH</button><button type="button" data-destination="Moon">MOON</button><button type="button" data-destination="Mars">MARS</button></div><span id="flight-status" hidden></span><span>01 / 01 <b>HOMEPAGE</b></span></div>
+      <div class="loading-screen" id="loading-screen"><div class="loader-orbit"><i></i></div><span>INITIALIZING DEEP SPACE FEED</span><div class="loading-track"><i></i></div></div>
+    </div>
+
+    <section class="credits-overlay" id="credits-dialog" aria-hidden="true">
+      <div class="credits-backdrop" data-close-credits></div>
+      <div class="credits-card" role="dialog" aria-modal="true" aria-labelledby="credits-title">
+        <button class="credits-close" id="close-credits" type="button" aria-label="Close credits">×</button>
+        <p class="eyebrow">THE PEOPLE BEHIND THE MISSION</p>
+        <h2 id="credits-title">TEAM CREDITS</h2>
+        <div class="credits-team">
+          <article class="credits-member">
+            <h3>Vaishnav M</h3>
+            <div class="credits-links"><a href="https://www.linkedin.com/in/vaishnav-m-a08104421" target="_blank" rel="noopener noreferrer">LinkedIn <span>↗</span></a><a href="https://github.com/vaishnavm3529-creator" target="_blank" rel="noopener noreferrer">GitHub <span>↗</span></a></div>
+            <div class="credits-email-row"><p class="credits-email">vaishnavm3529@gmail.com</p><button class="copy-email" type="button" data-copy="vaishnavm3529@gmail.com" aria-label="Copy Vaishnav's email address">COPY</button></div>
+          </article>
+          <article class="credits-member">
+            <h3>Mukilan V</h3>
+            <div class="credits-links"><a href="https://www.linkedin.com/in/mukilan-v-b5b0b1432/" target="_blank" rel="noopener noreferrer">LinkedIn <span>↗</span></a><a href="https://github.com/Erevanox" target="_blank" rel="noopener noreferrer">GitHub <span>↗</span></a></div>
+            <div class="credits-email-row"><p class="credits-email">mukilgraphics2007@gmail.com</p><button class="copy-email" type="button" data-copy="mukilgraphics2007@gmail.com" aria-label="Copy Mukilan's email address">COPY</button></div>
+          </article>
+          <article class="credits-member">
+            <h3>Karthikeyan MR</h3>
+            <div class="credits-links"><a href="https://www.linkedin.com/in/karthikeyan-mr348/" target="_blank" rel="noopener noreferrer">LinkedIn <span>↗</span></a><a href="https://github.com/KARTHIKEYAN-MR3" target="_blank" rel="noopener noreferrer">GitHub <span>↗</span></a></div>
+            <div class="credits-email-row"><p class="credits-email">mrkarthikeyan348@gmai.com</p><button class="copy-email" type="button" data-copy="mrkarthikeyan348@gmai.com" aria-label="Copy Karthikeyan's email address">COPY</button></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="explore-overlay" id="explore-overlay" aria-hidden="true">
+      <div class="explore-backdrop"></div>
+      <div class="explore-panel" role="dialog" aria-modal="true" aria-labelledby="panel-title">
+        <header class="panel-header"><a class="brand" href="#home">COSMIC HORIZON</a><div><span class="live-dot"></span> ARCHIVE ACCESS GRANTED</div><button id="close-explore" class="panel-close" aria-label="Close exploration panel">×</button></header>
+        <div class="panel-content">
+          <div class="panel-overline"><span>DESTINATION FILE</span><span id="panel-file-id">EARTH / 003</span></div>
+          <h2 id="panel-title">A WORLD<br>WE CALL HOME.</h2>
+          <p class="panel-intro" id="panel-intro"></p>
+          <div class="panel-layout">
+            <div class="object-column">
+              <div class="subhead"><span>HUMAN OBJECTS</span><span id="object-count">03 RECORDS</span></div>
+              <div id="object-list" class="object-list"></div>
+            </div>
+            <article class="object-detail" id="object-detail">
+              <div class="object-image" id="object-image"><span class="image-credit" id="image-credit">IMAGE: NASA</span></div>
+              <div class="object-detail-copy"><p class="object-kicker" id="object-kicker">MISSION ARTIFACT · 1969</p><h3 id="object-title">APOLLO 11 LUNAR MODULE</h3><p id="object-description"></p><div class="fact-box"><span>FIELD NOTE</span><p id="object-fact"></p></div></div>
+            </article>
+          </div>
+          <div class="panel-bottom"><span>THE RECORD REMAINS</span><span>COSMIC HORIZON / FIELD ARCHIVE <i>●</i></span></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+  <script src="assets/earth-texture-data.js?v=20261114-26" defer></script>
+  <script src="assets/sun-texture-data.js?v=20261114-26" defer></script>
+  <script src="assets/mars-texture-data.js?v=20261114-26" defer></script>
+  <script src="assets/moon-texture-data.js?v=20261114-26" defer></script>
+  <script src="script.js?v=20261115-01" defer></script>
+</body>
+</html>
+//Vaishnav M 
