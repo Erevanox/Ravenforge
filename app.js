@@ -186,6 +186,9 @@ scene.add(fillLight);
 const earthGroup = new THREE.Group();
 scene.add(earthGroup);
 const earthRadius = 2.35;
+let oceanMask = null;
+let oceanMaskWidth = 0;
+let oceanMaskHeight = 0;
 const textureLoader = new THREE.TextureLoader();
 textureLoader.load("assets/earth-daymap.jpg", (earthTexture) => {
   earthTexture.colorSpace = THREE.SRGBColorSpace;
@@ -198,11 +201,15 @@ textureLoader.load("assets/earth-daymap.jpg", (earthTexture) => {
   if (!roughnessContext) throw new Error("Could not create the Earth surface roughness map.");
   roughnessContext.drawImage(mapImage, 0, 0);
   const roughnessPixels = roughnessContext.getImageData(0, 0, roughnessCanvas.width, roughnessCanvas.height);
+  oceanMaskWidth = roughnessCanvas.width;
+  oceanMaskHeight = roughnessCanvas.height;
+  oceanMask = new Uint8Array(oceanMaskWidth * oceanMaskHeight);
   for (let i = 0; i < roughnessPixels.data.length; i += 4) {
     const red = roughnessPixels.data[i];
     const green = roughnessPixels.data[i + 1];
     const blue = roughnessPixels.data[i + 2];
     const isOcean = blue > red * 1.24 && blue > green * 1.06;
+    oceanMask[i / 4] = isOcean ? 1 : 0;
     const roughness = isOcean ? 150 : 235;
     roughnessPixels.data[i] = roughness;
     roughnessPixels.data[i + 1] = roughness;
@@ -255,8 +262,8 @@ atmosphere.name = "atmosphere";
 earthGroup.add(atmosphere);
 
 function createLocationMarkers() {
-  const markerMaterial = new THREE.MeshBasicMaterial({ color: 0x7ce8ff });
-  const glowMaterial = new THREE.MeshBasicMaterial({ color: 0x47c8ff, transparent: true, opacity: 0.24 });
+  const markerMaterial = new THREE.MeshBasicMaterial({ color: 0x59b8a6 });
+  const glowMaterial = new THREE.MeshBasicMaterial({ color: 0x006d5b, transparent: true, opacity: 0.3 });
   for (const location of locations) {
     const phi = THREE.MathUtils.degToRad(location.lon + 180);
     const theta = THREE.MathUtils.degToRad(90 - location.lat);
@@ -360,20 +367,33 @@ function showToast(message) {
   showToast.timeout = window.setTimeout(() => toast.classList.remove("is-visible"), 2400);
 }
 
-function getRegion(latitude, longitude) {
+function getSurfaceIsOcean(uv) {
+  if (!oceanMask) return null;
+  const x = Math.min(oceanMaskWidth - 1, Math.max(0, Math.floor(uv.x * oceanMaskWidth)));
+  const y = Math.min(oceanMaskHeight - 1, Math.max(0, Math.floor((1 - uv.y) * oceanMaskHeight)));
+  return oceanMask[y * oceanMaskWidth + x] === 1;
+}
+
+function getRegion(latitude, longitude, isOcean) {
+  if (isOcean) {
+    if (latitude <= -55) return { title: "Southern Ocean", key: "southern ocean", detail: "The Southern Ocean circles Antarctica. The Antarctic Circumpolar Current links its waters and helps move heat and nutrients around the globe." };
+    if (latitude >= 66) return { title: "Arctic Ocean", key: "arctic ocean", detail: "The Arctic Ocean is the smallest and shallowest of the five oceans. Sea ice and surrounding land strongly shape its seasonal conditions." };
+    if (longitude > -80 && longitude < 20) return { title: "Atlantic Ocean", key: "atlantic ocean", detail: "The Atlantic Ocean separates the Americas from Europe and Africa. Its currents move heat between the tropics and higher latitudes." };
+    if (longitude >= 20 && longitude <= 120) return { title: "Indian Ocean", key: "indian ocean", detail: "The Indian Ocean is the warmest of the major oceans and is bordered by Africa, Asia, Australia, and the Southern Ocean." };
+    return { title: "Pacific Ocean", key: "pacific ocean", detail: "The Pacific is Earth's largest and deepest ocean. The Ring of Fire around its margins is an active zone of earthquakes and volcanoes." };
+  }
   if (latitude < -60) return { title: "Antarctica", key: "antarctica", detail: "Earth's southernmost continent is covered by a vast ice sheet. Its high interior is the coldest, driest, and windiest region on the planet." };
-  if (longitude >= -168 && longitude <= -52 && latitude >= 7 && latitude <= 83) return { title: "North America", key: "north america", detail: "North America stretches from Arctic landscapes to tropical forests. Its landforms include broad plains, major mountain ranges, and the Great Lakes." };
+  if ((longitude >= -168 && longitude <= -52 && latitude >= 7 && latitude <= 83) || (longitude >= -75 && longitude <= -10 && latitude >= 59 && latitude <= 84)) {
+    return { title: "North America", key: "north america", detail: "North America stretches from Arctic landscapes to tropical forests. Its landforms include broad plains, major mountain ranges, and the Great Lakes." };
+  }
   if (longitude >= -82 && longitude <= -34 && latitude >= -56 && latitude <= 13) return { title: "South America", key: "south america", detail: "South America is home to the Andes, the Amazon Basin, and a wide range of climates and ecosystems." };
-  if (longitude >= -12 && longitude <= 45 && latitude >= 35 && latitude <= 72) return { title: "Europe", key: "europe", detail: "Europe is a peninsula-rich region on the western part of the Eurasian landmass, with varied landscapes and long histories of settlement." };
+  if (longitude >= -25 && longitude <= 45 && latitude >= 35 && latitude <= 72) return { title: "Europe", key: "europe", detail: "Europe is a peninsula-rich region on the western part of the Eurasian landmass, with varied landscapes and long histories of settlement." };
   if (longitude >= -18 && longitude <= 52 && latitude >= -35 && latitude < 35) return { title: "Africa", key: "africa", detail: "Africa spans the equator and contains the Sahara, the Congo rainforest, vast savannas, and the Nile and many other river systems." };
-  if (longitude >= 112 && latitude >= -50 && latitude < 0) return { title: "Australia and Oceania", key: "oceania", detail: "Australia and the islands of Oceania range from arid interiors to tropical reefs and remote volcanic islands." };
+  if ((longitude >= 112 && longitude <= 155 && latitude >= -45 && latitude <= -10) || (longitude >= 130 && longitude <= 155 && latitude >= -11 && latitude < 0) || (longitude >= 165 && latitude >= -48 && latitude <= -33)) {
+    return { title: "Australia and Oceania", key: "oceania", detail: "Australia and the islands of Oceania range from arid interiors to tropical reefs and remote volcanic islands." };
+  }
   if (latitude >= -10 && longitude >= 42 && longitude < 180) return { title: "Asia", key: "asia", detail: "Asia is Earth's largest continent, spanning Arctic tundra, high mountain ranges, deserts, forests, and densely populated river plains." };
-  if (latitude < -55) return { title: "Southern Ocean", key: "southern ocean", detail: "The Southern Ocean circles Antarctica. The Antarctic Circumpolar Current links its waters and helps move heat and nutrients around the globe." };
-  if (latitude > 75) return { title: "Arctic Ocean", key: "arctic ocean", detail: "The Arctic Ocean is the smallest and shallowest of the five oceans. Sea ice and surrounding land strongly shape its seasonal conditions." };
-  if (longitude > -70 && longitude < 20 && latitude > -60 && latitude < 70) return { title: "Atlantic Ocean", key: "atlantic ocean", detail: "The Atlantic Ocean separates the Americas from Europe and Africa. Its currents move heat between the tropics and higher latitudes." };
-  if (longitude >= 20 && longitude <= 120 && latitude > -50 && latitude < 30) return { title: "Indian Ocean", key: "indian ocean", detail: "The Indian Ocean is the warmest of the major oceans and is bordered by Africa, Asia, Australia, and the Southern Ocean." };
-  if (longitude <= -70 || longitude > 120) return { title: "Pacific Ocean", key: "pacific ocean", detail: "The Pacific is Earth's largest and deepest ocean. The Ring of Fire around its margins is an active zone of earthquakes and volcanoes." };
-  return { title: "A connected ocean", key: "ocean", detail: "All of Earth's oceans are connected, forming a global system that stores heat, moves nutrients, and supports life." };
+  return { title: "Land region", key: "land", detail: "This point lies on land. Explore the nearby marked locations or use the field guide to learn about Earth's regions." };
 }
 
 function onGlobeClick(event) {
@@ -388,9 +408,9 @@ function onGlobeClick(event) {
     return;
   }
   if (!surfaceHit || !surfaceHit.uv) return;
-  const latitude = 90 - surfaceHit.uv.y * 180;
+  const latitude = surfaceHit.uv.y * 180 - 90;
   const longitude = surfaceHit.uv.x * 360 - 180;
-  const region = getRegion(latitude, longitude);
+  const region = getRegion(latitude, longitude, getSurfaceIsOcean(surfaceHit.uv));
   const formattedLatitude = `${Math.abs(latitude).toFixed(1)}°${latitude >= 0 ? "N" : "S"}`;
   const formattedLongitude = `${Math.abs(longitude).toFixed(1)}°${longitude >= 0 ? "E" : "W"}`;
   coordinatesText.textContent = `${formattedLatitude}  /  ${formattedLongitude}  ·  ${region.title.toUpperCase()}`;
