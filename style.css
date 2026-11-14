@@ -1276,6 +1276,18 @@ body.intro-started .destination-prompt { animation: intro-prompt-left .65s ease-
 .about-record > span { color: #77cce4; font: 8px var(--mono); letter-spacing: 1.7px; }
 .about-record h2 { margin: 18px 0 8px; color: #e1f3fa; font: 500 26px var(--display); letter-spacing: .8px; }
 .about-record p { margin: 0; color: #92aab8; font-size: 11px; line-height: 1.8; }
+.about-info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 14px 0 30px; text-align: left; }
+.about-info-card { min-height: 250px; }
+.about-info-card h2 { margin-top: 16px; }
+.about-source-links { display: grid; gap: 8px; margin-top: 17px; }
+.about-source-links a { display: flex; justify-content: space-between; gap: 8px; padding: 8px 9px; border: 1px solid #83dfff26; color: #b8d9e8; font: 8px var(--mono); letter-spacing: .8px; transition: .2s; }
+.about-source-links a:hover, .about-source-links a:focus-visible { border-color: var(--cyan); color: #fff; outline: none; }
+.about-source-links a span { color: var(--cyan); }
+.about-info-card .about-ai-note { margin-top: 18px; padding-top: 12px; border-top: 1px solid #9bdcff24; color: #77cce4; font: 8px var(--mono); letter-spacing: 1.4px; }
+.about-ai-note b { display: block; margin-top: 7px; color: #e1f3fa; font-weight: 500; }
+.about-team-card { display: flex; flex-direction: column; align-items: flex-start; }
+.ravenforge-logo { display: block; width: min(100%, 320px); height: 150px; object-fit: cover; object-position: center 52%; margin: 2px 0 9px; }
+.about-team-card p { margin-top: auto; }
 .about-return { display: inline-flex; align-items: center; gap: 18px; padding: 13px 17px; border: 1px solid #64d6fa68; background: #42c8f513; color: #c8edf7; font: 9px var(--mono); letter-spacing: 1.5px; transition: .2s; }
 .about-return:hover, .about-return:focus-visible { background: #39baff28; border-color: var(--cyan); outline: none; }
 .about-return span { color: var(--cyan); font-size: 14px; }
@@ -1290,6 +1302,7 @@ body.intro-started .destination-prompt { animation: intro-prompt-left .65s ease-
   .about-motto { font-size: 8px; letter-spacing: .24em; }
   .about-intro { font-size: 12px; }
   .about-records { grid-template-columns: 1fr; gap: 10px; margin-top: 30px; }
+  .about-info-grid { grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
   .about-record { min-height: 0; padding: 18px; }
   .about-record h2 { margin-top: 12px; }
   .about-footer { min-height: 40px; padding: 0 13px; font-size: 6px; letter-spacing: .7px; }
