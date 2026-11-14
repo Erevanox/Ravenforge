@@ -1,4 +1,4 @@
-/* SPACE TRACE — one-screen solar-system exploration experience.
+/* COSMIC HORIZON — one-screen solar-system exploration experience.
    The scene uses local fallback colours first, then applies hosted surface maps. */
 (() => {
   'use strict';
