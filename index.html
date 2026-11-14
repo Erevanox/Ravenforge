@@ -8,7 +8,7 @@
   <title>SPACE TRACE — Abandoned but Not Forgotten</title>
   <link rel="preconnect" href="https://play.solarsystemscope.com">
   <!-- Planet surface maps: Solar System Scope, CC BY 4.0. -->
-  <link rel="stylesheet" href="style.css?v=20261114-29">
+  <link rel="stylesheet" href="style.css?v=20261114-31">
 </head>
 <body class="intro-pending">
   <main class="home" id="home">
@@ -41,8 +41,6 @@
       <div class="planet-label label-earth" data-planet-label="Earth"><i></i> EARTH</div>
       <div class="planet-label label-moon" data-planet-label="Moon"><i></i> MOON</div>
       <div class="planet-label label-mars" data-planet-label="Mars"><i></i> MARS</div>
-      <div class="destination-prompt" id="destination-prompt"><span class="prompt-pulse"></span><span class="prompt-title">SELECT A DESTINATION</span><button type="button" data-destination="Earth">EARTH</button><button type="button" data-destination="Moon">MOON</button><button type="button" data-destination="Mars">MARS</button></div>
-
       <section class="destination-card" id="destination-card" aria-live="polite" aria-hidden="true">
         <button class="card-close" id="close-destination" aria-label="Close destination details">×</button>
         <p class="eyebrow" id="destination-class">TERRESTRIAL WORLD <span>·</span> 003</p>
@@ -59,7 +57,7 @@
 
       <div class="view-controls"><button id="pause-button" type="button" aria-label="Pause planet rotation">Ⅱ</button><span>ROTATION</span><span class="control-separator"></span><span class="drag-hint">DRAG TO ORBIT</span><span class="scroll-icon">⌕</span></div>
       <div class="system-scale"><span>0</span><i></i><span>30 AU</span></div>
-      <div class="bottomline"><a href="https://play.solarsystemscope.com/textures/" target="_blank" rel="noreferrer" title="Local surface maps used by SPACE TRACE">MARS + MOON · LOCAL SURFACE MAPS</a><span id="flight-status"><i></i> AUTO FLIGHT IN PROGRESS</span><span>01 / 01 <b>HOMEPAGE</b></span></div>
+      <div class="bottomline"><a href="https://play.solarsystemscope.com/textures/" target="_blank" rel="noreferrer" title="Local surface maps used by SPACE TRACE">MARS + MOON · LOCAL SURFACE MAPS</a><div class="destination-prompt" id="destination-prompt"><span class="prompt-pulse"></span><span class="prompt-title">SELECT A DESTINATION</span><button type="button" data-destination="Earth">EARTH</button><button type="button" data-destination="Moon">MOON</button><button type="button" data-destination="Mars">MARS</button></div><span id="flight-status" hidden></span><span>01 / 01 <b>HOMEPAGE</b></span></div>
       <div class="loading-screen" id="loading-screen"><div class="loader-orbit"><i></i></div><span>INITIALIZING DEEP SPACE FEED</span><div class="loading-track"><i></i></div></div>
     </div>
 

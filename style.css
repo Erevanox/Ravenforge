@@ -171,16 +171,16 @@ body.intro-started .bottomline,
 body.intro-started .view-controls,
 body.intro-started .system-scale { animation: intro-copy .7s ease-out 2.75s both; }
 body.intro-started .planet-label { animation: intro-fade .55s ease-out 2.65s both; }
-body.intro-started .destination-prompt { animation: intro-prompt .65s ease-out 2.95s both; }
+body.intro-started .destination-prompt { animation: intro-prompt-left .65s ease-out 2.95s both; }
 @keyframes intro-stars { from { opacity: 0; } to { opacity: 1; } }
 @keyframes intro-copy {
   from { opacity: 0; transform: translateY(9px); }
   to { opacity: 1; transform: translateY(0); }
 }
 @keyframes intro-fade { from { opacity: 0; } to { opacity: 1; } }
-@keyframes intro-prompt {
-  from { opacity: 0; transform: translate(-50%, 9px); }
-  to { opacity: 1; transform: translate(-50%, 0); }
+@keyframes intro-prompt-left {
+  from { opacity: 0; transform: translateY(9px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 @keyframes intro-title {
   from { opacity: 0; clip-path: inset(0 50% 0 50%); letter-spacing: .42em; filter: blur(5px); }
@@ -423,10 +423,10 @@ body.intro-started .destination-prompt { animation: intro-prompt .65s ease-out 2
 .destination-prompt {
   position: absolute;
   z-index: 4;
-  left: 50%;
-  top: 30%;
+  left: clamp(22px, 5vw, 80px);
+  top: 40%;
   bottom: auto;
-  transform: translateX(-50%);
+  transform: none;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -590,7 +590,7 @@ body.intro-started .destination-prompt { animation: intro-prompt .65s ease-out 2
 .view-controls {
   position: absolute;
   z-index: 5;
-  top: 40%;
+  top: calc(40% + 66px);
   bottom: auto;
   left: clamp(22px, 5vw, 80px);
   transform: none;
@@ -657,6 +657,17 @@ body.intro-started .destination-prompt { animation: intro-prompt .65s ease-out 2
   display: flex;
   align-items: center;
   gap: 8px;
+}
+.bottomline #flight-status[hidden] { display: none; }
+.bottomline > .destination-prompt {
+  position: relative;
+  top: auto;
+  bottom: auto;
+  left: auto;
+  transform: none;
+  margin: 0 auto;
+  flex: 0 0 auto;
+  z-index: 1;
 }
 .bottomline b {
   font-weight: 400;
@@ -1025,7 +1036,7 @@ body.intro-started .destination-prompt { animation: intro-prompt .65s ease-out 2
     font-size: 10px;
   }
   .flight-readout {
-    top: 31%;
+    top: 34%;
     left: 18px;
   }
   .destination-card {
@@ -1049,6 +1060,7 @@ body.intro-started .destination-prompt { animation: intro-prompt .65s ease-out 2
   .destination-prompt {
     top: 34%;
     bottom: auto;
+    left: 18px;
     font-size: 8px;
     padding: 11px 13px;
   }
@@ -1066,7 +1078,7 @@ body.intro-started .destination-prompt { animation: intro-prompt .65s ease-out 2
     left: 68%;
   }
   .view-controls {
-    top: 42%;
+    top: calc(40% + 66px);
     bottom: auto;
     left: 18px;
     transform: none;
@@ -1081,6 +1093,8 @@ body.intro-started .destination-prompt { animation: intro-prompt .65s ease-out 2
     font-size: 6px;
     letter-spacing: 0.6px;
   }
+  .bottomline > a,
+  .bottomline > span:last-child { display: none; }
   .bottomline > span:first-child {
     max-width: 105px;
   }
@@ -1187,7 +1201,7 @@ body.intro-started .destination-prompt { animation: intro-prompt .65s ease-out 2
     letter-spacing: 1px;
   }
   .flight-readout {
-    top: 34%;
+    top: 37%;
   }
   .destination-card {
     bottom: 18%;
@@ -1200,9 +1214,10 @@ body.intro-started .destination-prompt { animation: intro-prompt .65s ease-out 2
   .destination-prompt {
     top: 37%;
     bottom: auto;
+    left: 18px;
   }
   .view-controls {
-    top: 43%;
+    top: calc(40% + 66px);
     bottom: auto;
     left: 18px;
     transform: none;
