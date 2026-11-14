@@ -83,13 +83,26 @@
   for(let i=0;i<2600;i++){
     const radius=90+Math.random()*130,theta=Math.random()*Math.PI*2,phi=Math.acos(2*Math.random()-1);
     starPositions.push(radius*Math.sin(phi)*Math.cos(theta),radius*Math.cos(phi),radius*Math.sin(phi)*Math.sin(theta));
-    const tint=.6+Math.random()*.4;starColors.push(.64*tint,.82*tint,tint);
+    const tint=.72+Math.random()*.28;starColors.push(.82*tint,.92*tint,tint);
   }
   const starGeometry=new THREE.BufferGeometry();
   starGeometry.setAttribute('position',new THREE.Float32BufferAttribute(starPositions,3));
   starGeometry.setAttribute('color',new THREE.Float32BufferAttribute(starColors,3));
-  const stars=new THREE.Points(starGeometry,new THREE.PointsMaterial({size:.19,vertexColors:true,transparent:true,opacity:.9,sizeAttenuation:true}));
+  const stars=new THREE.Points(starGeometry,new THREE.PointsMaterial({size:.24,vertexColors:true,transparent:true,opacity:1,sizeAttenuation:true}));
   scene.add(stars);
+
+  // A restrained single-draw-call asteroid belt between the Mars and Jupiter orbits.
+  const asteroidPositions=[],asteroidColors=[];
+  for(let i=0;i<1200;i++){
+    const angle=Math.random()*Math.PI*2,radius=16.9+Math.random()*2.4;
+    asteroidPositions.push(Math.cos(angle)*radius,Math.sin(angle)*radius,(Math.random()-.5)*.32);
+    const shade=.68+Math.random()*.3;asteroidColors.push(shade,shade*.83,shade*.65);
+  }
+  const asteroidGeometry=new THREE.BufferGeometry();
+  asteroidGeometry.setAttribute('position',new THREE.Float32BufferAttribute(asteroidPositions,3));
+  asteroidGeometry.setAttribute('color',new THREE.Float32BufferAttribute(asteroidColors,3));
+  const asteroidBelt=new THREE.Points(asteroidGeometry,new THREE.PointsMaterial({size:.18,vertexColors:true,transparent:true,opacity:.9,sizeAttenuation:true,depthWrite:false}));
+  worldRoot.add(asteroidBelt);
 
   // Soft additive sprites add luminous sun spill without a postprocessing dependency.
   function glowTexture(){
@@ -184,6 +197,7 @@
   const moonOrbitGlow=new THREE.Mesh(new THREE.RingGeometry(worlds[9].orbitRadius-.04,worlds[9].orbitRadius+.04,96),new THREE.MeshBasicMaterial({color:0x76cbee,transparent:true,opacity:.06,side:THREE.DoubleSide,depthWrite:false,blending:THREE.AdditiveBlending}));
   moonOrbitGlow.position.copy(moonOrbitLine.position);moonOrbitGlow.position.z=-.13;moonOrbitGlow.scale.set(0,0,1);worldRoot.add(moonOrbitGlow);
   function setFocusedScene(active){
+    asteroidBelt.visible=!mobileFocus;
     meshes.forEach((mesh,name)=>{
       const keep=active?destinations.includes(name):(!mobileFocus||destinations.includes(name));
       mesh.visible=keep;
@@ -405,7 +419,7 @@
     if(orbiting){
       worlds.forEach(world=>{
         if(world.key==='sun'||world.key==='moon')return;
-        world.angle+=dt*world.orbitSpeed*1.5;
+        world.angle+=dt*world.orbitSpeed*1.2;
         const mesh=meshes.get(world.name);mesh.position.set(Math.cos(world.angle)*world.orbitRadius,Math.sin(world.angle)*world.orbitRadius,0);
         if(mesh.userData.clouds)mesh.userData.clouds.position.copy(mesh.position);
         if(mesh.userData.halo)mesh.userData.halo.position.copy(mesh.position);
@@ -414,7 +428,7 @@
         if(orbitLines.has(world.name))orbitLines.get(world.name).rotation.z=0;
       });
       const earth=meshes.get('Earth').position,moon=meshes.get('Moon'),moonData=worlds[9];
-      moonData.angle+=dt*moonData.orbitSpeed*1.5;
+      moonData.angle+=dt*moonData.orbitSpeed*1.2;
       moon.position.set(earth.x+Math.cos(moonData.angle)*moonData.orbitRadius,earth.y+Math.sin(moonData.angle)*moonData.orbitRadius,.18);
       moonOrbitLine.position.set(earth.x,earth.y,-.16);
       moonOrbitGlow.position.set(earth.x,earth.y,-.13);
@@ -424,6 +438,7 @@
     if(!paused){
       meshes.forEach(mesh=>{const world=mesh.userData.world;mesh.rotation.y+=dt*world.spin*.30;if(mesh.userData.clouds)mesh.userData.clouds.rotation.y+=dt*world.spin*.30*1.12;});
       stars.rotation.y+=dt*.003;
+      if(asteroidBelt.visible)asteroidBelt.rotation.z+=dt*.025;
       targetRings.forEach((ring,name)=>{ring.material.opacity=.48+Math.sin(clock.elapsedTime*2.1+(name==='Mars'?1:0))*.16;});
       orbitGlows.forEach((glow,index)=>{glow.material.opacity=.032+Math.sin(clock.elapsedTime*.55+index*.8)*.018;});
       moonOrbitGlow.material.opacity=.045+Math.sin(clock.elapsedTime*.7)*.018;
