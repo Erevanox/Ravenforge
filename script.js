@@ -4,7 +4,16 @@
   'use strict';
   const host = document.getElementById('solar-system');
   const loading = document.getElementById('loading-screen');
+  let introStarted = false;
+  let introElapsed = 0;
+  function startIntro(){
+    if(introStarted)return;
+    introStarted=true;
+    document.body.classList.remove('intro-pending');
+    document.body.classList.add('intro-started');
+  }
   if (!host || !window.THREE) {
+    startIntro();
     if (loading) loading.innerHTML = '<span>3D FLIGHT SYSTEM UNAVAILABLE · CHECK YOUR CONNECTION</span>';
     return;
   }
@@ -46,6 +55,7 @@
   try {
     renderer = new THREE.WebGLRenderer({antialias:true,alpha:false,powerPreference:'high-performance'});
   } catch (error) {
+    startIntro();
     if (loading) loading.innerHTML = '<span>3D FLIGHT SYSTEM UNAVAILABLE · ENABLE WEBGL TO EXPLORE</span>';
     return;
   }
@@ -117,22 +127,25 @@
   let resolvedTextureMaps=0;
   function resolveTextureMap(){
     resolvedTextureMaps++;
-    if(resolvedTextureMaps>=expectedTextureMaps){clearTimeout(textureFallbackTimer);loading.classList.add('done');}
+    if(resolvedTextureMaps>=expectedTextureMaps){clearTimeout(textureFallbackTimer);loading.classList.add('done');startIntro();}
   }
-  const textureFallbackTimer=setTimeout(()=>loading.classList.add('done'),5000);
+  const textureFallbackTimer=setTimeout(()=>{loading.classList.add('done');startIntro();},1800);
   const meshes=new Map(),destinations=['Earth','Moon','Mars'];
   const targetRings=new Map();
   const orbitLines=new Map();
+  const orbitGlows=new Map();
 
   function makeAtmosphere(radius,color){
-    const mat=new THREE.ShaderMaterial({uniforms:{glowColor:{value:new THREE.Color(color)}},vertexShader:'varying vec3 vNormal; varying vec3 vView; void main(){vNormal=normalize(normalMatrix*normal);vec4 mvPosition=modelViewMatrix*vec4(position,1.0);vView=normalize(-mvPosition.xyz);gl_Position=projectionMatrix*mvPosition;}',fragmentShader:'uniform vec3 glowColor; varying vec3 vNormal; varying vec3 vView; void main(){float rim=pow(1.0-max(dot(normalize(vNormal),normalize(vView)),0.0),3.0);gl_FragColor=vec4(glowColor,rim*0.58);}',side:THREE.FrontSide,blending:THREE.AdditiveBlending,transparent:true,depthWrite:false});
+    const mat=new THREE.ShaderMaterial({uniforms:{glowColor:{value:new THREE.Color(color)},glowStrength:{value:.58}},vertexShader:'varying vec3 vNormal; varying vec3 vView; void main(){vNormal=normalize(normalMatrix*normal);vec4 mvPosition=modelViewMatrix*vec4(position,1.0);vView=normalize(-mvPosition.xyz);gl_Position=projectionMatrix*mvPosition;}',fragmentShader:'uniform vec3 glowColor; uniform float glowStrength; varying vec3 vNormal; varying vec3 vView; void main(){float rim=pow(1.0-max(dot(normalize(vNormal),normalize(vView)),0.0),3.0);gl_FragColor=vec4(glowColor,rim*glowStrength);}',side:THREE.FrontSide,blending:THREE.AdditiveBlending,transparent:true,depthWrite:false});
     const mesh=new THREE.Mesh(new THREE.SphereGeometry(radius*1.12,40,40),mat);return mesh;
   }
   worlds.forEach((world,index)=>{
     const isSun=world.key==='sun';
     if(!isSun&&world.key!=='moon'){
       const orbitLine=new THREE.Mesh(new THREE.RingGeometry(world.orbitRadius-.022,world.orbitRadius+.022,180),new THREE.MeshBasicMaterial({color:0x78b6d1,transparent:true,opacity:.19,side:THREE.DoubleSide,depthWrite:false}));
-      orbitLine.position.z=-.5;worldRoot.add(orbitLine);orbitLines.set(world.name,orbitLine);
+      orbitLine.position.z=-.5;orbitLine.scale.set(0,0,1);worldRoot.add(orbitLine);orbitLines.set(world.name,orbitLine);
+      const orbitGlow=new THREE.Mesh(new THREE.RingGeometry(world.orbitRadius-.045,world.orbitRadius+.045,180),new THREE.MeshBasicMaterial({color:0x66bded,transparent:true,opacity:.045,side:THREE.DoubleSide,depthWrite:false,blending:THREE.AdditiveBlending}));
+      orbitGlow.position.z=-.46;orbitGlow.scale.set(0,0,1);worldRoot.add(orbitGlow);orbitGlows.set(world.name,orbitGlow);
     }
     const isEarth=world.key==='earth';
     const mat=isEarth||isSun
@@ -167,7 +180,9 @@
     }
   });
   const moonOrbitLine=new THREE.Mesh(new THREE.RingGeometry(worlds[9].orbitRadius-.018,worlds[9].orbitRadius+.018,96),new THREE.MeshBasicMaterial({color:0x7ac8e5,transparent:true,opacity:.24,side:THREE.DoubleSide,depthWrite:false}));
-  moonOrbitLine.position.copy(meshes.get('Earth').position);moonOrbitLine.position.z=-.16;worldRoot.add(moonOrbitLine);
+  moonOrbitLine.position.copy(meshes.get('Earth').position);moonOrbitLine.position.z=-.16;moonOrbitLine.scale.set(0,0,1);worldRoot.add(moonOrbitLine);
+  const moonOrbitGlow=new THREE.Mesh(new THREE.RingGeometry(worlds[9].orbitRadius-.04,worlds[9].orbitRadius+.04,96),new THREE.MeshBasicMaterial({color:0x76cbee,transparent:true,opacity:.06,side:THREE.DoubleSide,depthWrite:false,blending:THREE.AdditiveBlending}));
+  moonOrbitGlow.position.copy(moonOrbitLine.position);moonOrbitGlow.position.z=-.13;moonOrbitGlow.scale.set(0,0,1);worldRoot.add(moonOrbitGlow);
   function setFocusedScene(active){
     meshes.forEach((mesh,name)=>{
       const keep=active?destinations.includes(name):true;
@@ -178,7 +193,9 @@
       if(mesh.userData.planetRings)mesh.userData.planetRings.visible=keep;
     });
     orbitLines.forEach(line=>line.visible=!active);
+    orbitGlows.forEach(line=>line.visible=!active);
     moonOrbitLine.visible=active;
+    moonOrbitGlow.visible=active;
     sunGlow.visible=!active;
     document.querySelectorAll('.planet-label').forEach(label=>{label.hidden=active&&!destinations.includes(label.dataset.planetLabel);});
     document.getElementById('space-view').classList.toggle('destination-selected',active);
@@ -224,6 +241,7 @@
   function updateDestinationReadiness(){
     document.querySelectorAll('.planet-label').forEach(label=>label.classList.add('visible'));
     prompt.classList.add('visible');
+    document.getElementById('enter-destination').disabled=false;
     document.getElementById('flight-status').innerHTML='<i></i> DESTINATIONS IN RANGE';
     setStage('02','DESTINATIONS IN RANGE','EARTH · MOON · MARS / SELECT TO IDENTIFY');
   }
@@ -234,6 +252,7 @@
   function moveCameraTo(pose,duration=1.7){focusTween={from:{x:camera.position.x,y:camera.position.y,z:camera.position.z,tx:camera.lookTargetX||0,ty:camera.lookTargetY||0},to:pose,time:0,duration};}
   function chooseDestination(world){
     if(!flightComplete||!world||!destinations.includes(world.name))return;
+    setHoveredPlanet(null);
     selected=world;setFocusedScene(true);prompt.classList.remove('visible');
     document.querySelectorAll('.planet-label').forEach(el=>el.classList.toggle('selected',el.dataset.planetLabel===world.name));
     document.getElementById('destination-class').innerHTML=`${world.type}<span> · </span>${world.number}`;
@@ -249,6 +268,15 @@
   document.querySelectorAll('[data-destination]').forEach(button=>button.addEventListener('click',()=>chooseDestination(worlds.find(world=>world.name===button.dataset.destination))));
   function updateScreenLabels(){
     worlds.forEach(world=>{const pos=meshes.get(world.name).position.clone().add(new THREE.Vector3(0,world.r+.72,0));worldRoot.localToWorld(pos);pos.project(camera);const el=document.querySelector(`[data-planet-label="${world.name}"]`);if(!el)return;el.style.left=((pos.x*.5+.5)*viewWidth*host.clientHeight)+'px';el.style.top=((-pos.y*.5+.5)*host.clientHeight)+'px';});
+    if(infoWorld){
+      const pos=meshes.get(infoWorld.name).position.clone();worldRoot.localToWorld(pos);pos.project(camera);
+      const x=(pos.x*.5+.5)*host.clientWidth,y=(-pos.y*.5+.5)*host.clientHeight;
+      const cardWidth=hoverCard.offsetWidth||300,cardHeight=hoverCard.offsetHeight||170,gap=26,pad=14;
+      const desiredX=x<host.clientWidth*.58?x+gap:x-cardWidth-gap;
+      hoverCard.style.left=THREE.MathUtils.clamp(desiredX,pad,Math.max(pad,host.clientWidth-cardWidth-pad))+'px';
+      hoverCard.style.right='auto';
+      hoverCard.style.top=THREE.MathUtils.clamp(y-cardHeight*.5,78,Math.max(78,host.clientHeight-cardHeight-56))+'px';
+    }
   }
   function showRecord(key){
     const rec=records[key];if(!rec)return;
@@ -276,18 +304,48 @@
 
   // Pointer interaction: subtle hover lighting, click-to-lock, drag-to-orbit.
   let hovered=null;
+  let infoWorld=null;
+  let hoverDismissTimer=null;
+  const hoverCard=document.getElementById('planet-hover-card');
+  const enterDestination=document.getElementById('enter-destination');
+  enterDestination.disabled=true;
+  function scheduleHoverDismiss(){clearTimeout(hoverDismissTimer);hoverDismissTimer=setTimeout(()=>setHoveredPlanet(null),450);}
+  function setHoveredPlanet(mesh){
+    clearTimeout(hoverDismissTimer);
+    hovered=mesh;
+    const world=mesh&&['Mars','Moon'].includes(mesh.userData.world.name)?mesh.userData.world:null;
+    if(world){
+      infoWorld=world;
+      document.getElementById('planet-hover-name').textContent=world.name.toUpperCase();
+      document.getElementById('planet-hover-description').textContent=world.name==='Mars'
+        ?'A rust-red frontier crossed by rover tracks and the remains of human exploration.'
+        :'Apollo footprints and landing hardware remain preserved on this silent world.';
+      hoverCard.classList.add('open');
+      hoverCard.setAttribute('aria-hidden','false');
+    }else{
+      infoWorld=null;
+      hoverCard.classList.remove('open');
+      hoverCard.setAttribute('aria-hidden','true');
+    }
+  }
   renderer.domElement.addEventListener('pointermove',event=>{
+    if(hoverCard.contains(event.target)){clearTimeout(hoverDismissTimer);return;}
     if(dragging){const dx=event.clientX-lastX,dy=event.clientY-lastY;if(Math.abs(dx)+Math.abs(dy)>2)dragMoved=true;rotationY+=dx*.004;rotationX=THREE.MathUtils.clamp(rotationX+dy*.003,-.85,.85);lastX=event.clientX;lastY=event.clientY;worldRoot.rotation.set(rotationX,rotationY,0);return;}
     const rect=renderer.domElement.getBoundingClientRect();pointer.set(((event.clientX-rect.left)/rect.width)*2-1,-((event.clientY-rect.top)/rect.height)*2+1);raycaster.setFromCamera(pointer,camera);
     const hit=raycaster.intersectObjects(Array.from(meshes.values()).filter(mesh=>mesh.userData.isDestination),false)[0];
-    hovered=hit?hit.object:null;renderer.domElement.style.cursor=hovered?'pointer':'grab';
+    if(hit)setHoveredPlanet(hit.object);else if(infoWorld)scheduleHoverDismiss();else setHoveredPlanet(null);
+    renderer.domElement.style.cursor=hovered?'pointer':'grab';
   });
+  renderer.domElement.addEventListener('pointerleave',event=>{if(hoverCard.contains(event.relatedTarget))clearTimeout(hoverDismissTimer);else if(infoWorld)scheduleHoverDismiss();else setHoveredPlanet(null);renderer.domElement.style.cursor='grab';});
+  hoverCard.addEventListener('pointerenter',()=>clearTimeout(hoverDismissTimer));
+  hoverCard.addEventListener('pointerleave',event=>{if(!renderer.domElement.contains(event.relatedTarget))scheduleHoverDismiss();});
   renderer.domElement.addEventListener('pointerdown',event=>{dragging=true;dragMoved=false;lastX=event.clientX;lastY=event.clientY;renderer.domElement.setPointerCapture(event.pointerId);});
   renderer.domElement.addEventListener('pointerup',event=>{
     if(!dragging)return;dragging=false;if(dragMoved)return;
     const rect=renderer.domElement.getBoundingClientRect();pointer.set(((event.clientX-rect.left)/rect.width)*2-1,-((event.clientY-rect.top)/rect.height)*2+1);raycaster.setFromCamera(pointer,camera);
-    const hit=raycaster.intersectObjects(Array.from(meshes.values()).filter(mesh=>mesh.userData.isDestination),false)[0];if(hit)chooseDestination(hit.object.userData.world);
+    const hit=raycaster.intersectObjects(Array.from(meshes.values()).filter(mesh=>mesh.userData.isDestination),false)[0];if(hit){const world=hit.object.userData.world;if(event.pointerType==='touch'&&['Mars','Moon'].includes(world.name))setHoveredPlanet(hit.object);else chooseDestination(world);}
   });
+  enterDestination.addEventListener('click',()=>{if(infoWorld)chooseDestination(infoWorld);});
   renderer.domElement.addEventListener('pointercancel',()=>dragging=false);
   renderer.domElement.addEventListener('wheel',event=>{event.preventDefault();const factor=THREE.MathUtils.clamp(1+event.deltaY*.001,.75,1.3);camera.position.z=THREE.MathUtils.clamp(camera.position.z*factor,5.2,overviewPose.z*1.15);camera.lookAt(camera.lookTargetX||0,camera.lookTargetY||0,0);},{passive:false});
 
@@ -310,6 +368,7 @@
   document.getElementById('close-explore').addEventListener('click',()=>{const overlay=document.getElementById('explore-overlay');overlay.classList.remove('open');overlay.setAttribute('aria-hidden','true');setStage('03',selected.name.toUpperCase()+' / TARGET LOCKED','DESTINATION IDENTIFIED · SELECT EXPLORE TO OPEN THE ARCHIVE');});
   document.getElementById('close-destination').addEventListener('click',()=>{document.getElementById('destination-card').classList.remove('open');document.getElementById('destination-card').setAttribute('aria-hidden','true');selected=null;setFocusedScene(false);document.querySelectorAll('.planet-label').forEach(el=>el.classList.remove('selected'));moveCameraTo(overviewPose,1.8);updateDestinationReadiness();});
   document.getElementById('reset-view').addEventListener('click',()=>{
+    setHoveredPlanet(null);enterDestination.disabled=true;
     selected=null;setFocusedScene(false);focusTween=null;flightTime=0;flightComplete=false;flightEndPose=null;flightStarted=true;rotationY=.08;rotationX=.34;worldRoot.rotation.set(rotationX,rotationY,0);
     document.getElementById('destination-card').classList.remove('open');document.getElementById('destination-card').setAttribute('aria-hidden','true');
     const overlay=document.getElementById('explore-overlay');overlay.classList.remove('open');overlay.setAttribute('aria-hidden','true');
@@ -322,11 +381,12 @@
   let errorLogged=false;
   function animate(){
     requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);flightStarted=true;
-    const orbiting=!paused&&!selected&&(flightComplete||flightTime<openingHold);
+    if(introStarted&&introElapsed<1.8){introElapsed=Math.min(1.8,introElapsed+dt);const draw=Math.min(1,Math.max(0,(introElapsed-.55)/1.15));orbitLines.forEach(line=>line.scale.set(draw,draw,1));orbitGlows.forEach(line=>line.scale.set(draw,draw,1));moonOrbitLine.scale.set(draw,draw,1);moonOrbitGlow.scale.set(draw,draw,1);}
+    const orbiting=!paused&&!selected;
     if(orbiting){
       worlds.forEach(world=>{
         if(world.key==='sun'||world.key==='moon')return;
-        world.angle+=dt*world.orbitSpeed;
+        world.angle+=dt*world.orbitSpeed*.18;
         const mesh=meshes.get(world.name);mesh.position.set(Math.cos(world.angle)*world.orbitRadius,Math.sin(world.angle)*world.orbitRadius,0);
         if(mesh.userData.clouds)mesh.userData.clouds.position.copy(mesh.position);
         if(mesh.userData.halo)mesh.userData.halo.position.copy(mesh.position);
@@ -335,16 +395,21 @@
         if(orbitLines.has(world.name))orbitLines.get(world.name).rotation.z=0;
       });
       const earth=meshes.get('Earth').position,moon=meshes.get('Moon'),moonData=worlds[9];
-      moonData.angle+=dt*moonData.orbitSpeed;
+      moonData.angle+=dt*moonData.orbitSpeed*.18;
       moon.position.set(earth.x+Math.cos(moonData.angle)*moonData.orbitRadius,earth.y+Math.sin(moonData.angle)*moonData.orbitRadius,.18);
       moonOrbitLine.position.set(earth.x,earth.y,-.16);
+      moonOrbitGlow.position.set(earth.x,earth.y,-.13);
       const moonHalo=moon.userData.halo;if(moonHalo)moonHalo.position.copy(moon.position);
       ['Earth','Moon','Mars'].forEach(name=>{const marker=targetRings.get(name);marker.position.copy(meshes.get(name).position);marker.position.z+=.08;});
     }
     if(!paused){
-      meshes.forEach(mesh=>{const world=mesh.userData.world;mesh.rotation.y+=dt*world.spin;if(mesh.userData.clouds)mesh.userData.clouds.rotation.y+=dt*world.spin*1.12;});
+      meshes.forEach(mesh=>{const world=mesh.userData.world;mesh.rotation.y+=dt*world.spin*.24;if(mesh.userData.clouds)mesh.userData.clouds.rotation.y+=dt*world.spin*.24*1.12;});
       stars.rotation.y+=dt*.003;
       targetRings.forEach((ring,name)=>{ring.material.opacity=.48+Math.sin(clock.elapsedTime*2.1+(name==='Mars'?1:0))*.16;});
+      orbitGlows.forEach((glow,index)=>{glow.material.opacity=.032+Math.sin(clock.elapsedTime*.55+index*.8)*.018;});
+      moonOrbitGlow.material.opacity=.045+Math.sin(clock.elapsedTime*.7)*.018;
+      sunGlow.material.opacity=.72+Math.sin(clock.elapsedTime*.42)*.07;
+      sunGlow.scale.setScalar(13+Math.sin(clock.elapsedTime*.42)*.28);
     }
     if(!flightComplete&&!selected&&!focusTween){if(flightTime<openingHold&&flightTime+dt>=openingHold)flightEndPose=innerSystemPose();flightTime+=dt;const progress=THREE.MathUtils.clamp((flightTime-openingHold)/openingDuration,0,1);const eased=easeZoom(progress);applyCamera(lerpPose(overviewPose,flightEndPose||innerSystemPose(),eased));
       if(progress>.03){document.getElementById('flight-status').innerHTML='<i></i> APPROACHING INNER SYSTEM';setStage('01','INBOUND / INNER SYSTEM','CAMERA FLIGHT · DESTINATIONS WILL BE IN RANGE');}
@@ -353,8 +418,13 @@
     if(focusTween){focusTween.time+=dt;const t=THREE.MathUtils.clamp(focusTween.time/focusTween.duration,0,1);applyCamera(lerpPose(focusTween.from,focusTween.to,ease(t)));if(t>=1)focusTween=null;}
     camera.lookTargetX=selected&&focusTween===null?worldPose(selected).tx:camera.lookTargetX||0;
     updateScreenLabels();
-    meshes.forEach(mesh=>{if(mesh.userData.isDestination&&mesh.material.emissive){mesh.material.emissive.set(0x000000);mesh.material.emissiveIntensity=0;}});
-    if(hovered&&hovered.material.emissive){hovered.material.emissive.set(0x124969);hovered.material.emissiveIntensity=.6;}
+    meshes.forEach(mesh=>{
+      if(mesh.userData.isDestination&&mesh.material.emissive){mesh.material.emissive.set(0x000000);mesh.material.emissiveIntensity=0;}
+      const isHoverTarget=mesh===hovered&&['Mars','Moon'].includes(mesh.userData.world.name);
+      const planetScale=mesh.scale.x+( (isHoverTarget?1.055:1)-mesh.scale.x )*(1-Math.exp(-dt*8));
+      mesh.scale.setScalar(planetScale);
+      if(mesh.userData.halo){const haloScale=mesh.userData.halo.scale.x+((isHoverTarget?1.2:1.07)-mesh.userData.halo.scale.x)*(1-Math.exp(-dt*7));mesh.userData.halo.scale.setScalar(haloScale);const strength=mesh.userData.halo.material.uniforms.glowStrength;strength.value+=((isHoverTarget ? .82 : .58)-strength.value)*(1-Math.exp(-dt*7));}
+    });
     renderer.render(scene,camera);
   }
   animate();

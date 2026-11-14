@@ -8,16 +8,20 @@
   <title>SPACE TRACE — Abandoned but Not Forgotten</title>
   <link rel="preconnect" href="https://play.solarsystemscope.com">
   <!-- Planet surface maps: Solar System Scope, CC BY 4.0. -->
-  <link rel="stylesheet" href="style.css?v=20261114-26">
+  <link rel="stylesheet" href="style.css?v=20261114-28">
 </head>
-<body>
+<body class="intro-pending">
   <main class="home" id="home">
     <div id="space-view" class="space-view" aria-label="Interactive three-dimensional solar system">
       <div id="solar-system"></div>
+      <div class="space-effects" aria-hidden="true">
+        <span class="space-nebula"></span>
+        <span class="space-particles"></span>
+        <span class="shooting-star"></span>
+      </div>
       <div class="vignette"></div>
       <header class="topbar">
-        <div class="brand-group"><a class="brand" href="#home" aria-label="Space Trace home"><span class="brand-mark">✳</span> SPACE TRACE</a><button class="credits-trigger" id="open-credits" type="button" aria-haspopup="dialog" aria-controls="credits-dialog">CREDITS <span>↗</span></button></div>
-        <div class="top-meta"><span class="live-dot"></span><span>DEEP SPACE NETWORK</span><span class="meta-divider"></span><span>ARCHIVE 001—026</span></div>
+        <div class="brand-group"><a class="credits-trigger about-link" href="about.html">ABOUT</a><button class="credits-trigger" id="open-credits" type="button" aria-haspopup="dialog" aria-controls="credits-dialog">CREDITS <span>↗</span></button></div>
         <button id="reset-view" class="reset-button" type="button"><span>↺</span> RESET VIEW</button>
       </header>
 
@@ -45,6 +49,12 @@
         <h2 id="destination-name">EARTH</h2>
         <p class="destination-description" id="destination-description"></p>
         <div class="card-footer"><span id="destination-coordinate">SOL / 1.00 AU</span><button id="explore-button" class="explore-button" type="button">EXPLORE <span>↗</span></button></div>
+      </section>
+      <section class="planet-hover-card" id="planet-hover-card" aria-live="polite" aria-hidden="true">
+        <span class="planet-hover-kicker">DESTINATION SIGNAL</span>
+        <h2 id="planet-hover-name"></h2>
+        <p id="planet-hover-description"></p>
+        <button id="enter-destination" type="button">ENTER DESTINATION <span>↗</span></button>
       </section>
 
       <div class="view-controls"><button id="pause-button" type="button" aria-label="Pause planet rotation">Ⅱ</button><span>ROTATION</span><span class="control-separator"></span><span class="drag-hint">DRAG TO ORBIT</span><span class="scroll-icon">⌕</span></div>
@@ -82,7 +92,7 @@
     <section class="explore-overlay" id="explore-overlay" aria-hidden="true">
       <div class="explore-backdrop"></div>
       <div class="explore-panel" role="dialog" aria-modal="true" aria-labelledby="panel-title">
-        <header class="panel-header"><a class="brand" href="#home"><span class="brand-mark">✳</span> SPACE TRACE</a><div><span class="live-dot"></span> ARCHIVE ACCESS GRANTED</div><button id="close-explore" class="panel-close" aria-label="Close exploration panel">×</button></header>
+        <header class="panel-header"><a class="brand" href="#home">SPACE TRACE</a><div><span class="live-dot"></span> ARCHIVE ACCESS GRANTED</div><button id="close-explore" class="panel-close" aria-label="Close exploration panel">×</button></header>
         <div class="panel-content">
           <div class="panel-overline"><span>DESTINATION FILE</span><span id="panel-file-id">EARTH / 003</span></div>
           <h2 id="panel-title">A WORLD<br>WE CALL HOME.</h2>
@@ -108,7 +118,7 @@
   <script src="assets/sun-texture-data.js?v=20261114-26" defer></script>
   <script src="assets/mars-texture-data.js?v=20261114-26" defer></script>
   <script src="assets/moon-texture-data.js?v=20261114-26" defer></script>
-  <script src="script.js?v=20261114-26" defer></script>
+  <script src="script.js?v=20261114-27" defer></script>
 </body>
 </html>
 //Vaishnav M 
