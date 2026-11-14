@@ -209,10 +209,10 @@
     const w=host.clientWidth||innerWidth,h=host.clientHeight||innerHeight,aspect=w/h;
     renderer.setSize(w,h,false);camera.aspect=aspect;camera.updateProjectionMatrix();
     baseRootScale=aspect<1.1?Math.max(.36,aspect/1.35):1;
-    worldRoot.scale.set(baseRootScale,1,1);
+    worldRoot.scale.setScalar(baseRootScale);
     const halfFov=THREE.MathUtils.degToRad(camera.fov/2);
     const worldHalfWidth=43*baseRootScale;
-    const halfHeight=43;
+    const halfHeight=43*baseRootScale;
     const fitDistance=Math.max(worldHalfWidth/Math.max(aspect,.01),halfHeight)/Math.tan(halfFov);
     viewWidth=aspect;viewHeight=h;
     overviewPose.z=Math.max(34,fitDistance*1.12);
