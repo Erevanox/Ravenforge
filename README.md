@@ -29,4 +29,6 @@ Then open `http://localhost:8000`.
 - `app.js` — 3D scene, mission data, and interactions
 - `assets/` — Mars texture and locally stored mission images
 
+Mission dates, landing regions, and objectives are recorded in `app.js`, with a source link on each mission record. Exact or current surface positions remain unplotted unless verified; globe markers and orbital paths are schematic.
+
 Three.js is loaded from jsDelivr and the DM Sans/DM Mono fonts are loaded from Google Fonts, so those resources require an internet connection. Mission image credits and source links are included in the site.

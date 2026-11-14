@@ -7,165 +7,165 @@ const SCHEMATIC_ORBIT_SPEED = .055;
 const missions = [
   {
     id: "mars-2", year: 1971, name: "Mars 2", kind: "Orbiter · lander",
-    agency: "Soviet Union", launch: "Not supplied in audit notes", arrival: "Not supplied in audit notes",
+    agency: "Soviet Union", launch: "19 May 1971 · launched", arrival: "27 Nov 1971 · Mars orbit insertion; lander crashed during descent",
     coordinates: null, location: "Exact crash coordinates unknown; no agency-confirmed surface point",
     locationLabel: "impact site unconfirmed",
-    locationDetail: "The supplied notes describe a crash during descent but do not identify an agency-confirmed impact area. No precise point can be plotted.",
-    objective: "Not supplied in audit notes.",
-    status: "Historical · precise surface location unconfirmed", statusType: "approximate", note: "The supplied audit notes explicitly caution against plotting an exact crash coordinate.",
-    confidence: "Location unconfirmed in supplied audit notes", source: null,
-    sourceLabel: "No reference URL supplied in audit notes", markerType: "surface",
+    locationDetail: "The lander crashed during descent. No confirmed impact site or precise surface coordinate is available, so no exact point is plotted.",
+    objective: "Study Mars from orbit and attempt the first Soviet Mars lander deployment.",
+    status: "Historical · lander crashed during descent; impact point unconfirmed", statusType: "approximate", note: "The orbiter entered Mars orbit, but the lander failed during descent. The impact location remains uncertain.",
+    confidence: "Mission chronology and objectives summarized from NASA's NSSDCA catalog.", source: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1971-045A",
+    sourceLabel: "NASA NSSDCA · Mars 2", markerType: "surface",
   },
   {
     id: "mars-3", year: 1971, name: "Mars 3", kind: "Orbiter · lander",
-    agency: "Soviet Union", launch: "Not supplied in audit notes", arrival: "Not supplied in audit notes",
-    coordinates: null, location: "Proposed site not confirmed by an agency",
-    locationLabel: "proposed site unconfirmed",
-    locationDetail: "A proposed landing site is not agency-confirmed in the supplied notes, so the exact surface point remains unknown.",
-    objective: "Not supplied in audit notes.",
-    status: "Historical · proposed landing site unconfirmed", statusType: "approximate", note: "An amateur proposed identification is not agency confirmation. No precise map pin is shown.",
-    confidence: "Location unconfirmed in supplied audit notes", source: null,
-    sourceLabel: "No reference URL supplied in audit notes", markerType: "surface",
+    agency: "Soviet Union", launch: "28 May 1971 · launched", arrival: "2 Dec 1971 · orbiter arrived; lander soft-landed",
+    coordinates: null, location: "Mars surface · landing region uncertain",
+    locationLabel: "landing region uncertain",
+    locationDetail: "The lander reached the surface and transmitted briefly, but its exact landing point is not securely established. No precise map pin is shown.",
+    objective: "Study Mars from orbit and return surface images and environmental measurements from a lander.",
+    status: "Historical · brief surface transmission; exact landing point uncertain", statusType: "approximate", note: "The lander transmitted for about 14.5 seconds after landing. The location shown here is deliberately not a precise coordinate.",
+    confidence: "Mission chronology and objectives summarized from NASA's NSSDCA catalog.", source: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1971-049A",
+    sourceLabel: "NASA NSSDCA · Mars 3", markerType: "surface",
   },
   {
     id: "pathfinder", year: 1997, name: "Mars Pathfinder", kind: "Lander · technology demonstrator",
-    agency: "NASA · United States", launch: "Not supplied in audit notes", arrival: "4 Jul 1997 · landed",
-    coordinates: null, location: "Surface object · site details not supplied in audit notes",
-    locationLabel: "site details unavailable",
-    locationDetail: "Pathfinder landed on 4 Jul 1997. Site-specific context and coordinates are not included in the supplied notes; Sojourner's deployment is recorded separately.",
-    objective: "Not supplied in audit notes.",
+    agency: "NASA · United States", launch: "4 Dec 1996 · launched", arrival: "4 Jul 1997 · landed at Ares Vallis",
+    coordinates: null, location: "Ares Vallis · Chryse Planitia",
+    locationLabel: "Ares Vallis",
+    locationDetail: "Pathfinder landed in Ares Vallis, near Chryse Planitia. The surface marker is schematic and does not plot the landing coordinates.",
+    objective: "Demonstrate a low-cost Mars landing and rover technology while studying local rocks, soil, and atmosphere.",
     status: "Historical · completed", statusType: "ended", note: "Pathfinder landed on 4 July 1997. Sojourner was deployed approximately 6 July; its deployment is a separate event.",
-    confidence: "Chronology correction in supplied audit notes", source: null,
-    sourceLabel: "No reference URL supplied in audit notes", markerType: "surface",
+    confidence: "Mission dates, landing region, and science goals from NASA/JPL mission records.", source: "https://www.jpl.nasa.gov/missions/mars-pathfinder-sojourner-rover/",
+    sourceLabel: "NASA/JPL · Mars Pathfinder", markerType: "surface",
   },
   {
     id: "sojourner", year: 1997, name: "Sojourner", kind: "Rover · Pathfinder deployment",
-    agency: "NASA · United States", launch: "Not supplied in audit notes", arrival: "Approximately 6 Jul 1997 · deployed",
-    coordinates: null, location: "Final coordinates not supplied in audit notes",
-    locationLabel: "final point unknown",
-    locationDetail: "Sojourner was deployed at the Pathfinder site approximately 6 Jul 1997. Its final position and coordinates are not supplied.",
-    objective: "Not supplied in audit notes.",
-    status: "Historical · deployment date approximate", statusType: "ended", note: "Keep the deployment separate from Pathfinder's 4 July landing; the audit notes say approximately 6 July.",
-    confidence: "Approximate chronology correction in supplied audit notes", source: null,
-    sourceLabel: "No reference URL supplied in audit notes", markerType: "surface",
+    agency: "NASA · United States", launch: "4 Dec 1996 · launched with Pathfinder", arrival: "4 Jul 1997 · landed; deployed about 6 Jul",
+    coordinates: null, location: "Ares Vallis · Pathfinder landing site",
+    locationLabel: "Ares Vallis · final point unknown",
+    locationDetail: "Sojourner explored near the Pathfinder lander in Ares Vallis. Its final position is not plotted.",
+    objective: "Demonstrate rover mobility and examine nearby Martian rocks and soil with cameras and instruments.",
+    status: "Historical · deployment date approximate", statusType: "ended",     note: "The lander arrived on 4 July; Sojourner was deployed about two days later.",
+    confidence: "Mission chronology and rover objectives from NASA/JPL Pathfinder records.", source: "https://www.jpl.nasa.gov/missions/mars-pathfinder-sojourner-rover/",
+    sourceLabel: "NASA/JPL · Pathfinder and Sojourner", markerType: "surface",
   },
   {
     id: "odyssey", year: 2001, name: "2001 Mars Odyssey", kind: "Orbiter",
-    agency: "NASA · United States", launch: "Not supplied in audit notes", arrival: "Not supplied in audit notes",
-    coordinates: null, location: "Mars orbit · no surface object associated", objective: "Not supplied in audit notes.",
+    agency: "NASA · United States", launch: "7 Apr 2001 · launched", arrival: "24 Oct 2001 · Mars orbit insertion",
+    coordinates: null, location: "Mars orbit · no surface object associated", objective: "Map surface elements and minerals, search for water ice, and measure the radiation environment.",
     status: `Operating · agency status reviewed ${sourceDate}`, statusType: "active", note: "Orbiter status is time-sensitive. This is a dated status, not a guarantee of future operations.",
-    confidence: "NASA status cited in supplied audit notes", source: "https://science.nasa.gov/mission/odyssey/",
-    sourceLabel: "NASA mission page", markerType: "orbiter",
+    confidence: `NASA mission profile; operating status checked ${sourceDate}.`, source: "https://science.nasa.gov/mission/odyssey/",
+    sourceLabel: "NASA · 2001 Mars Odyssey", markerType: "orbiter",
   },
   {
     id: "opportunity", year: 2004, name: "Opportunity", kind: "Mars Exploration Rover · rover",
-    agency: "NASA · United States", launch: "Not supplied in audit notes", arrival: "Not supplied in audit notes",
-    coordinates: null, location: "Final coordinates not supplied in audit notes",
-    locationLabel: "final point unknown",
-    locationDetail: "The supplied notes do not include Opportunity's final coordinates or a verified end-of-mission map point.",
-    objective: "Not supplied in audit notes.",
-    status: "Historical · end date not supplied", statusType: "ended", note: "Opportunity remains the longest-operating Mars rover at 5,111 sols. Its 45.16 km driving record was surpassed by Perseverance on 11 Oct 2026.",
-    confidence: "NASA achievement correction in supplied audit notes", source: "https://science.nasa.gov/blogs/perseverance-mars-rover/2026/10/12/nasas-perseverance-sets-off-world-record-for-total-distance-driven/",
-    sourceLabel: "NASA distance record", markerType: "surface",
+    agency: "NASA · United States", launch: "7 Jul 2003 · launched", arrival: "25 Jan 2004 · landed at Meridiani Planum",
+    coordinates: null, location: "Meridiani Planum · ended in Perseverance Valley",
+    locationLabel: "Meridiani Planum · final point schematic",
+    locationDetail: "Opportunity landed at Meridiani Planum and later reached Endeavour Crater; its final position was in Perseverance Valley. The marker is schematic.",
+    objective: "Search for evidence of past water and characterize the geology and soils of Mars.",
+    status: "Mission ended · declared 13 Feb 2019", statusType: "ended", note: "NASA ended the mission after repeated attempts to contact the rover failed following the 2018 global dust storm. Opportunity operated for 5,111 sols; Perseverance surpassed its driving-distance record in 2026.",
+    confidence: "NASA/JPL Opportunity mission record and 2026 rover-distance update.", source: "https://science.nasa.gov/mission/mer-opportunity/",
+    sourceLabel: "NASA · Opportunity", markerType: "surface",
   },
   {
     id: "mro", year: 2006, name: "Mars Reconnaissance Orbiter", kind: "Orbiter",
-    agency: "NASA · United States", launch: "Not supplied in audit notes", arrival: "Not supplied in audit notes",
-    coordinates: null, location: "Mars orbit · no surface object associated", objective: "Not supplied in audit notes.",
+    agency: "NASA · United States", launch: "12 Aug 2005 · launched", arrival: "10 Mar 2006 · Mars orbit insertion",
+    coordinates: null, location: "Mars orbit · no surface object associated", objective: "Study Mars' geology, climate, and water history with high-resolution imaging and radar, and support surface missions.",
     status: `Operating · agency status reviewed ${sourceDate}`, statusType: "active", note: "Orbiter status is time-sensitive. This is a dated status, not a guarantee of future operations.",
-    confidence: "NASA status cited in supplied audit notes", source: "https://www.jpl.nasa.gov/missions/mars-reconnaissance-orbiter-mro/",
-    sourceLabel: "JPL mission page", markerType: "orbiter",
+    confidence: `NASA/JPL mission profile; operating status checked ${sourceDate}.`, source: "https://www.jpl.nasa.gov/missions/mars-reconnaissance-orbiter-mro/",
+    sourceLabel: "NASA/JPL · Mars Reconnaissance Orbiter", markerType: "orbiter",
   },
   {
     id: "curiosity", year: 2012, name: "Curiosity", kind: "Mars Science Laboratory · rover",
-    agency: "NASA · United States", launch: "Not supplied in audit notes", arrival: "Not supplied in audit notes",
-    coordinates: null, location: "Landing / current coordinates not supplied in audit notes",
-    locationLabel: "Mount Sharp · point unknown",
-    locationDetail: "The notes report a 1 km elevation gain on Mount Sharp as of 26 Aug 2026. Landing and current coordinates are not supplied.",
-    objective: "Not supplied in audit notes.",
-    status: `Operating · NASA status reviewed ${sourceDate}`, statusType: "active", note: "The audit notes report 1 km of elevation gain on Mount Sharp as of 26 Aug 2026. Its exact current position is not supplied.",
-    confidence: "NASA status and dated milestone cited in supplied audit notes", source: "https://science.nasa.gov/mars/curiosity-reaches-1-kilometer-elevation-gain/",
-    sourceLabel: "NASA milestone", markerType: "surface",
+    agency: "NASA · United States", launch: "26 Nov 2011 · launched", arrival: "6 Aug 2012 · landed in Gale Crater",
+    coordinates: null, location: "Gale Crater · exploring Mount Sharp",
+    locationLabel: "Gale Crater · point schematic",
+    locationDetail: "Curiosity landed in Gale Crater and is climbing Mount Sharp. The current rover position is not represented by the schematic marker.",
+    objective: "Determine whether ancient Mars had environments capable of supporting microbial life and study its geology and climate.",
+    status: `Operating · NASA status reviewed ${sourceDate}`, statusType: "active", note: "NASA reported 1 km of elevation gain on Mount Sharp as of 26 Aug 2026. The schematic marker does not indicate Curiosity's current position.",
+    confidence: "Mission dates and science goals from NASA/JPL; recent status and elevation milestone from NASA.", source: "https://science.nasa.gov/mission/msl-curiosity/",
+    sourceLabel: "NASA · Mars Science Laboratory / Curiosity", markerType: "surface",
   },
   {
     id: "perseverance", year: 2021, name: "Perseverance", kind: "Mars 2020 · rover",
-    agency: "NASA · United States", launch: "Not supplied in audit notes", arrival: "Not supplied in audit notes",
-    coordinates: null, location: "Jezero region · landing / current coordinates not supplied",
-    locationLabel: "Jezero region only",
-    locationDetail: "The supplied data identifies the Jezero region only; it does not provide landing or current coordinates. The Three Forks depot is listed separately.",
-    objective: "Not supplied in audit notes.",
+    agency: "NASA · United States", launch: "30 Jul 2020 · launched", arrival: "18 Feb 2021 · landed in Jezero Crater",
+    coordinates: null, location: "Jezero Crater · current position schematic",
+    locationLabel: "Jezero Crater · point schematic",
+    locationDetail: "Perseverance landed in Jezero Crater. The rover is mobile, so this schematic marker does not indicate its current position; Three Forks is listed separately.",
+    objective: "Search for signs of ancient microbial life, study geology and climate, and collect samples for possible return to Earth.",
     status: `Operating · NASA status reviewed ${sourceDate}`, statusType: "active", note: "NASA recorded 45.22 km driven on 11 Oct 2026, surpassing Opportunity's driving-distance record. This is a dated figure, not a current total. The Three Forks depot's final tube was deposited 28 Jan 2023; completion was confirmed 29 Jan 2023.",
-    confidence: "NASA status and dated achievements cited in supplied audit notes", source: "https://science.nasa.gov/blogs/perseverance-mars-rover/2026/10/12/nasas-perseverance-sets-off-world-record-for-total-distance-driven/",
-    sourceLabel: "NASA distance record", markerType: "surface",
+    confidence: "Mission dates and science goals from NASA/JPL; recent status and milestones from NASA.", source: "https://science.nasa.gov/mission/mars-2020-perseverance/",
+    sourceLabel: "NASA · Mars 2020 / Perseverance", markerType: "surface",
   },
   {
     id: "maven", year: 2014, name: "MAVEN", kind: "Orbiter · atmospheric science",
-    agency: "NASA · United States", launch: "Not supplied in audit notes", arrival: "21 Sep 2014 · orbit insertion",
-    coordinates: null, location: "Mars orbit · post-failure orbital fate uncertain", objective: "Not supplied in audit notes.",
+    agency: "NASA · United States", launch: "18 Nov 2013 · launched", arrival: "21 Sep 2014 · Mars orbit insertion",
+    coordinates: null, location: "Mars orbit · post-failure orbital fate uncertain", objective: "Study the upper atmosphere and how solar-wind interactions drive atmospheric loss, revealing Mars' climate history.",
     status: "Ended · declared 3 Jun 2026", statusType: "ended", note: "Last signal: 6 Dec 2025 after passing behind Mars. NASA concluded it was not recoverable. It completed more than 11 years in orbit. No confirmed impact or surface location.",
-    confidence: "NASA status correction in supplied audit notes", source: "https://science.nasa.gov/mission/maven/",
-    sourceLabel: "NASA mission page", markerType: "orbiter",
+    confidence: "NASA mission profile and status update.", source: "https://science.nasa.gov/mission/maven/",
+    sourceLabel: "NASA · MAVEN", markerType: "orbiter",
   },
   {
     id: "hope", year: 2021, name: "Hope", kind: "Orbiter · Emirates Mars Mission",
-    agency: "UAE Space Agency · United Arab Emirates", launch: "Not supplied in audit notes", arrival: "Not supplied in audit notes",
-    coordinates: null, location: "Mars orbit · no surface object associated", objective: "Not supplied in audit notes.",
-    status: "Operating · extension announced through 2028", statusType: "active", note: "Mission extension announced 17 Feb 2026. The supplied audit notes do not provide orbital coordinates or full science objectives.",
-    confidence: "UAE announcement cited in supplied audit notes", source: "https://www.wam.ae/en/article/bysbi4j-uae-space-agency-announces-extension-emirates-mars",
-    sourceLabel: "WAM announcement", markerType: "orbiter",
+    agency: "UAE Space Agency · United Arab Emirates", launch: "19 Jul 2020 · launched", arrival: "9 Feb 2021 · Mars orbit insertion",
+    coordinates: null, location: "Mars orbit · no surface object associated", objective: "Observe the Martian atmosphere globally across daily and seasonal cycles, including weather and links between its lower and upper layers.",
+    status: "Operating · extension announced through 2028", statusType: "active", note: "Mission extension announced 17 Feb 2026. The orbit shown is schematic; it is not a live spacecraft position.",
+    confidence: "Emirates Mars Mission profile and UAE extension announcement.", source: "https://www.wam.ae/en/article/bysbi4j-uae-space-agency-announces-extension-emirates-mars",
+    sourceLabel: "WAM · Emirates Mars Mission", markerType: "orbiter",
   },
   {
     id: "mars-express", year: 2003, name: "Mars Express", kind: "Orbiter",
-    agency: "ESA · European Space Agency", launch: "Not supplied in audit notes", arrival: "Not supplied in audit notes",
-    coordinates: null, location: "Mars orbit · no surface object associated", objective: "Not supplied in audit notes.",
+    agency: "ESA · European Space Agency", launch: "2 Jun 2003 · launched", arrival: "25 Dec 2003 · Mars orbit insertion",
+    coordinates: null, location: "Mars orbit · no surface object associated", objective: "Map the planet's surface and mineralogy, probe its subsurface, study the atmosphere, and investigate water's history.",
     status: `Operating · checked ${sourceDate}`, statusType: "active", note: "ESA's mission page identifies Mars Express as in operation. Status is dated and can change.",
-    confidence: "ESA status cited in supplied audit notes", source: "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express",
-    sourceLabel: "ESA mission page", markerType: "orbiter",
+    confidence: `ESA mission profile; operating status checked ${sourceDate}.`, source: "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express",
+    sourceLabel: "ESA · Mars Express", markerType: "orbiter",
   },
   {
     id: "mom", year: 2014, name: "Mars Orbiter Mission", kind: "Orbiter · Mangalyaan",
-    agency: "ISRO · India", launch: "Not supplied in audit notes", arrival: "Not supplied in audit notes",
-    coordinates: null, location: "Mars orbit · no surface object associated", objective: "Not supplied in audit notes.",
+    agency: "ISRO · India", launch: "5 Nov 2013 · launched", arrival: "24 Sep 2014 · Mars orbit insertion",
+    coordinates: null, location: "Mars orbit · no surface object associated", objective: "Demonstrate interplanetary mission capabilities and study Mars' surface, morphology, mineralogy, and atmosphere.",
     status: "Ended · declared 27 Sep 2022; update published 3 Oct", statusType: "ended", note: "Communication was lost after a long eclipse in April 2022. ISRO announced the end / non-recoverable status at a national meeting on 27 Sep; do not treat April as the formal end date.",
-    confidence: "ISRO sources cited in supplied audit notes", source: "https://www.isro.gov.in/MOM_NationalMeet_2022SEP.html",
-    sourceLabel: "ISRO mission update", markerType: "orbiter",
+    confidence: "ISRO mission profile and end-of-mission update.", source: "https://www.isro.gov.in/MOM_NationalMeet_2022SEP.html",
+    sourceLabel: "ISRO · Mars Orbiter Mission", markerType: "orbiter",
   },
   {
     id: "tgo", year: 2016, name: "ExoMars Trace Gas Orbiter", kind: "Orbiter",
-    agency: "ESA · European Space Agency", launch: "Not supplied in audit notes", arrival: "19 Oct 2016 · arrived at Mars",
-    coordinates: null, location: "Mars orbit · no surface object associated", objective: "Not supplied in audit notes.",
+    agency: "ESA · European Space Agency", launch: "14 Mar 2016 · launched", arrival: "19 Oct 2016 · Mars orbit insertion",
+    coordinates: null, location: "Mars orbit · no surface object associated", objective: "Measure atmospheric trace gases and water vapour to investigate Mars' present-day processes and climate history; relay data from surface missions.",
     status: `Operating · verified ${sourceDate}`, statusType: "active", note: "ESA marked ten years at Mars on 19 Oct 2026. Its 2026 material confirms that TGO remains in operation.",
-    confidence: "ESA status cited in supplied audit notes", source: "https://www.esa.int/Enabling_Support/Operations/A_Mars-velous_decade_Celebrating_ten_years_of_TGO",
-    sourceLabel: "ESA ten-year update", markerType: "orbiter",
+    confidence: "ESA science profile and 2026 ten-year status update.", source: "https://www.esa.int/Enabling_Support/Operations/A_Mars-velous_decade_Celebrating_ten_years_of_TGO",
+    sourceLabel: "ESA · Trace Gas Orbiter", markerType: "orbiter",
   },
   {
     id: "zhurong", year: 2021, name: "Zhurong", kind: "Rover",
-    agency: "CNSA · China", launch: "Not supplied in audit notes", arrival: "Not supplied in audit notes",
-    coordinates: null, location: "Landing / last-known coordinates not supplied in audit notes",
-    locationLabel: "landing point unavailable",
-    locationDetail: "Landing and last-known coordinates are not included in the supplied notes, so no precise surface point can be identified.",
-    objective: "Not supplied in audit notes.",
-    status: "Dormant · no confirmed reactivation", statusType: "dormant", note: "The audit notes say the rover entered hibernation in May 2022 and did not resume expected communications. Its failure mechanism and future status are unconfirmed.",
-    confidence: "Operational status not independently verified in supplied audit notes", source: null,
-    sourceLabel: "Not independently verified", markerType: "surface",
+    agency: "CNSA · China", launch: "23 Jul 2020 · launched", arrival: "10 Feb 2021 · orbit insertion; landed 15 May",
+    coordinates: null, location: "Utopia Planitia · landing site",
+    locationLabel: "Utopia Planitia · point schematic",
+    locationDetail: "Zhurong landed in Utopia Planitia. Its surface marker is schematic and does not represent a last-known rover position.",
+    objective: "Survey surface geology and soil, search for water ice, and study the local environment and atmosphere.",
+    status: "Dormant · no confirmed reactivation", statusType: "dormant", note: "The rover entered hibernation in May 2022 and did not resume expected communications. Its failure mechanism and future status remain unconfirmed.",
+    confidence: "Dates and mission objectives from CNSA mission reporting; dormant status remains unconfirmed.", source: "https://www.cnsa.gov.cn/english/n6465652/n6465653/c6811715/content.html",
+    sourceLabel: "CNSA · Tianwen-1 / Zhurong", markerType: "surface",
   },
   {
     id: "three-forks", year: 2022, name: "Three Forks sample depot", kind: "Perseverance sample depot · surface object",
     agency: "NASA · United States", launch: "Not applicable · depot", arrival: "First tube: 21 Dec 2022 · final tube: 28 Jan 2023",
     coordinates: null, location: "Jezero Crater · 10-tube depot; per-tube coordinates not included",
     locationLabel: "Jezero Crater · sample depot",
-    locationDetail: "The 10 tubes were laid out as a mapped zigzag pattern in Jezero Crater. Per-tube coordinates are not transcribed in the supplied notes.",
+    locationDetail: "The 10 tubes were laid out as a mapped zigzag pattern in Jezero Crater. The NASA depot map provides the per-tube locations; this archive does not plot individual tubes.",
     objective: "Preserve a mapped set of samples for possible future retrieval.",
     status: "Completed · NASA confirmed 29 Jan 2023", statusType: "ended", note: "Ten tubes: seven rock cores, one regolith sample, one atmospheric sample, and one witness tube. Each is about 18.6 cm long; tubes were laid out in a mapped zigzag pattern.",
-    confidence: "NASA depot map and completion announcement cited in supplied audit notes", source: "https://science.nasa.gov/resource/perseverances-three-forks-sample-depot-map/",
+    confidence: "NASA depot map and completion announcement.", source: "https://science.nasa.gov/resource/perseverances-three-forks-sample-depot-map/",
     sourceLabel: "NASA depot map", markerType: "surface",
   },
   {
     id: "escapade", year: 2025, name: "ESCAPADE", kind: "Twin-spacecraft science mission · en route",
     agency: "NASA · United States", launch: "Nov 2025 · launched", arrival: "Planned for Sep 2027 · not yet at Mars",
-    coordinates: null, location: "En route to Mars · not a Mars surface object", objective: "Not supplied in audit notes.",
+    coordinates: null, location: "En route to Mars · not a Mars surface object", objective: "Use twin orbiters to investigate how solar wind and Mars' magnetosphere interact and how atmospheric material escapes to space.",
     status: "En route · arrival planned, not achieved", statusType: "planned", note: "As of 14 Nov 2026 ESCAPADE is en route. It is not shown as a landed object or an orbital Mars mission.",
-    confidence: "NASA mission status cited in supplied audit notes", source: "https://science.nasa.gov/mission/escapade/",
+    confidence: "NASA mission profile; arrival remains planned, not achieved.", source: "https://science.nasa.gov/mission/escapade/",
     sourceLabel: "NASA mission page", markerType: "en-route",
   },
 ];
@@ -354,6 +354,7 @@ let markerElements = new Map();
 let satelliteModels = new Map();
 let satelliteOrbits = new Map();
 let orbitalPaths = new Map();
+let orbitalHighlights = new Map();
 let scene, camera, renderer, mars, clouds, stars;
 let drag = null;
 let previousFrameTime = null;
@@ -362,7 +363,7 @@ let autoRotation = !prefersReducedMotion.matches;
 let targetZoom = 4.15;
 
 const satelliteBusMaterial = new THREE.MeshStandardMaterial({ color: 0xb9a98b, metalness: .62, roughness: .42 });
-const satellitePanelMaterial = new THREE.MeshStandardMaterial({ color: 0x28517a, metalness: .55, roughness: .48, emissive: 0x0b1d32, emissiveIntensity: .35 });
+const satellitePanelMaterial = new THREE.MeshStandardMaterial({ color: 0x28517a, metalness: .55, roughness: .48, emissive: 0x0b1d32, emissiveIntensity: .2975 });
 const satelliteDetailMaterial = new THREE.MeshStandardMaterial({ color: 0xe7d2a7, metalness: .7, roughness: .38 });
 const surfaceMarkerDirections = [
   [-.42, .17, .89], [.48, .34, .81], [.63, -.14, .76], [-.67, -.27, .69],
@@ -432,7 +433,7 @@ function createScene() {
     new THREE.SphereGeometry(1.045, 72, 56),
     new THREE.ShaderMaterial({
       vertexShader: "varying vec3 vNormal; void main(){vNormal=normalize(normalMatrix*normal);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}",
-      fragmentShader: "varying vec3 vNormal; void main(){float rim=pow(0.72-dot(vNormal,vec3(0.0,0.0,1.0)),3.0);gl_FragColor=vec4(0.78,0.26,0.13,rim*0.35);}",
+      fragmentShader: "varying vec3 vNormal; void main(){float rim=pow(0.72-dot(vNormal,vec3(0.0,0.0,1.0)),3.0);gl_FragColor=vec4(0.78,0.26,0.13,rim*0.2975);}",
       blending: THREE.AdditiveBlending, side: THREE.BackSide, transparent: true, depthWrite: false,
     }),
   );
@@ -519,10 +520,25 @@ function createOrbitalSystem() {
     const orbitGeometry = new THREE.BufferGeometry().setFromPoints(orbitPoints);
     const orbit = new THREE.LineLoop(
       orbitGeometry,
-      new THREE.LineBasicMaterial({ color: 0xff5fa2, linewidth: 1, transparent: true, opacity: .192, depthWrite: false }),
+      new THREE.LineBasicMaterial({ color: 0xff5fa2, linewidth: 1, transparent: true, opacity: .1632, depthWrite: false }),
     );
     mars.add(orbit);
     orbitalPaths.set(mission.id, orbit);
+
+    const orbitCurve = new THREE.CatmullRomCurve3(orbitPoints, true, "centripetal");
+    const highlight = new THREE.Mesh(
+      new THREE.TubeGeometry(orbitCurve, 256, .00575, 6, true),
+      new THREE.MeshBasicMaterial({
+        color: 0xff5fa2,
+        transparent: true,
+        opacity: .255,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      }),
+    );
+    highlight.visible = false;
+    mars.add(highlight);
+    orbitalHighlights.set(mission.id, highlight);
 
     const phase = Math.random() * Math.PI * 2;
     const radial = orbitAxis.clone().multiplyScalar(Math.cos(phase))
@@ -698,7 +714,8 @@ function updateOrbitalFocus() {
     const inRange = mission.year >= currentStart && mission.year <= currentEnd;
     const active = inRange && missionId === selectedId;
     orbit.visible = inRange;
-    orbit.material.opacity = active ? .48 : selectedOrbiterInRange ? .02 : .035;
+    orbit.material.opacity = active ? .408 : selectedOrbiterInRange ? .017 : .02975;
+    orbitalHighlights.get(missionId).visible = active;
   });
 }
 
@@ -740,9 +757,9 @@ function renderMission() {
       <dl class="mission-facts">
         ${mission.locationDetail ? fact("LOCATION DETAIL", mission.locationDetail) : ""}
         ${fact("POINT STATUS", mission.coordinates === null
-        ? mission.markerType === "orbiter" ? "Orbit path is schematic; orbital coordinates are not supplied." : "Surface marker is schematic; site coordinates are not supplied."
+        ? mission.markerType === "orbiter" ? "Schematic orbit only; this is not a live spacecraft position." : mission.markerType === "en-route" ? "No Mars surface point while the spacecraft is en route." : "Schematic marker; exact landing or current position is not plotted."
         : "Coordinates available in project data.")}
-        ${fact("COORDINATES", mission.coordinates === null ? "Latitude: null · longitude: null · reference: not supplied" : "Coordinate reference not supplied")}
+        ${fact("COORDINATES", mission.coordinates === null ? "Not plotted in this archive; see the mission reference for location details." : "Coordinate reference not supplied")}
         ${fact("MISSION NOTE", mission.note)}
         ${fact("EVIDENCE", mission.confidence)}
         ${fact("REFERENCE", mission.source ? `<a href="${mission.source}" target="_blank" rel="noreferrer">${mission.sourceLabel} ↗</a>` : mission.sourceLabel)}
