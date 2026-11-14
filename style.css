@@ -171,13 +171,17 @@ body.intro-started .bottomline,
 body.intro-started .view-controls,
 body.intro-started .system-scale { animation: intro-copy .7s ease-out 2.75s both; }
 body.intro-started .planet-label { animation: intro-fade .55s ease-out 2.65s both; }
-body.intro-started .destination-prompt { animation: intro-copy .65s ease-out 2.95s both; }
+body.intro-started .destination-prompt { animation: intro-prompt .65s ease-out 2.95s both; }
 @keyframes intro-stars { from { opacity: 0; } to { opacity: 1; } }
 @keyframes intro-copy {
   from { opacity: 0; transform: translateY(9px); }
   to { opacity: 1; transform: translateY(0); }
 }
 @keyframes intro-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes intro-prompt {
+  from { opacity: 0; transform: translate(-50%, 9px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
 @keyframes intro-title {
   from { opacity: 0; clip-path: inset(0 50% 0 50%); letter-spacing: .42em; filter: blur(5px); }
   to { opacity: 1; clip-path: inset(0); letter-spacing: .1em; filter: blur(0); }
@@ -193,7 +197,7 @@ body.intro-started .destination-prompt { animation: intro-copy .65s ease-out 2.9
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #b3e4ff1b;
+  border-bottom: 0;
   background: linear-gradient(#03070dbf, #03070d14);
 }
 .brand {
@@ -420,7 +424,8 @@ body.intro-started .destination-prompt { animation: intro-copy .65s ease-out 2.9
   position: absolute;
   z-index: 4;
   left: 50%;
-  bottom: 17%;
+  top: 30%;
+  bottom: auto;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
@@ -585,9 +590,10 @@ body.intro-started .destination-prompt { animation: intro-copy .65s ease-out 2.9
 .view-controls {
   position: absolute;
   z-index: 5;
-  bottom: 14%;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 40%;
+  bottom: auto;
+  left: clamp(22px, 5vw, 80px);
+  transform: none;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -1041,7 +1047,8 @@ body.intro-started .destination-prompt { animation: intro-copy .65s ease-out 2.9
     padding-top: 12px;
   }
   .destination-prompt {
-    bottom: 21%;
+    top: 34%;
+    bottom: auto;
     font-size: 8px;
     padding: 11px 13px;
   }
@@ -1059,7 +1066,10 @@ body.intro-started .destination-prompt { animation: intro-copy .65s ease-out 2.9
     left: 68%;
   }
   .view-controls {
-    bottom: 10%;
+    top: 42%;
+    bottom: auto;
+    left: 18px;
+    transform: none;
     font-size: 8px;
   }
   .system-scale {
@@ -1188,10 +1198,14 @@ body.intro-started .destination-prompt { animation: intro-copy .65s ease-out 2.9
     width: min(286px, calc(100% - 28px));
   }
   .destination-prompt {
-    bottom: 18%;
+    top: 37%;
+    bottom: auto;
   }
   .view-controls {
-    bottom: 9%;
+    top: 43%;
+    bottom: auto;
+    left: 18px;
+    transform: none;
   }
   .object-list {
     grid-template-columns: 1fr;

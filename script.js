@@ -228,7 +228,7 @@
   function applyCamera(p){camera.position.set(p.x,p.y,p.z);camera.lookTargetX=p.tx;camera.lookTargetY=p.ty;camera.lookAt(p.tx,p.ty,0);}
   if('ResizeObserver'in window)new ResizeObserver(resize).observe(host);else addEventListener('resize',resize);
 
-  const openingHold=1.25,openingDuration=9;
+  const openingHold=.45,openingDuration=3;
   let flightStarted=false,flightTime=0,flightComplete=false,flightEndPose=null,paused=false,selected=null,focusTween=null,dragging=false,dragMoved=false,lastX=0,lastY=0,rotationY=.08,rotationX=.34;
   worldRoot.rotation.set(rotationX,rotationY,0);
   const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();
@@ -246,7 +246,7 @@
     setStage('02','DESTINATIONS IN RANGE','EARTH · MOON · MARS / SELECT TO IDENTIFY');
   }
   function ease(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;}
-  function easeZoom(t){return 1-Math.pow(1-t,2.2);}
+  function easeZoom(t){return ease(t);}
   function lerpPose(a,b,t){return{x:THREE.MathUtils.lerp(a.x,b.x,t),y:THREE.MathUtils.lerp(a.y,b.y,t),z:THREE.MathUtils.lerp(a.z,b.z,t),tx:THREE.MathUtils.lerp(a.tx,b.tx,t),ty:THREE.MathUtils.lerp(a.ty,b.ty,t)};}
   function worldPose(world){const mesh=meshes.get(world.name),position=worldRoot.localToWorld(mesh.position.clone());const x=position.x,y=position.y;return{x,y:y+1.2,z:world.name==='Moon'?6.4:world.name==='Mars'?8.5:9.5,tx:x,ty:y};}
   function moveCameraTo(pose,duration=1.7){focusTween={from:{x:camera.position.x,y:camera.position.y,z:camera.position.z,tx:camera.lookTargetX||0,ty:camera.lookTargetY||0},to:pose,time:0,duration};}
@@ -386,7 +386,7 @@
     if(orbiting){
       worlds.forEach(world=>{
         if(world.key==='sun'||world.key==='moon')return;
-        world.angle+=dt*world.orbitSpeed*.18;
+        world.angle+=dt*world.orbitSpeed*1.5;
         const mesh=meshes.get(world.name);mesh.position.set(Math.cos(world.angle)*world.orbitRadius,Math.sin(world.angle)*world.orbitRadius,0);
         if(mesh.userData.clouds)mesh.userData.clouds.position.copy(mesh.position);
         if(mesh.userData.halo)mesh.userData.halo.position.copy(mesh.position);
@@ -395,7 +395,7 @@
         if(orbitLines.has(world.name))orbitLines.get(world.name).rotation.z=0;
       });
       const earth=meshes.get('Earth').position,moon=meshes.get('Moon'),moonData=worlds[9];
-      moonData.angle+=dt*moonData.orbitSpeed*.18;
+      moonData.angle+=dt*moonData.orbitSpeed*1.5;
       moon.position.set(earth.x+Math.cos(moonData.angle)*moonData.orbitRadius,earth.y+Math.sin(moonData.angle)*moonData.orbitRadius,.18);
       moonOrbitLine.position.set(earth.x,earth.y,-.16);
       moonOrbitGlow.position.set(earth.x,earth.y,-.13);
@@ -403,7 +403,7 @@
       ['Earth','Moon','Mars'].forEach(name=>{const marker=targetRings.get(name);marker.position.copy(meshes.get(name).position);marker.position.z+=.08;});
     }
     if(!paused){
-      meshes.forEach(mesh=>{const world=mesh.userData.world;mesh.rotation.y+=dt*world.spin*.24;if(mesh.userData.clouds)mesh.userData.clouds.rotation.y+=dt*world.spin*.24*1.12;});
+      meshes.forEach(mesh=>{const world=mesh.userData.world;mesh.rotation.y+=dt*world.spin*.30;if(mesh.userData.clouds)mesh.userData.clouds.rotation.y+=dt*world.spin*.30*1.12;});
       stars.rotation.y+=dt*.003;
       targetRings.forEach((ring,name)=>{ring.material.opacity=.48+Math.sin(clock.elapsedTime*2.1+(name==='Mars'?1:0))*.16;});
       orbitGlows.forEach((glow,index)=>{glow.material.opacity=.032+Math.sin(clock.elapsedTime*.55+index*.8)*.018;});
