@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-name: Deploy static site to GitHub Pages
-=======
 
-name: Deploy to GitHub Pages
->>>>>>> a06440faf234b485a04b11044d8bb300fa99fde2
+name: Deploy static site to GitHub Pages
 
 on:
   push:
@@ -28,27 +24,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-<<<<<<< HEAD
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
-=======
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build site
-        run: npm run build
-
->>>>>>> a06440faf234b485a04b11044d8bb300fa99fde2
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -60,12 +39,8 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     runs-on: ubuntu-latest
-<<<<<<< HEAD
     needs: upload
-=======
-    needs: build
 
->>>>>>> a06440faf234b485a04b11044d8bb300fa99fde2
     permissions:
       pages: write
       id-token: write
