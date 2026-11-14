@@ -590,7 +590,7 @@ body.intro-started .destination-prompt { animation: intro-prompt-left .65s ease-
 .view-controls {
   position: absolute;
   z-index: 5;
-  top: calc(40% + 66px);
+  top: calc(32% + 44px);
   bottom: auto;
   left: clamp(22px, 5vw, 80px);
   transform: none;
@@ -1078,7 +1078,7 @@ body.intro-started .destination-prompt { animation: intro-prompt-left .65s ease-
     left: 68%;
   }
   .view-controls {
-    top: calc(40% + 66px);
+    top: calc(34% + 44px);
     bottom: auto;
     left: 18px;
     transform: none;
@@ -1217,7 +1217,7 @@ body.intro-started .destination-prompt { animation: intro-prompt-left .65s ease-
     left: 18px;
   }
   .view-controls {
-    top: calc(40% + 66px);
+    top: calc(37% + 44px);
     bottom: auto;
     left: 18px;
     transform: none;
