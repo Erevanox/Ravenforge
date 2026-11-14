@@ -185,41 +185,60 @@
   moonOrbitGlow.position.copy(moonOrbitLine.position);moonOrbitGlow.position.z=-.13;moonOrbitGlow.scale.set(0,0,1);worldRoot.add(moonOrbitGlow);
   function setFocusedScene(active){
     meshes.forEach((mesh,name)=>{
-      const keep=active?destinations.includes(name):true;
+      const keep=active?destinations.includes(name):(!mobileFocus||destinations.includes(name));
       mesh.visible=keep;
       if(mesh.userData.halo)mesh.userData.halo.visible=keep;
       if(mesh.userData.clouds)mesh.userData.clouds.visible=keep;
       if(mesh.userData.atmosphere)mesh.userData.atmosphere.visible=keep;
       if(mesh.userData.planetRings)mesh.userData.planetRings.visible=keep;
     });
-    orbitLines.forEach(line=>line.visible=!active);
-    orbitGlows.forEach(line=>line.visible=!active);
-    moonOrbitLine.visible=active;
-    moonOrbitGlow.visible=active;
-    sunGlow.visible=!active;
-    document.querySelectorAll('.planet-label').forEach(label=>{label.hidden=active&&!destinations.includes(label.dataset.planetLabel);});
+    orbitLines.forEach((line,name)=>{line.visible=!active&&(!mobileFocus||destinations.includes(name));});
+    orbitGlows.forEach((line,name)=>{line.visible=!active&&(!mobileFocus||destinations.includes(name));});
+    moonOrbitLine.visible=active||mobileFocus;
+    moonOrbitGlow.visible=active||mobileFocus;
+    sunGlow.visible=!active&&!mobileFocus;
+    document.querySelectorAll('.planet-label').forEach(label=>{label.hidden=(active||mobileFocus)&&!destinations.includes(label.dataset.planetLabel);});
     document.getElementById('space-view').classList.toggle('destination-selected',active);
   }
 
   // A decorative orbital route visually ties the three homepage destinations together.
   // Camera framing scales the complete orbital system to the available screen width.
-  let viewWidth=1,viewHeight=1,baseRootScale=1;
+  let viewWidth=1,viewHeight=1,baseRootScale=1,mobileFocus=false,mobileFlightPose=null;
   const cameraState={x:0,y:0,z:1,tx:0,ty:0};
   function resize(){
     const w=host.clientWidth||innerWidth,h=host.clientHeight||innerHeight,aspect=w/h;
     renderer.setSize(w,h,false);camera.aspect=aspect;camera.updateProjectionMatrix();
+    mobileFocus=aspect<.8;
     baseRootScale=aspect<1.1?Math.max(.36,aspect/1.35):1;
     worldRoot.scale.setScalar(baseRootScale);
     const halfFov=THREE.MathUtils.degToRad(camera.fov/2);
-    const worldHalfWidth=43*baseRootScale;
-    const halfHeight=43*baseRootScale;
-    const fitDistance=Math.max(worldHalfWidth/Math.max(aspect,.01),halfHeight)/Math.tan(halfFov);
     viewWidth=aspect;viewHeight=h;
-    overviewPose.z=Math.max(34,fitDistance*1.12);
+    if(mobileFocus){
+      const points=destinations.map(name=>{
+        const world=worlds.find(item=>item.name===name);
+        const position=worldRoot.localToWorld(meshes.get(name).position.clone());
+        return{x:position.x,y:position.y,r:world.r*baseRootScale};
+      });
+      const minX=Math.min(...points.map(point=>point.x-point.r)),maxX=Math.max(...points.map(point=>point.x+point.r));
+      const minY=Math.min(...points.map(point=>point.y-point.r)),maxY=Math.max(...points.map(point=>point.y+point.r));
+      const centerX=(minX+maxX)/2,centerY=(minY+maxY)/2;
+      const halfWidth=(maxX-minX)/2,halfHeight=(maxY-minY)/2;
+      const trioDistance=Math.max(halfWidth/(Math.max(aspect,.01)*Math.tan(halfFov)),halfHeight/Math.tan(halfFov));
+      mobileFlightPose={x:centerX,y:centerY,z:Math.max(15,trioDistance*1.12),tx:centerX,ty:centerY};
+      Object.assign(overviewPose,{x:centerX,y:centerY,tx:centerX,ty:centerY,z:Math.max(22,mobileFlightPose.z*1.3)});
+    }else{
+      const worldHalfWidth=43*baseRootScale;
+      const halfHeight=43*baseRootScale;
+      const fitDistance=Math.max(worldHalfWidth/Math.max(aspect,.01),halfHeight)/Math.tan(halfFov);
+      mobileFlightPose=null;
+      Object.assign(overviewPose,{x:0,y:0,tx:0,ty:0,z:Math.max(34,fitDistance*1.12)});
+    }
+    setFocusedScene(Boolean(selected));
     if(!flightStarted){applyCamera(overviewPose);}
   }
   const overviewPose={x:0,y:0,z:70,tx:0,ty:0};
   function innerSystemPose(){
+    if(mobileFocus&&mobileFlightPose)return mobileFlightPose;
     const earth=worldRoot.localToWorld(meshes.get('Earth').position.clone());
     const mars=worldRoot.localToWorld(meshes.get('Mars').position.clone());
     const x=(earth.x+mars.x)/2,y=(earth.y+mars.y)/2;
