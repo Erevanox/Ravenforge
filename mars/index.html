@@ -16,7 +16,7 @@
       href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20261115.3" />
+    <link rel="stylesheet" href="./styles.css?v=20261115.4" />
     <link rel="stylesheet" href="../shared/site-nav.css" />
     <script src="../shared/site-nav.js"></script>
     <script type="importmap">
@@ -26,7 +26,7 @@
         }
       }
     </script>
-    <script type="module" src="./app.js?v=20261115.36"></script>
+    <script type="module" src="./app.js?v=20261115.37"></script>
   </head>
   <body>
     <div class="app-shell">
@@ -78,8 +78,8 @@
               <div class="scene-hint">DRAG TO ROTATE <span class="hint-divider">·</span> SCROLL TO ZOOM</div>
               <div class="scale-label"><span></span> MARS / NOT TO SCALE</div>
             </div>
-            <aside class="archive-telemetry" id="archive-telemetry" aria-label="Archive telemetry">
-              <div class="telemetry-title"><span aria-hidden="true">⊕</span> ARCHIVE TELEMETRY <button class="telemetry-collapse" id="telemetry-toggle" type="button" aria-label="Collapse archive telemetry" aria-controls="telemetry-details" aria-expanded="true">−</button></div>
+            <aside class="archive-telemetry is-collapsed" id="archive-telemetry" aria-label="Archive telemetry">
+              <div class="telemetry-title"><span class="telemetry-symbol" aria-hidden="true">⊕</span><span class="telemetry-label">ARCHIVE TELEMETRY</span><button class="telemetry-collapse" id="telemetry-toggle" type="button" aria-label="Expand archive telemetry" aria-controls="telemetry-details" aria-expanded="false">+</button></div>
               <div id="telemetry-details">
                 <div><span>RECORDS IN RANGE</span><strong id="visible-count">08</strong></div>
                 <div><span>SURFACE LOCATIONS</span><strong id="surface-count">0</strong></div>
