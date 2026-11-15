@@ -230,7 +230,7 @@
 
   // A decorative orbital route visually ties the three homepage destinations together.
   // Camera framing scales the complete orbital system to the available screen width.
-  let viewWidth=1,viewHeight=1,baseRootScale=1,mobileFocus=false,mobileFlightPose=null;
+  let viewWidth=1,viewHeight=1,baseRootScale=1,mobileFocus=false,mobileFlightPose=null,cameraPanned=false;
   const cameraState={x:0,y:0,z:1,tx:0,ty:0};
   function resize(){
     const w=host.clientWidth||innerWidth,h=host.clientHeight||innerHeight,aspect=w/h;
@@ -316,7 +316,7 @@
   function chooseDestination(world){
     if(!world||!destinations.includes(world.name))return;
     setHoveredPlanet(null);
-    selected=world;setFocusedScene(true);prompt.classList.add('visible');
+    selected=world;cameraPanned=false;setFocusedScene(true);prompt.classList.add('visible');
     document.querySelectorAll('.planet-label').forEach(el=>el.classList.toggle('selected',el.dataset.planetLabel===world.name));
     document.getElementById('destination-class').innerHTML=`${world.type}<span> · </span>${world.number}`;
     document.getElementById('destination-name').textContent=world.name.toUpperCase();
@@ -393,7 +393,19 @@
       }
     }
     if(hoverCard.contains(event.target)){clearTimeout(hoverDismissTimer);return;}
-    if(dragging){const dx=event.clientX-lastX,dy=event.clientY-lastY;if(Math.abs(dx)+Math.abs(dy)>2)dragMoved=true;rotationY+=dx*.004;rotationX=THREE.MathUtils.clamp(rotationX+dy*.003,-.85,.85);lastX=event.clientX;lastY=event.clientY;worldRoot.rotation.set(rotationX,rotationY,0);return;}
+    if(dragging){const dx=event.clientX-lastX,dy=event.clientY-lastY;if(Math.abs(dx)+Math.abs(dy)>2)dragMoved=true;
+      if(event.pointerType==='touch'){
+        focusTween=null;
+        if(!flightComplete&&!selected){flightComplete=true;updateDestinationReadiness();}
+        const worldPerPixel=2*camera.position.z*Math.tan(THREE.MathUtils.degToRad(camera.fov/2))/host.clientHeight;
+        camera.lookTargetX=(camera.lookTargetX||0)-dx*worldPerPixel;camera.lookTargetY=(camera.lookTargetY||0)+dy*worldPerPixel;
+        camera.position.x-=dx*worldPerPixel;camera.position.y+=dy*worldPerPixel;cameraPanned=true;
+        camera.lookAt(camera.lookTargetX,camera.lookTargetY,0);
+      }else{
+        rotationY+=dx*.004;rotationX=THREE.MathUtils.clamp(rotationX+dy*.003,-.85,.85);worldRoot.rotation.set(rotationX,rotationY,0);
+      }
+      lastX=event.clientX;lastY=event.clientY;return;
+    }
     const rect=renderer.domElement.getBoundingClientRect();pointer.set(((event.clientX-rect.left)/rect.width)*2-1,-((event.clientY-rect.top)/rect.height)*2+1);raycaster.setFromCamera(pointer,camera);
     const hit=raycaster.intersectObjects(Array.from(meshes.values()).filter(mesh=>mesh.userData.isDestination),false)[0];
     if(hit)setHoveredPlanet(hit.object);else if(infoWorld)scheduleHoverDismiss();else setHoveredPlanet(null);
@@ -447,10 +459,10 @@
     setTimeout(()=>{button.textContent='COPY';},1400);
   }));
   document.getElementById('close-explore').addEventListener('click',()=>{const overlay=document.getElementById('explore-overlay');overlay.classList.remove('open');overlay.setAttribute('aria-hidden','true');setStage('03',selected.name.toUpperCase()+' / TARGET LOCKED','DESTINATION IDENTIFIED · SELECT EXPLORE TO OPEN THE ARCHIVE');});
-  document.getElementById('close-destination').addEventListener('click',()=>{document.getElementById('destination-card').classList.remove('open');document.getElementById('destination-card').setAttribute('aria-hidden','true');selected=null;setFocusedScene(false);document.querySelectorAll('.planet-label').forEach(el=>el.classList.remove('selected'));moveCameraTo(overviewPose,1.8);updateDestinationReadiness();});
+  document.getElementById('close-destination').addEventListener('click',()=>{document.getElementById('destination-card').classList.remove('open');document.getElementById('destination-card').setAttribute('aria-hidden','true');selected=null;cameraPanned=false;setFocusedScene(false);document.querySelectorAll('.planet-label').forEach(el=>el.classList.remove('selected'));moveCameraTo(overviewPose,1.8);updateDestinationReadiness();});
   document.getElementById('reset-view').addEventListener('click',()=>{
     setHoveredPlanet(null);enterDestination.disabled=true;
-    selected=null;setFocusedScene(false);focusTween=null;flightTime=0;flightComplete=false;flightEndPose=null;flightStarted=true;rotationY=.08;rotationX=.34;worldRoot.rotation.set(rotationX,rotationY,0);
+    selected=null;cameraPanned=false;setFocusedScene(false);focusTween=null;flightTime=0;flightComplete=false;flightEndPose=null;flightStarted=true;rotationY=.08;rotationX=.34;worldRoot.rotation.set(rotationX,rotationY,0);
     document.getElementById('destination-card').classList.remove('open');document.getElementById('destination-card').setAttribute('aria-hidden','true');
     const overlay=document.getElementById('explore-overlay');overlay.classList.remove('open');overlay.setAttribute('aria-hidden','true');
     document.querySelectorAll('.planet-label').forEach(el=>el.classList.remove('selected','visible'));prompt.classList.remove('visible');
@@ -493,7 +505,7 @@
       if(progress>=1){flightComplete=true;updateDestinationReadiness();}
     }
     if(focusTween){focusTween.time+=dt;const t=THREE.MathUtils.clamp(focusTween.time/focusTween.duration,0,1);applyCamera(lerpPose(focusTween.from,focusTween.to,ease(t)));if(t>=1)focusTween=null;}
-    camera.lookTargetX=selected&&focusTween===null?worldPose(selected).tx:camera.lookTargetX||0;
+    camera.lookTargetX=selected&&focusTween===null&&!cameraPanned?worldPose(selected).tx:camera.lookTargetX||0;
     updateScreenLabels();
     meshes.forEach(mesh=>{
       if(mesh.userData.isDestination&&mesh.material.emissive){mesh.material.emissive.set(0x000000);mesh.material.emissiveIntensity=0;}

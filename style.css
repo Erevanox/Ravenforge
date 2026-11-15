@@ -1014,10 +1014,7 @@ body.intro-started .destination-prompt {
     top: auto;
     bottom: 116px;
   }
-  .view-controls {
-    top: auto;
-    bottom: 72px;
-  }
+  .view-controls { display: none; }
   .mobile-zoom-controls {
     position: absolute;
     z-index: 5;
