@@ -1,0 +1,1433 @@
+# lunar_database.txt
+
+**LUNAR HERITAGE DATABASE: 26 SURFACE / ORBITAL RECORDS + MISSION EVENTS (1959–2026)**
+Prepared for: NASA Space Apps Challenge, interactive 3D Moon heritage explorer
+
+---
+
+## 1. RESEARCH METHODOLOGY AND SOURCE RELIABILITY
+
+**1.1 Important limitations (read first)**
+- This revised edition retains the original research as its starting point and adds a targeted source check against current NASA and ISRO mission pages. This is **not a complete independent verification of every technical value or URL**. Items not directly checked remain labelled approximate, uncertain, or requiring verification.
+- Where I was not confident of a number, I wrote "approx.", "Not publicly confirmed" or "Unknown". Nothing was filled in by guesswork.
+- **Before shipping:** open every URL, and confirm coordinates marked "Approximate" against the LROC or NASA documents.
+
+**1.2 Source hierarchy**
+1. Mission documentation and agency archives: NASA NSSDCA Master Catalog, the Apollo Lunar Surface Journal (ALSJ), Apollo Preliminary Science Reports, NASA LRO/LROC releases, ISRO, JAXA, ESA, Intuitive Machines, SpaceIL.
+2. Peer-reviewed publications (cited by journal and volume where I am confident).
+3. Wikipedia was used only as a secondary index to cross-check coordinates and dates. It is never the sole source for a key fact.
+
+**1.3 Conventions**
+- Dates and times are UTC unless stated. Local-time conversions are marked.
+- Coordinates are decimal degrees: **latitude N positive, S negative; longitude E positive, W negative** (range −180 to +180). State the lunar reference system / convention when available. Do not infer accuracy from decimal places. A rover's last position must not be replaced with its lander's coordinates.
+- **Location accuracy:**
+  - *Exact* = identified in LRO/LROC or similar orbital imagery, good to tens of metres.
+  - *Approximate* = from mission navigation or older catalogues, good to roughly 0.01°–1°.
+  - *Unknown* = not publicly confirmed.
+- Orbiters have **no fixed surface coordinates** (Rule 5). Where an orbiter ended in a deliberate or accidental impact, the impact site is listed separately as an event location.
+- **Mission type vocabulary:** Orbital mission | Successful soft landing | Failed landing (crash) | Deliberate impact | Rover.
+- **Timeline block (every record):** first presence at the Moon, last known presence, still present (Yes/No/Partly), and confidence (Confirmed/Uncertain). "Presence" means the physical object. "Operational life" is listed separately.
+
+**1.4 Selection and co-location rule**
+- The original 30 entries are **not all single physical objects**. Several are mission-level groupings that combine a lander, rover, orbiter, or impactor. Treat each entry as a research record, then create separate component objects in the application data model whenever the components have distinct coordinates, dates, or statuses.
+- Examples requiring component-level separation in the app: Chandrayaan-1 orbiter vs. Moon Impact Probe; Chandrayaan-2 orbiter vs. Vikram lander/debris (Pragyan remained aboard and was not deployed); Chandrayaan-3 Vikram vs. Pragyan.
+- Additions in this revision: Blue Ghost Mission 1 and IM-2 Athena (2025). Artemis II (2026) is included as a lunar flyby event only; it did not leave a surface object.
+
+---
+
+## 2. SUMMARY TABLE
+
+The original 30 records are retained; Records 31–32 are added in Section 8. Year = arrival at the Moon. Signed decimal degrees. "N/A" = orbiter with no fixed surface location. Mission-level records may contain multiple components; see Section 8.5.
+
+| ID | Object Name | Category | Country | Year | Latitude | Longitude | Status |
+|----|-------------|----------|---------|------|----------|-----------|--------|
+| 1 | Luna 2 | Impactor (hard impact) | USSR | 1959 | 29.1 (approx.) | 0.0 (approx.) | Impact debris; site not imaged |
+| 2 | Luna 9 | Lander (first soft landing) | USSR | 1966 | 7.08 | −64.37 | On surface, inactive |
+| 3 | Surveyor 3 | Lander | USA | 1967 | −3.0162 | −23.4181 | On surface, inactive (parts returned 1969) |
+| 4 | Apollo 11, Tranquility Base | Landing site (crewed) | USA | 1969 | 0.6741 | 23.4730 | Descent stage and artifacts remain |
+| 5 | Apollo 11 LRRR | Scientific equipment | USA | 1969 | 0.6741 (site) | 23.4730 (site) | On surface; passive, still usable |
+| 6 | Apollo 12 (Ocean of Storms) | Landing site (crewed) | USA | 1969 | −3.0124 | −23.4216 | Descent stage and ALSEP remain |
+| 7 | Luna 16 | Lander (robotic sample return) | USSR | 1970 | −0.68 | 56.30 | Descent stage on surface |
+| 8 | Lunokhod 1 (Luna 17) | Rover | USSR | 1970 | 38.33 | −35.01 | On surface; reflector still usable |
+| 9 | Apollo 15 (Hadley–Apennine) | Landing site (crewed) | USA | 1971 | 26.1322 | 3.6333 | Descent stage, ALSEP, LRRR remain |
+| 10 | Apollo 15 LRV-1 | Rover (crewed) | USA | 1971 | 26.13 (approx.) | 3.63 (approx.) | On surface, parked |
+| 11 | Apollo 17 (Taurus–Littrow) | Landing site (crewed) | USA | 1972 | 20.1908 | 30.7717 | Descent stage, ALSEP, LRV-3 remain |
+| 12 | Lunokhod 2 (Luna 21) | Rover | USSR | 1973 | 25.85 (approx.) | 30.45 (approx.) | On surface, inactive |
+| 13 | Lunar Prospector | Orbiter | USA | 1998 | N/A (orbiter) | N/A | Ended by deliberate impact 1999 |
+| 14 | SMART-1 | Orbiter | ESA | 2004 | N/A (orbiter) | N/A | Ended by deliberate impact 2006 |
+| 15 | Kaguya (SELENE) | Orbiter | Japan | 2007 | N/A (orbiter) | N/A | Ended by deliberate impact 2009 |
+| 17 | Chandrayaan-1 (+MIP) | Orbiter + impactor | India | 2008 | N/A (orbiter) | N/A | Contact lost 2009; MIP impacted 2008 |
+| 18 | Lunar Reconnaissance Orbiter | Orbiter | USA | 2009 | N/A (orbiter) | N/A | Active mission (NASA page checked 2026) |
+| 22 | Beresheet | Failed landing (crash) | Israel | 2019 | 32.5956 | 19.3496 | Wreckage on surface |
+| 23 | Chandrayaan-2 Vikram | Failed landing (crash) | India | 2019 | −70.8810 | 22.7840 | Wreckage on surface |
+| 25 | Danuri (KPLO) | Orbiter | South Korea | 2022 | N/A (orbiter) | N/A | Orbital mission; current operational status requires dated KARI confirmation |
+| 26 | Chandrayaan-3 Vikram | Lander | India | 2023 | −69.3733 | 32.3189 | On surface, dormant |
+| 27 | Pragyan | Rover | India | 2023 | Approximate; use traverse/parking coordinate if sourced | Approximate; use traverse/parking coordinate if sourced | On surface, dormant after lunar night; exact final position requires source |
+| 28 | SLIM | Lander (precision) | Japan | 2024 | −13.3 | 25.2 | On surface, mission ended |
+| 29 | IM-1 Odysseus | Lander (commercial) | USA | 2024 | −80.1304 | 1.4378 | On surface, mission ended |
+| 31 | Blue Ghost Mission 1 | Lander | USA | 2025 | Unknown pending coordinate verification | Unknown pending coordinate verification | On surface; mission concluded |
+| 32 | IM-2 Athena | Lander | USA | 2025 | Unknown pending coordinate verification | Unknown pending coordinate verification | On surface; limited operations; mission status should be dated |
+
+---
+
+## 3. DETAILED RECORDS
+
+---
+
+### Record 1: Luna 2
+
+**Basic Information**
+- Official name: Luna 2
+- Alternative name: Lunik 2; "Second Soviet Cosmic Rocket"
+- Object category: Impactor (hard impact; first human-made object to reach the Moon)
+- Country: USSR
+- Space agency: Soviet space programme (OKB-1 / Academy of Sciences)
+- Mission name: Luna 2
+
+**Historical Information**
+- Launch date: 12 Sep 1959, ~06:39 UTC (Baikonur)
+- Lunar arrival / landing / deployment date: 13 Sep 1959, ~21:02 UTC (impact)
+- Mission completion date: 13 Sep 1959 (ended at impact)
+- Historical significance: First human-made object to reach another celestial body.
+- Mission objective: Reach the Moon directly; measure radiation, magnetic field and the interplanetary environment; deliver Soviet pennants.
+- What happened during the mission: The probe flew a direct trajectory and transmitted until impact. Its instruments reported no significant lunar magnetic field and no radiation belt, and they supported the existence of the solar wind. This was a **hard impact, not a soft landing**.
+- Current status: Impact debris on the surface. The precise crater has not, to my knowledge, been definitively identified in orbital imagery.
+
+**Geographical Information**
+- Lunar latitude: ≈29.1°N
+- Lunar longitude: ≈0.0° (NSSDCA, approximate)
+- Landing site / lunar region: Near Palus Putredinis, between Aristides, Archimedes and Autolycus
+- Nearest recognizable crater: Autolycus / Aristides / Archimedes
+- Location accuracy: **Approximate**
+
+**Physical Information**
+- Object dimensions: Spherical instrument container with antennae; exact dimensions not confirmed here.
+- Object mass: ≈390 kg (reported)
+- Description of the physical object: Spherical probe carrying scintillation and Geiger counters, magnetometers, micrometeorite detectors and ion traps. Metal pennants with the USSR emblem were reportedly on board.
+- What remains on the Moon today: Fragments of the probe, and reportedly pennant pieces. The location of any upper-stage impact is not publicly confirmed.
+
+**Timeline Compatibility**
+- First known presence: 13 Sep 1959
+- Last known presence: Debris assumed present to date
+- Still physically present: Yes (as impact debris)
+- Presence status: Confirmed (impact event); fragments not individually located. Location uncertain.
+
+**Visual References**
+- Image URL: https://commons.wikimedia.org/wiki/Category:Luna_2 (landing page; verify)
+- Original image source: Soviet space programme archive images, via Wikimedia Commons
+- Image caption (suggested): "Luna 2 spherical probe replica; first human-made object to reach the Moon, 13 Sep 1959."
+- Official source page: https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1959-014A
+
+**Research Sources**
+- Source 1: NASA NSSDCA, Luna 2 (1959-014A)
+- Source 2: NASA NSSDCA Lunar Impact/Landing list (nssdc.gsfc.nasa.gov)
+- Source 3: Gringauz et al. (1960), solar-wind ion-trap results from Soviet cosmic rockets (Soviet Physics Doklady) (VERIFY citation)
+
+---
+
+### Record 2: Luna 9
+
+**Basic Information**
+- Official name: Luna 9
+- Alternative name: Lunik 9; Ye-6M No. 202
+- Object category: Lander (first successful soft landing on the Moon)
+- Country: USSR
+- Space agency: Soviet space programme (OKB-1/Lavochkin)
+- Mission name: Luna 9
+
+**Historical Information**
+- Launch date: 31 Jan 1966, ~11:41 UTC
+- Lunar arrival / landing / deployment date: 3 Feb 1966, ~18:45 UTC (touchdown)
+- Mission completion date: ~6 Feb 1966 (battery exhausted; last transmission ~22:55 UTC)
+- Historical significance: First soft landing and first images from the lunar surface.
+- Mission objective: Soft-land a capsule and transmit surface panoramas and radiation data.
+- What happened during the mission: A ~100 kg landing capsule separated from the braking stage and bounced to rest. Its petals opened, an antenna deployed, and it returned the first lunar panoramas. These panoramas showed the surface could support a spacecraft, contrary to deep-dust fears.
+- Current status: Inactive, on the surface.
+
+**Geographical Information**
+- Lunar latitude: 7.08°N
+- Lunar longitude: −64.37° (295.63°E)
+- Landing site: Oceanus Procellarum, west of Reiner and the Marius Hills
+- Nearest recognizable crater: Reiner / Marius Hills region
+- Location accuracy: **Approximate** (NSSDCA navigation value; an LRO-confirmed identification is not confirmed here)
+
+**Physical Information**
+- Object dimensions: Spherical capsule ≈0.6 m diameter (approx.)
+- Object mass: Landing capsule ≈99 kg; total launched mass ≈1,538 kg
+- Description of the physical object: Sphere with four petal-like covers, a TV camera, a radiation detector and antennae.
+- What remains on the Moon today: The capsule, and the separated braking stage if it landed nearby (status unverified).
+
+**Timeline Compatibility**
+- First known presence: 3 Feb 1966
+- Last known presence: Present to date
+- Still physically present: Yes
+- Presence status: Confirmed (landing), location approximate
+
+**Visual References**
+- Image URL: https://commons.wikimedia.org/wiki/Category:Luna_9 (landing page; verify)
+- Original image source: Soviet Academy of Sciences panorama archive, via Wikimedia Commons
+- Image caption (suggested): "First panorama from the lunar surface, Luna 9, 3–6 Feb 1966, Oceanus Procellarum."
+- Official source page: https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1966-006A
+
+**Research Sources**
+- Source 1: NASA NSSDCA, Luna 9 (1966-006A)
+- Source 2: NASA NSSDCA lunar landing coordinates list
+- Source 3: Soviet Luna 9 mission descriptions (TASS, 1966), via NASA History and Roscosmos archives (VERIFY)
+
+---
+
+### Record 3: Surveyor 3
+
+**Basic Information**
+- Official name: Surveyor 3
+- Alternative name: Surveyor C
+- Object category: Lander
+- Country: USA
+- Space agency: NASA / JPL
+- Mission name: Surveyor programme, mission 3
+
+**Historical Information**
+- Launch date: 17 Apr 1967, ~07:05 UTC
+- Lunar arrival / landing / deployment date: 20 Apr 1967, ~00:04 UTC (after two bounces)
+- Mission completion date: ~3 May 1967 (end of operations at lunar sunset; VERIFY exact)
+- Historical significance: Soil-mechanics data for Apollo. It is the only robotic lander visited by humans: Apollo 12 astronauts Conrad and Bean visited it on 20 Nov 1969.
+- Mission objective: Soft-land, image the surface, and dig trenches with a surface sampler.
+- What happened during the mission: Surveyor 3 bounced twice and settled inside a subdued crater. It returned thousands of images and used its scoop to dig trenches, measuring soil bearing strength.
+- Current status: Inactive, on the surface.
+
+**Geographical Information**
+- Lunar latitude: −3.0162°
+- Lunar longitude: −23.4181°
+- Landing site: Oceanus Procellarum / Mare Insularum
+- Nearest recognizable crater: Surveyor Crater (~200 m, informal); near Lansberg and Copernicus ejecta
+- Location accuracy: **Exact** (LRO-identified)
+
+**Physical Information**
+- Object dimensions: ≈3 m tall tripod
+- Object mass: ≈295–300 kg on the surface (class value; exact vehicle figure not verified here)
+- Description of the physical object: Three-legged, aluminium-frame spacecraft with a TV camera, scoop, solar panel and omnidirectional antenna.
+- What remains on the Moon today: The lander minus the parts returned by Apollo 12. Removed were the TV camera, scoop, cabling and a piece of tubing. These were brought to Earth for engineering study. The remainder is still in place.
+
+**Timeline Compatibility**
+- First known presence: 20 Apr 1967
+- Last known presence: Present to date. Components removed 20 Nov 1969 (partial).
+- Still physically present: Partly (most of the structure)
+- Presence status: Confirmed
+
+**Visual References**
+- Image URL: https://www.hq.nasa.gov/alsj/a12/images12.html (Apollo 12 image library with Surveyor 3 images; verify)
+- Original image source: NASA / Apollo 12 Hasselblad magazine photographs
+- Image caption (suggested): "Apollo 12's Pete Conrad inspecting Surveyor 3, 20 Nov 1969, ~160–180 m from Intrepid."
+- Official source page: https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1967-035A
+
+**Research Sources**
+- Source 1: NASA NSSDCA, Surveyor 3 (1967-035A)
+- Source 2: NASA SP-146, "Surveyor III: A Preliminary Report" (1967)
+- Source 3: LROC Apollo 12/Surveyor 3 site imagery (lroc.asu.edu)
+
+**Note:** The 1970s claim that bacteria survived on the returned camera is widely regarded as contamination. It is not treated as a result here.
+
+---
+
+### Record 4: Apollo 11, Tranquility Base
+
+**Basic Information**
+- Official name: Apollo 11 Lunar Module LM-5 "Eagle" landing site
+- Alternative name: Tranquility Base; Statio Tranquillitatis (IAU)
+- Object category: Landing site (first crewed lunar landing)
+- Country: USA
+- Space agency: NASA
+- Mission name: Apollo 11
+
+**Historical Information**
+- Launch date: 16 Jul 1969, 13:32 UTC
+- Lunar arrival / landing / deployment date: 20 Jul 1969, 20:17 UTC (touchdown); first EVA step 21 Jul 02:56 UTC
+- Mission completion date: Surface departure 21 Jul 17:54 UTC; splashdown 24 Jul 16:50 UTC
+- Historical significance: First humans on the Moon.
+- Mission objective: Crewed landing, return and sample collection.
+- What happened during the mission: Armstrong and Aldrin spent ~21.6 hours on the surface, with a 2 h 31 min EVA. They deployed the EASEP package (seismometer and retroreflector) and collected ~21.5 kg of samples. The ascent stage then left. The descent stage became a launch platform and remains on the surface.
+- Current status: Historic site. All hardware is inert. (Aldrin reported the flag was blown over by the ascent-engine exhaust. LRO images show shadows of the flag in later missions' views but not here; the flag's status is uncertain.)
+
+**Geographical Information**
+- Lunar latitude: 0.6741°N
+- Lunar longitude: 23.4730°E
+- Landing site: Southwestern Mare Tranquillitatis
+- Nearest recognizable crater: Sabine; the tiny crater West (~180 m) was passed on descent
+- Location accuracy: **Exact** (LRO-derived)
+
+**Physical Information**
+- Object dimensions: LM ≈7 m tall; ≈9.4 m across landing gear
+- Object mass: LM-5 at launch ≈15,100 kg. Descent stage dry mass ≈2,000 kg (approx., verify)
+- Description of the physical object: Gold-foil-wrapped descent stage and its landing gear. Left on the surface: the commemorative plaque, a silicon disc of goodwill messages, the Apollo 1 patch, medals, boots, tools, the television camera and equipment.
+- What remains on the Moon today: Descent stage, plaque, PSEP and LRRR (LRRR is Record 5), and discarded equipment. The ascent stage left lunar orbit and crashed at an unknown location.
+
+**Timeline Compatibility**
+- First known presence: 20 Jul 1969 (human presence 20–21 Jul 1969)
+- Last known presence: Present to date
+- Still physically present: Yes
+- Presence status: Confirmed
+
+**Visual References**
+- Image URL: https://www.hq.nasa.gov/alsj/a11/images11.html (verify)
+- Original image source: NASA Apollo 11 Hasselblad frames; LROC site mosaics
+- Image caption (suggested): "Aldrin on the surface, Mare Tranquillitatis, 21 Jul 1969 (NASA AS11-40-5903 series)."
+- Official source page: https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1969-059C
+
+**Research Sources**
+- Source 1: NASA Apollo Lunar Surface Journal, Apollo 11
+- Source 2: NASA SP-214, Apollo 11 Preliminary Science Report
+- Source 3: LROC Apollo 11 site images (lroc.asu.edu)
+
+---
+
+### Record 5: Apollo 11 Laser Ranging Retroreflector Array (LRRR)
+
+**Basic Information**
+- Official name: Lunar Laser Ranging Retroreflector (LRRR), Apollo 11
+- Alternative name: Apollo 11 retroreflector; part of EASEP
+- Object category: Scientific equipment (passive)
+- Country: USA
+- Space agency: NASA
+- Mission name: Apollo 11 (Early Apollo Scientific Experiments Package)
+
+**Historical Information**
+- Launch date: 16 Jul 1969
+- Lunar arrival / landing / deployment date: Deployed 21 Jul 1969 by Aldrin
+- Mission completion date: No completion; still usable
+- Historical significance: First lunar laser-ranging reflector. It established decades of centimetre-to-millimetre Earth–Moon distance measurements.
+- Mission objective: Provide a target for Earth-based laser pulses to measure the Earth–Moon distance.
+- What happened during the mission: Lick Observatory obtained the first returns on 1 Aug 1969. Measurements confirmed the Moon recedes at ~3.8 cm/yr and tested general relativity.
+- Current status: Passive, on the surface. Its return efficiency has degraded, but it remains usable by observatories (for example APOLLO at Apache Point and OCA in France; VERIFY current users).
+
+**Geographical Information**
+- Lunar latitude: ≈0.6741°N (site)
+- Lunar longitude: ≈23.4730°E (site)
+- Landing site: Mare Tranquillitatis
+- Nearest recognizable crater: Sabine
+- Location accuracy: **Approximate** (placed at the LM site; offset ~tens of metres)
+
+**Physical Information**
+- Object dimensions: ≈46 cm square panel; 100 fused-silica corner cubes (3.8 cm each)
+- Object mass: Not confirmed here
+- Description of the physical object: Aluminium panel holding a 10×10 array of corner-cube prisms, aligned toward Earth.
+- What remains on the Moon today: The complete array.
+
+**Timeline Compatibility**
+- First known presence: 21 Jul 1969
+- Last known presence: Present to date
+- Still physically present: Yes
+- Presence status: Confirmed (active ranging returns)
+
+**Visual References**
+- Image URL: https://www.hq.nasa.gov/alsj/a11/images11.html (verify)
+- Original image source: NASA Apollo 11 photograph
+- Image caption (suggested): "Apollo 11 retroreflector array, deployed 21 Jul 1969; still used for lunar laser ranging."
+- Official source page: https://www.hq.nasa.gov/alsj/ (ALSJ, Apollo 11 experiments)
+
+**Research Sources**
+- Source 1: Bender et al. (1973), "The Lunar Laser Ranging Experiment," *Science* 182, 229–238
+- Source 2: NASA SP-214, Apollo 11 Preliminary Science Report
+- Source 3: APOLLO project, Apache Point Observatory (physics.ucsd.edu/~tmurphy/apollo/)
+
+---
+
+### Record 6: Apollo 12, Ocean of Storms
+
+**Basic Information**
+- Official name: Apollo 12 Lunar Module LM-6 "Intrepid" landing site
+- Alternative name: Statio Cognitum
+- Object category: Landing site (crewed) with ALSEP
+- Country: USA
+- Space agency: NASA
+- Mission name: Apollo 12
+
+**Historical Information**
+- Launch date: 14 Nov 1969, 16:22 UTC
+- Lunar arrival / landing / deployment date: 19 Nov 1969, 06:54 UTC (touchdown)
+- Mission completion date: Surface departure 20 Nov 14:25 UTC; splashdown 24 Nov
+- Historical significance: First precision landing, ~160–180 m from Surveyor 3. First full ALSEP (long-term station).
+- Mission objective: Precision landing, science station deployment, Surveyor 3 inspection and sampling.
+- What happened during the mission: Conrad and Bean made two EVAs (~7.75 h total) and deployed ALSEP. It carried a seismometer, magnetometer, solar-wind spectrometer, suprathermal ion detector, cold-cathode gauge and an RTG (SNAP-27). They collected ~34 kg of samples and retrieved Surveyor 3 parts. The ascent stage was deliberately crashed, and its seismic signal was recorded.
+- Current status: ALSEP shut down 30 Sep 1977 (all ALSEP stations). Hardware inert.
+
+**Geographical Information**
+- Lunar latitude: −3.0124°
+- Lunar longitude: −23.4216°
+- Landing site: Oceanus Procellarum (Mare Insularum)
+- Nearest recognizable crater: Surveyor Crater (Surveyor 3); Lansberg
+- Location accuracy: **Exact** (LRO-identified)
+
+**Physical Information**
+- Object dimensions: LM ≈7 m tall, ≈9.4 m across landing gear
+- Object mass: Descent stage dry ≈2,000 kg (approx., verify)
+- Description of the physical object: Descent stage, ALSEP instruments and RTG (the fuel cask was carried back to the LM), and scattered equipment.
+- What remains on the Moon today: Descent stage, ALSEP, tools and Surveyor 3 (Record 3) nearby. The ascent stage impacted at ~3.94°S, 21.20°W (approx., NASA seismic location).
+
+**Timeline Compatibility**
+- First known presence: 19 Nov 1969
+- Last known presence: Present to date
+- Still physically present: Yes
+- Presence status: Confirmed
+
+**Visual References**
+- Image URL: https://www.hq.nasa.gov/alsj/a12/images12.html (verify)
+- Original image source: NASA Apollo 12 Hasselblad frames; LROC site images
+- Image caption (suggested): "Apollo 12 Intrepid and ALSEP at the Ocean of Storms, with Surveyor 3 on the crater rim, Nov 1969."
+- Official source page: https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1969-099C
+
+**Research Sources**
+- Source 1: NASA Apollo Lunar Surface Journal, Apollo 12
+- Source 2: NASA SP-235, Apollo 12 Preliminary Science Report
+- Source 3: LROC Apollo 12 site images (lroc.asu.edu)
+
+---
+
+### Record 7: Luna 16
+
+**Basic Information**
+- Official name: Luna 16
+- Alternative name: Ye-8-5 No. 406
+- Object category: Lander (first robotic sample return from the Moon)
+- Country: USSR
+- Space agency: Soviet space programme (Lavochkin)
+- Mission name: Luna 16
+
+**Historical Information**
+- Launch date: 12 Sep 1970, ~13:25 UTC
+- Lunar arrival / landing / deployment date: 20 Sep 1970, ~05:18 UTC
+- Mission completion date: Ascent stage lifted off 21 Sep 1970; capsule recovered 24 Sep 1970 (Kazakhstan)
+- Historical significance: First robotic lunar sample return, and the first return of lunar soil by an automated craft.
+- Mission objective: Drill, collect and return a core sample.
+- What happened during the mission: Luna 16 landed in Mare Fecunditatis and drilled ~35 cm. The ascent stage launched from the descent stage with ~101 g of soil.
+- Current status: The descent stage is inactive on the surface.
+
+**Geographical Information**
+- Lunar latitude: −0.68°
+- Lunar longitude: 56.30°
+- Landing site: Mare Fecunditatis
+- Nearest recognizable crater: Webb / Langrenus region (approx.)
+- Location accuracy: **Approximate**
+
+**Physical Information**
+- Object dimensions: Not confirmed here
+- Object mass: Launch ≈5,727 kg; landed spacecraft ≈1,880 kg (reported; verify). Sample ≈101 g
+- Description of the physical object: Descent stage with drill arm and legs; the ascent stage (with its return capsule) departed.
+- What remains on the Moon today: Descent stage, drill assembly and legs.
+
+**Timeline Compatibility**
+- First known presence: 20 Sep 1970
+- Last known presence: Present to date
+- Still physically present: Yes (descent stage only)
+- Presence status: Confirmed
+
+**Visual References**
+- Image URL: https://commons.wikimedia.org/wiki/Category:Luna_16 (verify)
+- Original image source: Soviet archive, via Wikimedia Commons
+- Image caption (suggested): "Luna 16 descent stage, Mare Fecunditatis, Sep 1970."
+- Official source page: https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1970-072A
+
+**Research Sources**
+- Source 1: NASA NSSDCA, Luna 16 (1970-072A)
+- Source 2: NASA NSSDCA lunar landing coordinates list
+- Source 3: Vinogradov (ed.), *Lunar Soil from the Sea of Fertility* (Soviet monograph, 1974) (VERIFY)
+
+---
+
+### Record 8: Lunokhod 1 (Luna 17)
+
+**Basic Information**
+- Official name: Lunokhod 1 (carried by Luna 17)
+- Alternative name: Ye-8 No. 203; "Moonwalker"
+- Object category: Rover (first remotely driven robotic rover on another world)
+- Country: USSR
+- Space agency: Soviet space programme (Lavochkin / VNIITransmash)
+- Mission name: Luna 17
+
+**Historical Information**
+- Launch date: 10 Nov 1970, ~14:44 UTC
+- Lunar arrival / landing / deployment date: Landing 17 Nov 1970, ~03:46 UTC; rover rolled off later that day
+- Mission completion date: Last communication ~14 Sep 1971; end declared ~4 Oct 1971 (sources vary)
+- Historical significance: First rover on another world.
+- Mission objective: Remote driving, surface imaging, soil analysis, laser-reflector test.
+- What happened during the mission: Lunokhod 1 operated for 11 lunar days and drove ~10.5 km. It returned ~20,000 TV images and ~200 panoramas, and made multiple soil analyses. When the isotope heater failed at the end of its life, it could not survive the night.
+- Current status: Inactive. Its French-built retroreflector was rediscovered in 2010 (see below).
+
+**Geographical Information**
+- Lunar latitude: 38.33°N (final position)
+- Lunar longitude: −35.01° (final position)
+- Landing site: Mare Imbrium (Sinus Iridum area)
+- Nearest recognizable crater: Maupertuis / Sinus Iridum margin (approx.)
+- Location accuracy: **Exact** (LROC identification, 2010, ±~tens of m). The Luna 17 landing site, ~38.24°N, −35.00°, is approximate.
+
+**Physical Information**
+- Object dimensions: Eight-wheeled pressurised vehicle; exact dimensions not verified here
+- Object mass: ≈756 kg
+- Description of the physical object: Tub-shaped body with a solar-panel lid, eight wheels, TV cameras and an X-ray fluorescence spectrometer. Carries a French-built corner-cube laser retroreflector array.
+- What remains on the Moon today: The rover and the Luna 17 descent stage.
+
+**Timeline Compatibility**
+- First known presence: 17 Nov 1970
+- Last known presence: Present to date
+- Still physically present: Yes
+- Presence status: Confirmed (retroreflector ranged in 2010)
+
+**Visual References**
+- Image URL: https://commons.wikimedia.org/wiki/Category:Lunokhod_1 (verify)
+- Original image source: LROC (NASA/GSFC/Arizona State University) and Soviet archives
+- Image caption (suggested): "Lunokhod 1 and tracks imaged from lunar orbit by LRO, 2010."
+- Official source page: https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1970-095A
+
+**Research Sources**
+- Source 1: NASA NSSDCA, Luna 17 / Lunokhod 1 (1970-095A)
+- Source 2: LROC release on Lunokhod 1 (lroc.asu.edu, 2010)
+- Source 3: Murphy et al. (2011), "Laser ranging to the lost Lunokhod 1 reflector," *Icarus* 211, 1103–1108
+
+---
+
+### Record 9: Apollo 15, Hadley–Apennine
+
+**Basic Information**
+- Official name: Apollo 15 Lunar Module LM-10 "Falcon" landing site
+- Alternative name: Hadley Rille site
+- Object category: Landing site (crewed) with ALSEP and LRRR
+- Country: USA
+- Space agency: NASA
+- Mission name: Apollo 15
+
+**Historical Information**
+- Launch date: 26 Jul 1971, 13:34 UTC
+- Lunar arrival / landing / deployment date: 30 Jul 1971, 22:16 UTC
+- Mission completion date: Surface departure 2 Aug 17:11 UTC; splashdown 7 Aug 1971
+- Historical significance: First J-mission (extended stay) and first use of the Lunar Roving Vehicle.
+- Mission objective: Explore Hadley Rille and the Apennine front; deploy ALSEP; collect samples.
+- What happened during the mission: Scott and Irwin spent ~66 h on the surface and made three EVAs (~18.5 h total). They deployed ALSEP (including the heat-flow experiment) and the 300-cube retroreflector array. They collected ~77 kg of samples, including the "Genesis Rock," and performed the hammer-and-feather drop. The crew left the "Fallen Astronaut" memorial. The PFS-1 subsatellite was released in lunar orbit (Record note: the subsatellite is not a surface object; its fate is not confirmed here).
+- Current status: Historic site; all hardware inert.
+
+**Geographical Information**
+- Lunar latitude: 26.1322°N
+- Lunar longitude: 3.6333°E
+- Landing site: Palus Putredinis, at Hadley Rille
+- Nearest recognizable crater: Hadley Rille / Mons Hadley Delta
+- Location accuracy: **Exact** (LRO-identified)
+
+**Physical Information**
+- Object dimensions: LM ≈7 m tall, ≈9.4 m across landing gear (J-mission LM was heavier)
+- Object mass: Not confirmed here
+- Description of the physical object: Descent stage, ALSEP with RTG, the 300-cube LRRR, the Fallen Astronaut statuette (≈8.5 cm) and plaque, and a Bible.
+- What remains on the Moon today: Descent stage, ALSEP, LRRR (still usable; Record 10 covers the rover), memorial and equipment. The ascent stage was crashed deliberately; its coordinates are not confirmed here.
+
+**Timeline Compatibility**
+- First known presence: 30 Jul 1971
+- Last known presence: Present to date
+- Still physically present: Yes
+- Presence status: Confirmed
+
+**Visual References**
+- Image URL: https://www.hq.nasa.gov/alsj/a15/images15.html (verify)
+- Original image source: NASA Apollo 15 frames; LROC mosaics
+- Image caption (suggested): "Apollo 15 Falcon, LRV and Hadley Delta, 31 Jul 1971."
+- Official source page: https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1971-063C
+
+**Research Sources**
+- Source 1: NASA Apollo Lunar Surface Journal, Apollo 15
+- Source 2: NASA SP-289, Apollo 15 Preliminary Science Report
+- Source 3: LROC Apollo 15 site images (lroc.asu.edu)
+
+---
+
+### Record 10: Apollo 15 Lunar Roving Vehicle (LRV-1)
+
+**Basic Information**
+- Official name: Lunar Roving Vehicle LRV-1
+- Alternative name: "Moon buggy"; Rover-1
+- Object category: Rover (crewed)
+- Country: USA
+- Space agency: NASA
+- Mission name: Apollo 15
+
+**Historical Information**
+- Launch date: 26 Jul 1971
+- Lunar arrival / landing / deployment date: Deployed 31 Jul 1971 (EVA 1)
+- Mission completion date: Last used 2 Aug 1971, before liftoff
+- Historical significance: First crewed rover on the Moon; it extended exploration range from hundreds of metres to kilometres.
+- Mission objective: Transport crew and equipment across the Hadley region.
+- What happened during the mission: The LRV drove ~28 km over three EVAs (≈27.9 km per NASA). A ground-controlled TV camera mounted on it transmitted the first live liftoff of an ascent stage.
+- Current status: Parked and inactive, near the LM.
+
+**Geographical Information**
+- Lunar latitude: ≈26.13°N (approx.)
+- Lunar longitude: ≈3.63°E (approx.)
+- Landing site: Hadley–Apennine
+- Nearest recognizable crater: Hadley Rille
+- Location accuracy: **Approximate** (placed at the LM site; parking offset from Falcon not verified here)
+
+**Physical Information**
+- Object dimensions: Length ≈3.1 m; wheelbase ≈2.3 m; height ≈1.14 m
+- Object mass: ≈210 kg on Earth; payload capacity ≈490 kg
+- Description of the physical object: Four wire-mesh wheels, each with its own electric motor; two silver-zinc batteries; top speed ≈13 km/h.
+- What remains on the Moon today: The complete vehicle.
+
+**Timeline Compatibility**
+- First known presence: 31 Jul 1971
+- Last known presence: Present to date
+- Still physically present: Yes
+- Presence status: Confirmed (visible in LRO imagery)
+
+**Visual References**
+- Image URL: https://www.hq.nasa.gov/alsj/a15/images15.html (verify)
+- Original image source: NASA Apollo 15 photography
+- Image caption (suggested): "Apollo 15 LRV-1 parked at Hadley Rille, Aug 1971."
+- Official source page: https://www.hq.nasa.gov/alsj/ (ALSJ, Apollo 15 LRV)
+
+**Research Sources**
+- Source 1: NASA Apollo Lunar Surface Journal, Apollo 15 LRV
+- Source 2: NASA SP-289, Apollo 15 Preliminary Science Report
+- Source 3: NASA Apollo Lunar Roving Vehicle fact sheet (nasa.gov)
+
+---
+
+### Record 11: Apollo 17, Taurus–Littrow
+
+**Basic Information**
+- Official name: Apollo 17 Lunar Module LM-12 "Challenger" landing site
+- Alternative name: Taurus–Littrow valley
+- Object category: Landing site (crewed; last crewed landing)
+- Country: USA
+- Space agency: NASA
+- Mission name: Apollo 17
+
+**Historical Information**
+- Launch date: 7 Dec 1972, ~05:33 UTC
+- Lunar arrival / landing / deployment date: 11 Dec 1972, 19:54 UTC
+- Mission completion date: Surface departure 14 Dec 22:54 UTC; splashdown 19 Dec 1972
+- Historical significance: The last time humans walked on the Moon. First geologist-astronaut (Harrison Schmitt).
+- Mission objective: Sample highlands and young volcanic materials; deploy ALSEP.
+- What happened during the mission: Cernan and Schmitt stayed ~75 h and made three EVAs (~22 h total). They collected ~110 kg of samples, including orange volcanic glass. Instruments included the Lunar Surface Gravimeter, Heat Flow Experiment, Lunar Seismic Profiling, Lunar Ejecta and Meteorites, Atmospheric Composition, and a traverse gravimeter on the LRV. They left a commemorative plaque ("…May the spirit of peace in which we came be reflected in the lives of all mankind").
+- Current status: Historic site. ALSEP shut down 30 Sep 1977.
+
+**Geographical Information**
+- Lunar latitude: 20.1908°N
+- Lunar longitude: 30.7717°E
+- Landing site: Southeast Mare Serenitatis, Taurus–Littrow valley
+- Nearest recognizable crater: Littrow; Shorty and Camelot craters nearby
+- Location accuracy: **Exact** (LRO-identified)
+
+**Physical Information**
+- Object dimensions: LM ≈7 m tall, ≈9.4 m across landing gear
+- Object mass: Not confirmed here
+- Description of the physical object: Descent stage, ALSEP, plaque, flag, and LRV-3.
+- What remains on the Moon today: Descent stage, ALSEP, LRV-3 (parked ~200 m east of the LM; offset approx.), plaque and equipment.
+
+**Timeline Compatibility**
+- First known presence: 11 Dec 1972
+- Last known presence: Present to date
+- Still physically present: Yes
+- Presence status: Confirmed
+
+**Visual References**
+- Image URL: https://www.hq.nasa.gov/alsj/a17/images17.html (verify)
+- Original image source: NASA Apollo 17 frames; LROC images
+- Image caption (suggested): "Apollo 17 Challenger, LRV and Taurus–Littrow valley, Dec 1972."
+- Official source page: https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1972-096C
+
+**Research Sources**
+- Source 1: NASA Apollo Lunar Surface Journal, Apollo 17
+- Source 2: NASA SP-330, Apollo 17 Preliminary Science Report
+- Source 3: LROC Apollo 17 site images (lroc.asu.edu)
+
+---
+
+### Record 12: Lunokhod 2 (Luna 21)
+
+**Basic Information**
+- Official name: Lunokhod 2 (carried by Luna 21)
+- Alternative name: Ye-8 No. 204
+- Object category: Rover
+- Country: USSR
+- Space agency: Soviet space programme (Lavochkin / VNIITransmash)
+- Mission name: Luna 21
+
+**Historical Information**
+- Launch date: 8 Jan 1973, ~06:55 UTC
+- Lunar arrival / landing / deployment date: Landing 15 Jan 1973, ~22:35 UTC; rover deployed 16 Jan
+- Mission completion date: Official end ~4 Jun 1973; communication reportedly ceased ~10–11 May 1973 (sources vary; Uncertain)
+- Historical significance: Longest-distance rover traverse of the Soviet programme (~39 km); record distance on another world for decades.
+- Mission objective: Explore Le Monnier crater and the Taurus edge; measure magnetic fields, and perform photometry and laser tests.
+- What happened during the mission: Lunokhod 2 drove ~39 km in ~4 lunar days. It returned imagery and data on soil mechanics, magnetic fields and the sky's brightness. The mission ended after overheating (dust covering the radiator is the commonly reported cause).
+- Current status: Inactive.
+
+**Geographical Information**
+- Lunar latitude: ≈25.85°N
+- Lunar longitude: ≈30.45°E
+- Landing site: Le Monnier crater, southeastern Mare Serenitatis edge
+- Nearest recognizable crater: Le Monnier
+- Location accuracy: **Approximate**
+
+**Physical Information**
+- Object dimensions: Eight-wheeled vehicle; exact dimensions not verified here
+- Object mass: ≈840 kg
+- Description of the physical object: Improved Lunokhod 1 design, with an additional front TV camera, a magnetometer and an astrophotometer.
+- What remains on the Moon today: The rover and the Luna 21 descent stage.
+
+**Timeline Compatibility**
+- First known presence: 15 Jan 1973
+- Last known presence: Present to date
+- Still physically present: Yes
+- Presence status: Confirmed (landing); precise rover position is approximate
+
+**Visual References**
+- Image URL: https://commons.wikimedia.org/wiki/Category:Lunokhod_2 (verify)
+- Original image source: Soviet archive, via Wikimedia Commons
+- Image caption (suggested): "Lunokhod 2 model; rover explored Le Monnier crater, Jan–May 1973."
+- Official source page: https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1973-001A
+
+**Research Sources**
+- Source 1: NASA NSSDCA, Luna 21 / Lunokhod 2 (1973-001A)
+- Source 2: NASA NSSDCA lunar landing coordinates list
+- Source 3: Soviet Luna 21 results summary, via NASA History (VERIFY)
+
+---
+
+### Record 13: Lunar Prospector
+
+**Basic Information**
+- Official name: Lunar Prospector
+- Alternative name: Discovery Program Mission 3
+- Object category: Orbiter
+- Country: USA
+- Space agency: NASA (Ames Research Center)
+- Mission name: Lunar Prospector
+
+**Historical Information**
+- Launch date: 7 Jan 1998, ~02:28 UTC
+- Lunar arrival / orbit date: Lunar orbit insertion ~11 Jan 1998
+- Mission completion date: 31 Jul 1999 (controlled impact)
+- Historical significance: First NASA lunar mission after Apollo. Found hydrogen enrichment at the poles, consistent with water ice.
+- Mission objective: Map composition, gravity and magnetic fields from a ~100 km polar orbit.
+- What happened during the mission: Polar orbit with a neutron spectrometer, gamma-ray spectrometer, magnetometer and gravity experiment. In July 1999 it was crashed into the permanently shadowed crater Shoemaker (south pole), hoping to release detectable water. No water plume was detected.
+- Current status: Wreckage at the impact site (ended 1999).
+
+**Orbital Timeline**
+- Orbital mission: ~11 Jan 1998 – 31 Jul 1999. No fixed location during the orbital phase.
+
+**Geographical Information (event location, not a fixed orbital position)**
+- Impact latitude: ≈−87.7°
+- Impact longitude: ≈42.1°E
+- Landing site / lunar region: Shoemaker crater, near the lunar south pole
+- Nearest recognizable crater: Shoemaker
+- Location accuracy: **Approximate** (impact event only)
+
+**Physical Information**
+- Object dimensions: ≈1.4 m diameter × 1.3 m high, with three ≈2.5 m booms (approx.)
+- Object mass: ≈295 kg at launch
+- Description of the physical object: Spin-stabilised drum with three instrument booms. It carried a small capsule of Eugene Shoemaker's ashes, the first human remains placed on the Moon.
+- What remains on the Moon today: Wreckage and the ashes capsule near the impact site (exact debris position unknown).
+
+**Timeline Compatibility**
+- First known presence: 11 Jan 1998 (orbit); surface debris from 31 Jul 1999
+- Last known presence: Wreckage present to date
+- Still physically present: Yes (as impact debris)
+- Presence status: Confirmed (event); debris location uncertain
+
+**Visual References**
+- Image URL: https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1998-001A (landing page; verify image links)
+- Original image source: NASA / Ames Research Center
+- Image caption (suggested): "Lunar Prospector in lunar polar orbit, 1998–1999."
+- Official source page: https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1998-001A
+
+**Research Sources**
+- Source 1: NASA NSSDCA, Lunar Prospector (1998-001A)
+- Source 2: Feldman et al. (1998), *Science* 281, 1496–1500 (hydrogen at the lunar poles)
+- Source 3: NASA Ames Lunar Prospector mission pages (VERIFY URL)
+
+---
+
+### Record 14: SMART-1
+
+**Basic Information**
+- Official name: SMART-1 (Small Missions for Advanced Research in Technology)
+- Alternative name: Europe's first lunar mission
+- Object category: Orbiter
+- Country: European (ESA member states)
+- Space agency: ESA
+- Mission name: SMART-1
+
+**Historical Information**
+- Launch date: 27 Sep 2003 (Ariane 5, Kourou)
+- Lunar arrival / orbit date: Lunar capture ~15 Nov 2004
+- Mission completion date: 3 Sep 2006, ~05:42 UTC (controlled impact)
+- Historical significance: First European lunar mission; first lunar use of a solar-electric (ion) engine for interplanetary transfer.
+- Mission objective: Test ion propulsion and miniaturised instruments; map lunar mineralogy and topography.
+- What happened during the mission: SMART-1 spiralled out from Earth orbit over ~14 months, using its Hall-effect thruster. It then orbited the Moon, surveying surface composition, including calcium and magnesium. After its propellant ran low, it was crashed on the Moon.
+- Current status: Wreckage at the impact site.
+
+**Orbital Timeline**
+- Orbital mission: ~15 Nov 2004 – 3 Sep 2006.
+
+**Geographical Information (event location)**
+- Impact latitude: ≈−34.3° (ESA gives 34.4°S; other sources 34.26°S)
+- Impact longitude: ≈−46.2°
+- Landing site / lunar region: Lacus Excellentiae, near the Moon's near side
+- Nearest recognizable crater: Not confirmed here
+- Location accuracy: **Approximate**
+
+**Physical Information**
+- Object dimensions: ≈1 m cube; solar array span ≈14 m
+- Object mass: ≈367 kg at launch
+- Description of the physical object: Small box satellite with two solar arrays and a PPS-1350 Hall-effect thruster.
+- What remains on the Moon today: Impact debris (location uncertain).
+
+**Timeline Compatibility**
+- First known presence: 15 Nov 2004 (orbit); surface debris from 3 Sep 2006
+- Last known presence: Debris present to date
+- Still physically present: Yes (as debris)
+- Presence status: Confirmed (event); debris location uncertain
+
+**Visual References**
+- Image URL: https://www.esa.int/Science_Exploration/Space_Science/SMART-1 (verify)
+- Original image source: ESA
+- Image caption (suggested): "ESA's SMART-1 above the Moon, 2005–2006."
+- Official source page: https://www.esa.int/Science_Exploration/Space_Science/SMART-1
+
+**Research Sources**
+- Source 1: ESA SMART-1 mission pages
+- Source 2: NASA NSSDCA, SMART-1 (2003-043C)
+- Source 3: Foing et al. (2006), "SMART-1 mission to the Moon: status, first results," *Advances in Space Research* (VERIFY volume)
+
+---
+
+### Record 15: Kaguya (SELENE)
+
+**Basic Information**
+- Official name: Kaguya (SELENE: Selenological and Engineering Explorer)
+- Alternative name: SELENE
+- Object category: Orbiter (with two subsatellites)
+- Country: Japan
+- Space agency: JAXA
+- Mission name: Kaguya / SELENE
+
+**Historical Information**
+- Launch date: 14 Sep 2007, ~01:31 UTC (Tanegashima, H-IIA)
+- Lunar arrival / orbit date: Lunar orbit ~4 Oct 2007
+- Mission completion date: 10 Jun 2009, ~18:25 UTC (controlled impact)
+- Historical significance: Largest lunar mission since Apollo at its time. HDTV Earthrise views, global topography, and the discovery of the Marius Hills skylight.
+- Mission objective: Global mapping of topography, gravity, composition and the plasma environment.
+- What happened during the mission: Kaguya carried 14 instruments. Subsatellites Okina (Rstar) and Ouna (Vstar) were released in Oct 2007 for gravity and VLBI studies. Kaguya's data revealed a vertical hole (a lava-tube skylight) in the Marius Hills. Orbit was lowered in 2009 and the craft was crashed.
+- Current status: Wreckage at the impact site.
+
+**Orbital Timeline**
+- Orbital mission: ~4 Oct 2007 – 10 Jun 2009. Okina ended Feb 2009; Ouna ended Jun 2009 (VERIFY dates).
+
+**Geographical Information (event location)**
+- Impact latitude: ≈−65.5°
+- Impact longitude: ≈80.4°E
+- Landing site / lunar region: Near Gill crater, southern near-side/far-side border region
+- Nearest recognizable crater: Gill
+- Location accuracy: **Approximate**
+
+**Physical Information**
+- Object dimensions: Main orbiter ≈2.1 m × 2.1 m × 4.8 m body (approx., VERIFY)
+- Object mass: ≈2,900 kg at launch
+- Description of the physical object: Main orbiter with 14 instruments, plus two small relay/VLBI satellites.
+- What remains on the Moon today: Impact debris of Kaguya, and of Okina and Ouna if they impacted (VERIFY).
+
+**Timeline Compatibility**
+- First known presence: 4 Oct 2007 (orbit); debris from 10 Jun 2009
+- Last known presence: Debris present to date
+- Still physically present: Yes (as debris)
+- Presence status: Confirmed (event); debris location uncertain
+
+**Visual References**
+- Image URL: https://global.jaxa.jp/projects/sas/selene/ (verify)
+- Original image source: JAXA / NHK
+- Image caption (suggested): "Kaguya's HDTV Earthrise, Nov 2007."
+- Official source page: https://global.jaxa.jp/projects/sas/selene/
+
+**Research Sources**
+- Source 1: JAXA Kaguya (SELENE) mission pages
+- Source 2: NASA NSSDCA, SELENE (2007-039A)
+- Source 3: Haruyama et al. (2009), "Possible lunar lava tube skylight observed by SELENE cameras," *Geophys. Res. Lett.* 36, L21206
+
+---
+
+### Record 17: Chandrayaan-1 mission record (orbiter + separately deployed Moon Impact Probe)
+
+**Basic Information**
+- Official name: Chandrayaan-1
+- Alternative name: India's first lunar probe; Moon Impact Probe (MIP) as a deployed sub-object
+- Object category: Orbiter plus impactor
+- Country: India
+- Space agency: ISRO
+- Mission name: Chandrayaan-1
+
+**Historical Information**
+- Launch date: 22 Oct 2008, ~00:52 UTC (PSLV-C11, Sriharikota)
+- Lunar arrival / orbit date: Lunar orbit insertion ~8 Nov 2008. MIP released and impacted 14 Nov 2008.
+- Mission completion date: Contact lost ~28 Aug 2009; mission declared over ~29 Aug 2009
+- Historical significance: India's first lunar mission; MIP put the Indian tricolour on the Moon. Helped confirm lunar surface water (M3, Mini-SAR).
+- Mission objective: Remote sensing of mineralogy, topography and ice at 100 km polar orbit.
+- What happened during the mission: It carried 11 payloads (5 Indian and 6 foreign, from NASA, ESA and Bulgaria). NASA's Moon Mineralogy Mapper detected hydroxyl/water signatures (Pieters et al., 2009), and Mini-SAR found evidence of ice-bearing craters. The orbit was raised to ~200 km in May 2009. The spacecraft lost contact in Aug 2009. In 2016 NASA ground radar re-detected it in lunar orbit.
+- Current status: Orbiter believed to remain in lunar orbit (VERIFY); MIP wreckage on the surface.
+
+**Orbital Timeline**
+- Orbital mission: ~8 Nov 2008 – ~28 Aug 2009 (operational); orbit status afterwards: believed still orbiting (radar detection 2016).
+- Surface: MIP impact ~14 Nov 2008.
+
+**Geographical Information (event location)**
+- Latitude/Longitude: MIP impact near Shackleton crater at the south pole; **exact coordinates not publicly confirmed here**
+- Landing site / lunar region: South polar region
+- Nearest recognizable crater: Shackleton
+- Location accuracy: **Approximate** (MIP impact only; orbiter has no fixed position)
+
+**Physical Information**
+- Object dimensions: ≈1.5 m cube bus (approx.)
+- Object mass: ≈1,380 kg at launch; MIP ≈29 kg
+- Description of the physical object: Orbiter with TMC, HySI, LLRI, HEX, M3, Mini-SAR, SARA, C1XS, SIR-2, RADOM-7 and BBX payloads; MIP carried the Indian flag.
+- What remains on the Moon today: MIP wreckage near Shackleton. The orbiter itself, if still in orbit, is not on the surface.
+
+**Timeline Compatibility**
+- First known presence: 8 Nov 2008 (orbit); MIP on the surface 14 Nov 2008
+- Last known presence: Orbiter in orbit to date (uncertain); MIP debris present
+- Still physically present: MIP debris: Yes. Orbiter: orbiting (Uncertain).
+- Presence status: Orbiter: uncertain. MIP: confirmed event, location uncertain.
+
+**Visual References**
+- Image URL: https://www.isro.gov.in/Chandrayaan.html (verify)
+- Original image source: ISRO
+- Image caption (suggested): "Chandrayaan-1 (artist's concept) in polar orbit, 2008–2009."
+- Official source page: https://www.isro.gov.in/Chandrayaan.html
+
+**Research Sources**
+- Source 1: ISRO Chandrayaan-1 mission pages
+- Source 2: Pieters et al. (2009), *Science* 326, 568–572
+- Source 3: NASA/JPL release on radar detection of Chandrayaan-1 (2016)
+
+---
+
+### Record 18: Lunar Reconnaissance Orbiter (LRO)
+
+**Basic Information**
+- Official name: Lunar Reconnaissance Orbiter
+- Alternative name: LRO
+- Object category: Orbiter
+- Country: USA
+- Space agency: NASA (Goddard Space Flight Center)
+- Mission name: LRO
+
+**Historical Information**
+- Launch date: 18 Jun 2009, ~21:32 UTC (Atlas V, with LCROSS)
+- Lunar arrival / orbit date: Lunar orbit insertion ~23 Jun 2009
+- Mission completion date: Ongoing (VERIFY current status)
+- Mission objective: Characterise the surface for future exploration; map topography, radiation, temperatures and polar hydrogen.
+- What happened during the mission: LRO carried seven instruments: LROC, LOLA, LAMP, Diviner, CRaTER, LEND and Mini-RF. It has operated in an elliptical polar orbit since 2011. It has laser-ranged retroreflectors and located lost craft (for example, Vikram in 2019).
+- Current status: Operating as of my last information (VERIFY).
+
+**Orbital Timeline**
+- Orbital mission: ~23 Jun 2009 – ongoing.
+
+**Geographical Information**
+- Latitude/Longitude: N/A (orbiter). No fixed surface location.
+- Landing site / lunar region: Polar orbit (periapsis near south pole)
+- Nearest landmark: N/A
+- Location accuracy: N/A
+
+**Physical Information**
+- Object dimensions: Not confirmed here
+- Object mass: ≈1,916 kg at launch
+- Description of the physical object: Box bus, solar arrays, 7 instruments.
+- What remains on the Moon today: Nothing (still in orbit).
+
+**Timeline Compatibility**
+- First known presence: 23 Jun 2009 (orbit)
+- Last known presence: Ongoing
+- Still physically present: In orbit (not on surface)
+- Presence status: Confirmed
+
+**Visual References**
+- Image URL: https://science.nasa.gov/mission/lro/ (verify)
+- Original image source: NASA/GSFC/ASU
+- Image caption (suggested): "LRO in lunar orbit; its camera images underpin accurate landing-site coordinates."
+- Official source page: https://science.nasa.gov/mission/lro/
+
+**Research Sources**
+- Source 1: NASA LRO mission pages
+- Source 2: NASA NSSDCA, LRO (2009-031A)
+- Source 3: LROC (lroc.asu.edu)
+
+---
+
+### Record 22: Beresheet
+
+**Basic Information**
+- Official name: Beresheet
+- Alternative name: SpaceIL Lunar Lander; Genesis
+- Object category: Failed landing (crash)
+- Country: Israel
+- Space agency: SpaceIL with Israel Aerospace Industries (private/non-profit; supported by the Israel Space Agency)
+- Mission name: Beresheet
+
+**Historical Information**
+- Launch date: 22 Feb 2019, ~01:45 UTC (Falcon 9, secondary payload)
+- Lunar arrival / landing / deployment date: Lunar orbit ~4 Apr 2019; landing attempt and crash 11 Apr 2019, ~19:25 UTC
+- Mission completion date: 11 Apr 2019 (crash)
+- Historical significance: First privately built spacecraft to reach lunar orbit and attempt a landing; Israel became the seventh country to reach lunar orbit.
+- Mission objective: Soft-land on Mare Serenitatis and measure the local magnetic field.
+- What happened during the mission: A manual-command error during descent shut down the main engine. The lander crashed at high speed. This was a **failed landing, a crash**.
+- Current status: Wreckage on the surface.
+
+**Geographical Information**
+- Lunar latitude: 32.5956°N
+- Lunar longitude: 19.3496°E
+- Landing site: Mare Serenitatis
+- Nearest recognizable crater: Not confirmed here
+- Location accuracy: **Exact** (LRO-identified)
+
+**Physical Information**
+- Object dimensions: ≈2 m diameter, ≈1.5 m high (approx.)
+- Object mass: ≈585 kg at launch; ≈150 kg dry
+- Description of the physical object: Four-legged lander with a magnetometer (Weizmann Institute), a NASA retroreflector and a "lunar library" time capsule (Arch Mission Foundation).
+- What remains on the Moon today: Wreckage and the time-capsule data discs. Dehydrated tardigrades were reportedly included; survival is considered very unlikely and unconfirmed.
+
+**Timeline Compatibility**
+- First known presence: 11 Apr 2019
+- Last known presence: Present to date
+- Still physically present: Yes (Vikram debris)
+- Presence status: Impact event and debris field identified; individual debris fragments are not all separately mapped
+
+**Visual References**
+- Image URL: https://www.lroc.asu.edu/ (LROC site; search "Beresheet"; verify)
+- Original image source: NASA/GSFC/ASU (LROC)
+- Image caption (suggested): "Beresheet impact site imaged by LRO, 22 Apr 2019."
+- Official source page: https://www.spaceil.com/ (VERIFY)
+
+**Research Sources**
+- Source 1: NASA LRO release on Beresheet impact site (Apr 2019)
+- Source 2: SpaceIL/IAI mission statements (2019)
+- Source 3: LROC (lroc.asu.edu)
+
+---
+
+### Record 23: Chandrayaan-2 mission record — Vikram impact debris (orbiter is a separate orbital object)
+
+**Basic Information**
+- Official name: Chandrayaan-2 Vikram lander (with Pragyan rover on board)
+- Alternative name: Vikram (Chandrayaan-2)
+- Object category: Mission record containing a failed Vikram landing / impact debris. The Chandrayaan-2 orbiter is a separate orbital object and must not share Vikram's surface coordinates.
+- Country: India
+- Space agency: ISRO
+- Mission name: Chandrayaan-2
+
+**Historical Information**
+- Launch date: 22 Jul 2019, ~09:13 UTC (GSLV Mk III)
+- Lunar arrival / landing / deployment date: Orbiter inserted 20 Aug 2019. Vikram separated 2 Sep. Landing attempt 6/7 Sep 2019 (powered descent ~20:08 UTC; contact lost ~20:25 UTC at ~2.1 km altitude).
+- Mission completion date: Vikram/Pragyan lost on 6/7 Sep 2019; orbiter continues
+- Historical significance: India's first lunar landing attempt, aimed at the south polar region. Orbiter carries a dual-frequency SAR and a 0.25 m-class camera.
+- Mission objective: Soft-land near the south pole and deploy the Pragyan rover.
+- What happened during the mission: Vikram's descent deviated and contact was lost ~2 km above the surface. It **crashed**. NASA's LRO identified the debris field on 2 Dec 2019 after a tip from an Indian amateur (S. Subramanian). Pragyan, still aboard, was never deployed.
+- Current status: Lander wreckage on the surface. The orbiter is reported operational (VERIFY).
+
+**Geographical Information**
+- Lunar latitude: −70.8810°
+- Lunar longitude: 22.7840°
+- Landing site: Southern highlands, between Manzinus C and Simpelius N
+- Nearest recognizable crater: Manzinus C / Simpelius N
+- Location accuracy: **Exact** (LRO-identified)
+
+**Physical Information**
+- Object dimensions: Not verified here
+- Object mass: Vikram ≈1,471 kg; Pragyan ≈27 kg; orbiter ≈2,379 kg
+- Description of the physical object: Lander with ChaSTE, ILSA and Langmuir probe payloads and an unused rover.
+- What remains on the Moon today: Vikram impact debris. Pragyan was not deployed; it remained aboard Vikram and must not be represented as an independently landed rover.
+
+**Timeline Compatibility**
+- First known presence: 6/7 Sep 2019
+- Last known presence: Present to date
+- Still physically present: Yes (Vikram debris)
+- Presence status: Impact event and debris field identified; individual debris fragments are not all separately mapped. Orbiter: orbital timeline 20 Aug 2019 – ongoing (VERIFY).
+
+**Visual References**
+- Image URL: https://www.lroc.asu.edu/ (search "Vikram"; verify)
+- Original image source: NASA/GSFC/ASU (LROC), 2019
+- Image caption (suggested): "Debris field of Chandrayaan-2's Vikram, imaged by LRO, Dec 2019."
+- Official source page: https://www.isro.gov.in/Chandrayaan2.html (VERIFY)
+
+**Research Sources**
+- Source 1: NASA LRO release, "NASA's LRO Images Vikram impact site," 2 Dec 2019
+- Source 2: ISRO Chandrayaan-2 mission pages
+- Source 3: LROC (lroc.asu.edu)
+
+---
+
+### Record 25: Danuri (KPLO)
+
+**Basic Information**
+- Official name: Korea Pathfinder Lunar Orbiter (KPLO)
+- Alternative name: Danuri ("Enjoy the Moon")
+- Object category: Orbiter
+- Country: South Korea
+- Space agency: KARI
+- Mission name: Danuri / KPLO
+
+**Historical Information**
+- Launch date: 4 Aug 2022, ~23:08 UTC (Falcon 9, Cape Canaveral)
+- Lunar arrival / orbit date: Lunar orbit insertion ~16 Dec 2022
+- Mission completion date: Ongoing (extended; VERIFY)
+- Historical significance: South Korea's first lunar mission. Carries NASA's ShadowCam for permanently shadowed regions.
+- Mission objective: Test lunar-exploration technologies; survey topography, magnetism and gamma-ray and polarimetric data from ~100 km polar orbit.
+- What happened during the mission: Danuri used a low-energy ballistic trajectory. It carries LUTI, PolCam, KMAG, KGRS, a delay-tolerant networking experiment and ShadowCam (NASA).
+- Current status: Operating (VERIFY current extension).
+
+**Orbital Timeline**
+- Orbital mission: ~16 Dec 2022 – ongoing.
+
+**Geographical Information**
+- Latitude/Longitude: N/A (orbiter)
+- Landing site / lunar region: Polar orbit
+- Nearest landmark: N/A
+- Location accuracy: N/A
+
+**Physical Information**
+- Object dimensions: Not verified here
+- Object mass: ≈678 kg at launch
+- Description of the physical object: Small orbiter with solar arrays and six instruments.
+- What remains on the Moon today: Nothing (still in orbit).
+
+**Timeline Compatibility**
+- First known presence: 16 Dec 2022 (orbit)
+- Last known presence: Ongoing
+- Still physically present: In orbit (not on surface)
+- Presence status: Confirmed (VERIFY current status)
+
+**Visual References**
+- Image URL: https://www.kari.re.kr/eng/ (VERIFY exact page)
+- Original image source: KARI
+- Image caption (suggested): "Danuri's first Earth-and-Moon image, 2022."
+- Official source page: https://www.kari.re.kr/eng/ (VERIFY)
+
+**Research Sources**
+- Source 1: KARI KPLO/Danuri mission pages (VERIFY)
+- Source 2: NASA ShadowCam / Danuri mission pages
+- Source 3: Mission press releases (Aug and Dec 2022)
+
+---
+
+### Record 26: Chandrayaan-3 Vikram (Shiv Shakti Point)
+
+**Basic Information**
+- Official name: Chandrayaan-3 Vikram lander
+- Alternative name: Vikram (Chandrayaan-3); landing site named Shiv Shakti Point
+- Object category: Lander (successful soft landing)
+- Country: India
+- Space agency: ISRO
+- Mission name: Chandrayaan-3
+
+**Historical Information**
+- Launch date: 14 Jul 2023, ~09:05 UTC (LVM3-M4)
+- Lunar arrival / landing / deployment date: Orbit ~5 Aug 2023; landing 23 Aug 2023, ~12:33 UTC (18:03 IST)
+- Mission completion date: Put into sleep mode ~4 Sep 2023; reactivation attempts later failed (~22 Sep 2023)
+- Historical significance: India became the fourth country to soft-land, and the first to land this close to the south polar region. "Shiv Shakti Point" was approved by the IAU in Mar 2024.
+- Mission objective: Soft-land and carry out in-situ measurements.
+- What happened during the mission: ChaSTE measured the near-surface temperature profile; ILSA recorded seismic signals; RAMBHA-LP measured plasma. Vikram performed a ~40 cm hop on 3 Sep 2023. NASA's LRO laser altimeter later ranged to its LRA retroreflector (Dec 2023).
+- Current status: Dormant on the surface.
+
+**Geographical Information**
+- Lunar latitude: −69.3733°
+- Lunar longitude: 32.3189°
+- Landing site: Southern highlands, between Manzinus C and Simpelius N
+- Nearest recognizable crater: Manzinus C / Simpelius N
+- Location accuracy: **Exact** (ISRO / LRO-confirmed)
+
+**Physical Information**
+- Object dimensions: Not verified here
+- Object mass: Lander module ≈1,752 kg including Pragyan (ISRO; verify)
+- Description of the physical object: Lander with ChaSTE, ILSA, RAMBHA-LP and the NASA LRA.
+- What remains on the Moon today: The lander (rover in Record 27).
+
+**Timeline Compatibility**
+- First known presence: 23 Aug 2023
+- Last known presence: Present to date
+- Still physically present: Yes
+- Presence status: Confirmed
+
+**Visual References**
+- Image URL: https://www.isro.gov.in/Chandrayaan3.html (verify)
+- Original image source: ISRO; LROC
+- Image caption (suggested): "Vikram lander at Shiv Shakti Point, imaged by Pragyan, Aug 2023."
+- Official source page: https://www.isro.gov.in/Chandrayaan3.html
+
+**Research Sources**
+- Source 1: ISRO Chandrayaan-3 mission pages
+- Source 2: NASA LRO release on Vikram retroreflector ranging (Dec 2023)
+- Source 3: IAU WGPSN naming record, Shiv Shakti (Mar 2024)
+
+---
+
+### Record 27: Pragyan rover
+
+**Basic Information**
+- Official name: Pragyan rover (Chandrayaan-3)
+- Alternative name: "Wisdom"
+- Object category: Rover
+- Country: India
+- Space agency: ISRO
+- Mission name: Chandrayaan-3
+
+**Historical Information**
+- Launch date: 14 Jul 2023
+- Lunar arrival / landing / deployment date: Rolled out 23/24 Aug 2023 (a few hours after landing; verify timing)
+- Mission completion date: Parked in sleep mode ~2 Sep 2023; no revival
+- Historical significance: India's first lunar rover.
+- Mission objective: Analyse local soil composition.
+- What happened during the mission: Pragyan drove ~100 m. Its APXS and LIBS confirmed sulphur and other elements near the south pole. It avoided a small crater on 27 Aug 2023.
+- Current status: Dormant on the surface.
+
+**Geographical Information**
+- Lunar latitude: ≈−69.37° (approx.)
+- Lunar longitude: ≈32.32° (approx.)
+- Landing site: Shiv Shakti Point
+- Nearest recognizable crater: Manzinus C
+- Location accuracy: **Approximate** (within ~100 m of the lander)
+
+**Physical Information**
+- Object dimensions: ≈0.92 × 0.75 × 0.40 m (approx.)
+- Object mass: ≈26 kg
+- Description of the physical object: Six-wheeled solar-powered rover with APXS, LIBS, and cameras.
+- What remains on the Moon today: The rover.
+
+**Timeline Compatibility**
+- First known presence: 23 Aug 2023
+- Last known presence: Present to date
+- Still physically present: Yes
+- Presence status: Confirmed
+
+**Visual References**
+- Image URL: https://www.isro.gov.in/Chandrayaan3.html (verify)
+- Original image source: ISRO
+- Image caption (suggested): "Pragyan on the lunar surface, Aug 2023."
+- Official source page: https://www.isro.gov.in/Chandrayaan3.html
+
+**Research Sources**
+- Source 1: ISRO Chandrayaan-3 mission pages
+- Source 2: ISRO press releases (Aug–Sep 2023)
+- Source 3: ISRO science results (VERIFY)
+
+---
+
+### Record 28: SLIM (Smart Lander for Investigating Moon)
+
+**Basic Information**
+- Official name: Smart Lander for Investigating Moon (SLIM)
+- Alternative name: "Moon Sniper"
+- Object category: Lander (precision landing demonstrator)
+- Country: Japan
+- Space agency: JAXA
+- Mission name: SLIM
+
+**Historical Information**
+- Launch date: 6 Sep 2023, ~23:42 UTC (7 Sep 08:42 JST) (H-IIA)
+- Lunar arrival / landing / deployment date: Orbit ~25 Dec 2023; landing 19 Jan 2024, ~15:20 UTC
+- Mission completion date: Mission ended in 2024 after several night survivals (VERIFY final date)
+- Historical significance: Japan became the fifth country to soft-land. Precision landing demonstrated (target accuracy ~100 m).
+- Mission objective: Land near a target crater within ~100 m.
+- What happened during the mission: A main engine failure shortly before touchdown caused SLIM to land in an unplanned orientation. It resumed operation after power was restored. Two small probes, LEV-1 and LEV-2 (SORA-Q), were deployed and operated successfully. A multi-band camera obtained spectra of olivine-bearing rocks.
+- Current status: Inactive.
+
+**Geographical Information**
+- Lunar latitude: −13.3°
+- Lunar longitude: 25.2°E
+- Landing site: Near Shioli crater, Mare Nectaris edge
+- Nearest recognizable crater: Shioli
+- Location accuracy: **Approximate** (JAXA-reported; later reports cite ~10 m target error)
+
+**Physical Information**
+- Object dimensions: ≈2.4 × 1.7 × 2.7 m (approx.)
+- Object mass: ≈200 kg dry; ≈700 kg launch
+- Description of the physical object: Box lander with two small probes and a multi-band camera.
+- What remains on the Moon today: SLIM, LEV-1 and LEV-2.
+
+**Timeline Compatibility**
+- First known presence: 19 Jan 2024
+- Last known presence: Present to date
+- Still physically present: Yes
+- Presence status: Confirmed
+
+**Visual References**
+- Image URL: https://global.jaxa.jp/projects/sas/slim/ (verify)
+- Original image source: JAXA / Tomy / Sony / Doshisha University
+- Image caption (suggested): "SLIM imaged on the Moon by LEV-2, Jan 2024."
+- Official source page: https://global.jaxa.jp/projects/sas/slim/
+
+**Research Sources**
+- Source 1: JAXA SLIM pages
+- Source 2: NASA LRO imagery of SLIM (Jan 2024)
+- Source 3: JAXA press conferences (Jan–Aug 2024)
+
+---
+
+### Record 29: IM-1 Odysseus
+
+**Basic Information**
+- Official name: IM-1 "Odysseus" (Nova-C lander)
+- Alternative name: Odysseus; Tipsy
+- Object category: Lander (commercial, NASA CLPS)
+- Country: USA
+- Space agency: Intuitive Machines (private) for NASA CLPS
+- Mission name: IM-1
+
+**Historical Information**
+- Launch date: 15 Feb 2024, ~06:05 UTC (Falcon 9)
+- Lunar arrival / landing / deployment date: Landing 22 Feb 2024, ~23:23 UTC
+- Mission completion date: ~28–29 Feb 2024 (power exhausted); later wake attempts failed (VERIFY)
+- Historical significance: First US landing since Apollo 17 (52 years); first commercial landing; first methane-fuelled engine used on the Moon.
+- Mission objective: Deliver six NASA payloads and commercial cargo near the south pole.
+- What happened during the mission: Laser rangefinders did not work (a safety pin was not removed). The team used a NASA navigation lidar experiment for descent. One leg caught on the surface and the lander tipped onto its side, limiting power and communications. It operated for about a week before lunar night.
+- Current status: Inactive on the surface.
+
+**Geographical Information**
+- Lunar latitude: −80.1304°
+- Lunar longitude: 1.4378°E
+- Landing site: Near Malapert A, south polar region
+- Nearest recognizable crater: Malapert A
+- Location accuracy: **Exact** (LRO-identified)
+
+**Physical Information**
+- Object dimensions: ≈4.0 m tall, ≈1.6 m wide (approx.)
+- Object mass: ≈1,900 kg fuelled (approx.)
+- Description of the physical object: Hexagonal-bodied lander with a methane/oxygen engine and a range of NASA and commercial payloads. A Jeff Koons "Moon Phases" art payload was carried.
+- What remains on the Moon today: The lander and its payloads.
+
+**Timeline Compatibility**
+- First known presence: 22 Feb 2024
+- Last known presence: Present to date
+- Still physically present: Yes
+- Presence status: Confirmed
+
+**Visual References**
+- Image URL: https://www.intuitivemachines.com/im-1 (verify)
+- Original image source: Intuitive Machines; NASA/GSFC/ASU (LROC)
+- Image caption (suggested): "Odysseus on its side near Malapert A, imaged by LRO, 24 Feb 2024."
+- Official source page: https://www.intuitivemachines.com/im-1
+
+**Research Sources**
+- Source 1: Intuitive Machines IM-1 mission page
+- Source 2: NASA CLPS / LRO release on Odysseus
+- Source 3: Press briefings (Feb 2024)
+
+---
+
+#### Record 31: Blue Ghost Mission 1 (Firefly Aerospace)
+
+- **Object / mission:** Blue Ghost Mission 1 lunar lander.
+- **Country / operator:** United States; Firefly Aerospace.
+- **Mission type:** Successful robotic soft landing.
+- **Launch:** 15 Feb 2025.
+- **Lunar landing:** 2 Mar 2025.
+- **Landing region:** Mare Crisium.
+- **Mission end:** Firefly reported completion of surface operations on 16 Mar 2025; subsequent science-data analysis is not the same as continued lander operation.
+- **Physical presence:** Lander hardware remains at the landing site, but it is inactive after the mission.
+- **Coordinates:** Do not enter a precise marker until the landing-site coordinate is checked against Firefly mission documentation or suitable LRO/LROC imagery. Use `null` / `Unknown` rather than a guessed point.
+- **Visual asset:** Prefer Firefly's official surface imagery; label artist renderings separately from actual surface photographs.
+- **Primary starting source:** NASA Moon Missions page: https://science.nasa.gov/moon/missions/
+- **Additional source:** Firefly Aerospace mission archive: https://fireflyspace.com/
+
+NASA's mission summary lists Blue Ghost 1 as landing successfully on 2 Mar 2025 and completing its mission on 16 Mar 2025.
+
+#### Record 32: IM-2 Athena (Intuitive Machines)
+
+- **Object / mission:** Nova-C lander named Athena, mission IM-2.
+- **Country / operator:** United States; Intuitive Machines.
+- **Mission type:** Lunar landing; landed on its side and had limited surface operations.
+- **Launch:** 27 Feb 2025.
+- **Lunar landing:** 6 Mar 2025.
+- **Landing region:** Near Mons Mouton, lunar south-polar region.
+- **Mission outcome:** NASA reports the lander was on its side, limiting science operations.
+- **Physical presence:** Lander remains at the lunar surface; do not label it operational unless a dated source confirms operation.
+- **Coordinates:** Leave as `Unknown / verify` until confirmed from Intuitive Machines or LRO/LROC documentation. Do not use a planned target coordinate as the actual landing coordinate.
+- **Primary starting source:** NASA Moon Missions page: https://science.nasa.gov/moon/missions/
+- **Mission press kit:** NASA CLPS IM-2 press kit: https://www.nasa.gov/wp-content/uploads/2025/02/np-2025-02-005-jsc-clps-intuitive-machines-press-kit-508-2-25-25.pdf
+- **Operator source:** https://www.intuitivemachines.com/
+
+NASA's mission summary lists IM-2 as landing on 6 Mar 2025 near the Moon's south pole and notes that the lander was on its side.
+
+### 8.2 2026 mission event — Artemis II (not a surface object)
+
+- **Mission:** Artemis II.
+- **Type:** Crewed lunar flyby; no lunar landing.
+- **Launch:** 1 Apr 2026.
+- **Lunar flyby:** 6 Apr 2026.
+- **Splashdown:** 10 Apr 2026.
+- **Crew:** Reid Wiseman, Victor Glover, Christina Koch and Jeremy Hansen.
+- **Surface-object database treatment:** Do not create a lunar surface marker for Orion, the crew, or the mission. Add a timeline event with `event_type: "lunar_flyby"` and `surface_object: false`.
+- **NASA source:** https://www.nasa.gov/mission/artemis-ii/
+- **NASA return-to-Earth release:** https://www.nasa.gov/news-release/nasa-welcomes-record-setting-artemis-ii-moonfarers-back-to-earth/
+
+### 8.3 Verified status correction — Lunar Reconnaissance Orbiter
+
+NASA's LRO mission page currently labels LRO an **Active Mission** and states that it has studied the Moon since 2009. Keep it in the orbital layer, with no fixed surface latitude/longitude.
+
+Source: https://science.nasa.gov/mission/lro/
+
+### 8.4 Chandrayaan-1: separate the orbiter and MIP in the application
+
+ISRO's mission page confirms Chandrayaan-1 launched on 22 Oct 2008, entered lunar orbit, carried the Moon Impact Probe, and lost communication on 29 Aug 2009. NASA's mission page describes the MIP as a separately released impactor that struck near Shackleton crater on 14 Nov 2008.
+
+Application treatment:
+- `chandrayaan-1-orbiter`: orbital object; no fixed surface coordinates; operational period ended in Aug 2009. Do not state that it is still orbiting as a confirmed current fact based solely on the 2016 radar re-detection.
+- `chandrayaan-1-mip`: separate impact event / debris record; surface coordinate should remain approximate or unknown unless a primary source provides a defensible location.
+
+Sources:
+- ISRO: https://www.isro.gov.in/Chandrayaan_1.html
+- NASA: https://science.nasa.gov/mission/chandrayaan-1/
+
+### 8.5 Required corrections to the visualization data model
+
+The original document uses some mission records that contain multiple physical components. The app should not map every mission record as a single marker. Use one `mission_id` with multiple `objects` where applicable.
+
+Recommended fields:
+
+- `record_id`: unique identifier for the physical object or mission event.
+- `mission_id`: groups components belonging to one mission.
+- `object_name`
+- `object_type`: lander, rover, instrument, impact_debris, orbiter, flyby_event.
+- `country_or_operator`
+- `arrival_date`
+- `landing_or_deployment_date`
+- `operational_end_date`
+- `last_confirmed_presence_date`
+- `presence_start_date`
+- `presence_end_date` (null when still believed present)
+- `surface_presence`: true / false / uncertain.
+- `latitude`, `longitude`: numeric values only when supported.
+- `coordinate_status`: image_confirmed / mission_reported / approximate / unknown.
+- `coordinate_reference`: datum / lunar reference convention, when known.
+- `position_epoch`: date associated with a rover's coordinate.
+- `orbital_period_start`, `orbital_period_end`: for orbiters.
+- `status_as_of`: date on which the status was checked.
+- `image_asset`, `image_source`, `image_credit`, `image_type`.
+- `source_urls`: list of sources supporting the specific fields.
+
+### 8.6 Correct timeline filtering rule
+
+For a selected interval `[start_year, end_year]`, show a surface object if its physical-presence interval overlaps the selected interval:
+
+`object.presence_start_date <= selected_end_date` AND (`object.presence_end_date` is null OR `object.presence_end_date >= selected_start_date`).
+
+Do **not** filter surface objects by operational life. A failed, dormant or inactive lander can remain physically present long after it stops transmitting.
+
+Use separate timeline tracks / layers:
+1. **Surface heritage:** landers, rovers, instruments and impact debris.
+2. **Orbital missions:** spacecraft while in lunar orbit; show orbit/trajectory only if reliable ephemeris data is available.
+3. **Mission events:** flybys and other events that did not leave an object on the surface.
+
+A mission's planned landing date is not an actual arrival date. Planned missions after the 2026 cutoff must not appear as completed historical objects.
+
+### 8.7 Source-check notes
+
+The following official pages were checked for this revision:
+- NASA Moon Missions: https://science.nasa.gov/moon/missions/ (includes Blue Ghost 1, IM-2 and Artemis II).
+- NASA LRO: https://science.nasa.gov/mission/lro/ (labels LRO an active mission).
+- NASA Artemis II: https://www.nasa.gov/mission/artemis-ii/ (records the crewed flyby and dates).
+- ISRO Chandrayaan-1: https://www.isro.gov.in/Chandrayaan_1.html (mission dates and end of communications).
+- NASA Chandrayaan-1 / MIP: https://science.nasa.gov/mission/chandrayaan-1/ (orbiter and impactor distinction).
+
+**Important limitation:** The existence of a source URL in this document does not mean every numeric value in the original 30 records has been revalidated. Before production, verify each object's coordinate and image individually. Where the source does not establish an exact position, the application must show an approximate region or omit the marker rather than fabricate precision.

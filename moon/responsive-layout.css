@@ -1,0 +1,12 @@
+@media (max-width: 760px) {
+  .timeline-panel {
+    flex-basis: 150px;
+    padding: 8px 11px;
+  }
+}
+
+@media (max-height: 600px) and (max-width: 760px) {
+  .timeline-panel {
+    flex-basis: 120px;
+  }
+}

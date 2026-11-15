@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050a12">
+    <meta name="description" content="An interactive guide to Earth's geography, science, and deep history.">
+    <title>Earth | Cosmic Horizon</title>
+    <link rel="icon" href="data:,">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../shared/site-nav.css">
+    <script src="../shared/site-nav.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/"
+        }
+      }
+    </script>
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <main class="experience">
+      <div class="starfield" aria-hidden="true"></div>
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="Earth Legacy home">
+          <span class="brand-mark" aria-hidden="true"><span></span></span>
+          <span class="brand-copy">
+            <strong>EARTH <span>LEGACY</span></strong>
+            <small>NASA SPACE APPS <i></i> INTERACTIVE 3D EXPLORER</small>
+          </span>
+        </a>
+        <div class="header-tools">
+          <label class="search-box">
+            <span class="search-icon" aria-hidden="true"></span>
+            <input id="search-input" type="search" placeholder="Search Earth..." autocomplete="off" aria-label="Search Earth information">
+            <kbd>/</kbd>
+            <div class="search-results" id="search-results" hidden></div>
+          </label>
+          <button class="header-link" id="categories-button"><span class="grid-icon" aria-hidden="true"></span> Categories</button>
+          <button class="header-link" id="facts-button"><span class="spark-icon" aria-hidden="true">✳</span> Earth facts</button>
+          <button class="icon-button info-button" id="info-button" aria-label="About this experience" title="About this experience">i</button>
+        </div>
+      </header>
+
+      <section class="stage" aria-label="Interactive Earth globe">
+        <div class="stage-heading">
+          <p class="eyebrow"><span class="live-dot"></span> A LIVING, CHANGING WORLD</p>
+          <h1>Our home, <em>in perspective.</em></h1>
+          <p class="stage-caption">Rotate the globe. Find a place. Discover the story of Earth.</p>
+        </div>
+        <div id="globe-wrap" class="globe-wrap">
+          <canvas id="earth-canvas" aria-label="Interactive 3D model of planet Earth"></canvas>
+          <div class="globe-halo" aria-hidden="true"></div>
+          <div class="globe-label label-north" aria-hidden="true">N 90°</div>
+          <div class="globe-label label-south" aria-hidden="true">S 90°</div>
+          <div class="globe-hint" id="globe-hint"><span class="mouse-icon" aria-hidden="true"></span> DRAG TO EXPLORE <span class="hint-divider">·</span> SCROLL TO ZOOM</div>
+        </div>
+
+        <div class="left-dock">
+          <nav class="globe-controls" aria-label="Globe controls">
+            <button class="control-button" id="focus-button" aria-label="Focus on Earth" title="Focus Earth"><span class="focus-icon" aria-hidden="true"></span></button>
+            <span class="control-separator"></span>
+            <button class="control-button" id="zoom-in" aria-label="Zoom in" title="Zoom in"><span class="plus-icon" aria-hidden="true"></span></button>
+            <button class="control-button" id="zoom-out" aria-label="Zoom out" title="Zoom out"><span class="minus-icon" aria-hidden="true"></span></button>
+            <span class="control-separator"></span>
+            <button class="control-button" id="reset-button" aria-label="Reset view" title="Reset view"><span class="reset-icon" aria-hidden="true">↺</span></button>
+            <button class="control-button is-active" id="rotation-button" aria-label="Turn automatic rotation off" title="Auto rotation on"><span class="rotate-icon" aria-hidden="true">⟳</span></button>
+          </nav>
+
+          <aside class="telemetry" aria-label="Earth at a glance">
+            <div class="telemetry-heading"><span class="telemetry-icon" aria-hidden="true">◉</span><span>EARTH AT A GLANCE</span><span class="telemetry-status"></span></div>
+            <div class="telemetry-grid">
+              <div><span class="data-label">PLANET</span><strong>Earth</strong></div>
+              <div><span class="data-label">AGE</span><strong>4.54 <small>BILLION YR</small></strong></div>
+              <div><span class="data-label">SURFACE AREA</span><strong>510.1 <small>MILLION KM²</small></strong></div>
+              <div><span class="data-label">MEAN RADIUS</span><strong>6,371 <small>KM</small></strong></div>
+              <div><span class="data-label">NATURAL SATELLITE</span><strong>Moon</strong></div>
+            </div>
+            <div class="telemetry-foot"><span>01</span> / 01 <span class="foot-rule"></span> BLUE MARBLE</div>
+          </aside>
+        </div>
+        <button class="dock-toggle" id="dock-toggle" type="button" aria-label="Show Earth controls and stats" aria-expanded="false" title="Swipe from the left or tap to show controls">
+          <span aria-hidden="true">›</span>
+        </button>
+
+        <div class="coordinates" aria-live="polite"><span class="coordinates-dot"></span><span id="coordinates-text">ROTATE TO EXPLORE THE PLANET</span></div>
+
+        <aside class="info-panel" id="info-panel" aria-live="polite" aria-label="Earth information" hidden>
+          <div class="panel-topline"><span class="panel-kicker" id="panel-kicker">FIELD NOTES / EARTH</span><button class="panel-close" id="panel-close" aria-label="Close information panel">×</button></div>
+          <div class="panel-content" id="panel-content"></div>
+        </aside>
+
+        <aside class="category-drawer" id="category-drawer" aria-label="Earth topics" hidden>
+          <div class="drawer-heading"><div><p class="eyebrow">EXPLORE THE PLANET</p><h2>Field guide</h2></div><button class="panel-close" id="drawer-close" aria-label="Close categories">×</button></div>
+          <div class="category-list" id="category-list"></div>
+          <div class="drawer-foot">22 TOPICS <span>·</span> ONE REMARKABLE WORLD</div>
+        </aside>
+      </section>
+
+      <footer class="timeline" aria-label="Geological history timeline">
+        <div class="timeline-header">
+          <div class="timeline-title"><span class="timeline-icon" aria-hidden="true">◷</span><div><span class="eyebrow">A PLANET IN TIME</span><h2>Earth's story</h2></div></div>
+          <div class="timeline-controls">
+            <span class="timeline-range">4.54 BILLION YEARS <span>—</span> TODAY</span>
+            <button class="timeline-arrow" id="timeline-left" aria-label="Scroll timeline left">‹</button>
+            <button class="timeline-arrow" id="timeline-right" aria-label="Scroll timeline right">›</button>
+          </div>
+        </div>
+        <div class="timeline-track" id="timeline-track" tabindex="0" aria-label="Scroll through Earth's history">
+          <div class="timeline-line" aria-hidden="true"></div>
+          <div class="timeline-events" id="timeline-events"></div>
+        </div>
+      </footer>
+
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </main>
+  </body>
+</html>

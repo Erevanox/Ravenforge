@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#07090d" />
+    <meta
+      name="description"
+      content="An interactive, source-conscious explorer of Mars missions and milestones."
+    />
+    <title>Mars | Cosmic Horizon</title>
+    <link rel="icon" href="data:," />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css?v=20261115.2" />
+    <link rel="stylesheet" href="../shared/site-nav.css" />
+    <script src="../shared/site-nav.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"
+        }
+      }
+    </script>
+    <script type="module" src="./app.js?v=20261114.33"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="Ares Legacy home">
+          <span class="brand-mark" aria-hidden="true">♂</span>
+          <span class="brand-copy">
+            <span class="brand-title-row">
+              <span class="brand-name">ARES LEGACY</span>
+              <span class="brand-dot" aria-hidden="true">•</span>
+              <span class="brand-badge">NASA SPACE APPS</span>
+            </span>
+            <span class="brand-subtitle">Interactive 3D Historical Archive · 1971–2026</span>
+          </span>
+        </a>
+        <div class="topbar-search">
+          <label class="search-field">
+            <span aria-hidden="true">⌕</span>
+            <input id="mission-search" type="search" list="mission-suggestions" placeholder="Search missions, landers, agencies..." autocomplete="off" aria-label="Search Mars missions" />
+          </label>
+          <datalist id="mission-suggestions"></datalist>
+        </div>
+        <nav class="topbar-actions" aria-label="Archive tools">
+          <button class="topbar-action" id="filters-toggle" type="button" aria-controls="era-filters" aria-expanded="true"><span aria-hidden="true">▽</span> FILTERS</button>
+          <button class="topbar-action" id="sources-button" type="button" aria-label="Open sources and image credits" title="Sources and image credits">SOURCES <span aria-hidden="true">▤</span></button>
+          <button class="topbar-info" id="open-info" type="button" aria-label="Open selected mission information" aria-controls="mission-panel" aria-expanded="false">i</button>
+        </nav>
+      </header>
+
+      <main>
+        <section class="explorer" aria-label="Interactive Mars mission explorer">
+          <div class="scene-wrap">
+            <div class="scene-head">
+              <span class="eyebrow"><span class="eyebrow-line"></span> MARS / LIVE FIELD</span>
+              <span class="scene-coordinate-note">SCHEMATIC ORBITS · NOT TO SCALE</span>
+            </div>
+            <div class="texture-status" id="texture-status" role="status" aria-live="polite"></div>
+            <div class="globe-stage" id="globe-stage">
+              <div class="globe-glow" aria-hidden="true"></div>
+              <div id="mars-canvas" aria-label="Interactive 3D model of Mars. Drag to rotate and use the mouse wheel to zoom." role="img"></div>
+              <div id="marker-layer" aria-label="Mission markers"></div>
+              <div class="axis-label axis-north">N</div>
+              <div class="axis-label axis-south">S</div>
+              <div class="scene-controls" role="group" aria-label="Mars view controls">
+                <button id="reset-view" type="button" aria-label="Reset view" title="Reset view">⌖</button>
+                <button id="zoom-in" type="button" aria-label="Zoom in" title="Zoom in">+</button>
+                <button id="zoom-out" type="button" aria-label="Zoom out" title="Zoom out">−</button>
+              </div>
+              <div class="scene-hint">DRAG TO ROTATE <span class="hint-divider">·</span> SCROLL TO ZOOM</div>
+              <div class="scale-label"><span></span> MARS / NOT TO SCALE</div>
+            </div>
+            <aside class="archive-telemetry" aria-label="Archive telemetry">
+              <div class="telemetry-title"><span aria-hidden="true">⊕</span> ARCHIVE TELEMETRY</div>
+              <div><span>RECORDS IN RANGE</span><strong id="visible-count">08</strong></div>
+              <div><span>SURFACE LOCATIONS</span><strong id="surface-count">0</strong></div>
+              <div><span>ORBITAL MISSIONS</span><strong id="orbiter-count">0</strong></div>
+            </aside>
+            <div class="scene-footer">
+              <div class="planet-readout"><span class="readout-dot"></span><span id="scene-caption">A world in the making</span></div>
+              <div class="scene-legend"><span class="legend-marker"></span> SURFACE LOCATION · SCHEMATIC <span class="legend-orbit"></span> ORBITAL PATHS</div>
+            </div>
+          </div>
+
+          <aside class="mission-panel" id="mission-panel" aria-live="polite" aria-hidden="true" inert>
+            <div class="panel-topline">
+              <span>MISSION INFORMATION</span>
+              <div class="panel-actions"><span id="mission-index">01 / 08</span><button class="panel-close" id="close-info" type="button" aria-label="Close mission information">×</button></div>
+            </div>
+            <div id="mission-content"></div>
+            <div class="panel-footnote"><span class="footnote-mark">i</span><span id="location-disclosure">Map markers are schematic indicators, not coordinate-accurate sites.</span></div>
+          </aside>
+        </section>
+
+        <section class="timeline" aria-label="Mars exploration timeline">
+          <div class="timeline-header">
+            <div class="epoch-controls">
+              <span class="epoch-label">EPOCH</span>
+              <label class="year-field"><input id="start-year" type="number" min="1971" max="2026" value="1971" aria-label="Start year" /></label>
+              <span class="epoch-arrow" aria-hidden="true">→</span>
+              <label class="year-field"><input id="end-year" type="number" min="1971" max="2026" value="2026" aria-label="End year" /></label>
+              <span class="year-span" id="year-span">(55 yrs)</span>
+              <button class="reset-history" id="reset-history" type="button" aria-label="Reset history" title="Reset history">⟲</button>
+            </div>
+            <div class="period-readout"><span>VISIBLE IN PERIOD</span><strong><span id="timeline-count">17</span> / 17</strong></div>
+          </div>
+          <div class="era-filters" id="era-filters" role="group" aria-label="Timeline era presets">
+            <button class="era-chip active" type="button" data-start="1971" data-end="2026" aria-pressed="true">All history <span>1971–2026</span></button>
+            <button class="era-chip" type="button" data-start="1971" data-end="1996" aria-pressed="false">Early missions <span>1971–1996</span></button>
+            <button class="era-chip" type="button" data-start="1997" data-end="2013" aria-pressed="false">Surface era <span>1997–2013</span></button>
+            <button class="era-chip" type="button" data-start="2001" data-end="2020" aria-pressed="false">Orbital science <span>2001–2020</span></button>
+            <button class="era-chip" type="button" data-start="2021" data-end="2026" aria-pressed="false">Recent missions <span>2021–2026</span></button>
+          </div>
+          <div class="timeline-track-wrap">
+            <div class="timeline-ruler" id="timeline-ruler" aria-hidden="true"></div>
+            <div class="timeline-track" id="timeline-track">
+              <div class="track-line"></div>
+              <div class="track-selected" id="track-selected"></div>
+              <div id="timeline-markers"></div>
+              <div class="range-inputs">
+                <input id="start-range" type="range" min="1971" max="2026" value="1971" aria-label="Timeline start year" />
+                <input id="end-range" type="range" min="1971" max="2026" value="2026" aria-label="Timeline end year" />
+              </div>
+            </div>
+            <div class="timeline-events" id="timeline-events"></div>
+          </div>
+          <div class="timeline-bottom">
+            <span><span class="timeline-dot"></span> SELECT A MARKER TO OPEN ITS MISSION RECORD</span>
+            <span>STATUS AND SOURCES REVIEWED 14 NOV 2026</span>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <dialog class="sources-dialog" id="sources-dialog" aria-labelledby="sources-title">
+      <div class="dialog-head"><div><span class="eyebrow"><span class="eyebrow-line"></span> FIELD NOTES</span><h2 id="sources-title">Sources &amp; confidence</h2></div><button id="close-sources" class="dialog-close" aria-label="Close sources" type="button">×</button></div>
+      <p class="dialog-intro">Mission dates, landing regions, and objectives are supplemented with agency mission profiles linked in each record. Exact or current rover positions are not plotted unless verified; globe markers and orbital paths are schematic. The 2K surface map was supplied with this project; its original credit and licence were not provided or independently verified.</p>
+      <div class="source-list">
+        <a href="https://science.nasa.gov/mission/maven/" target="_blank" rel="noreferrer"><span>NASA · MAVEN mission</span><span>↗</span></a>
+        <a href="https://science.nasa.gov/blogs/perseverance-mars-rover/2026/10/12/nasas-perseverance-sets-off-world-record-for-total-distance-driven/" target="_blank" rel="noreferrer"><span>NASA · Perseverance distance record</span><span>↗</span></a>
+        <a href="https://www.wam.ae/en/article/bysbi4j-uae-space-agency-announces-extension-emirates-mars" target="_blank" rel="noreferrer"><span>WAM · Emirates Mars Mission extension</span><span>↗</span></a>
+        <a href="https://science.nasa.gov/resource/perseverances-three-forks-sample-depot-map/" target="_blank" rel="noreferrer"><span>NASA · Three Forks depot map</span><span>↗</span></a>
+        <a href="https://www.esa.int/Science_Exploration/Space_Science/Mars_Express" target="_blank" rel="noreferrer"><span>ESA · Mars Express</span><span>↗</span></a>
+        <a href="https://www.esa.int/Enabling_Support/Operations/A_Mars-velous_decade_Celebrating_ten_years_of_TGO" target="_blank" rel="noreferrer"><span>ESA · Trace Gas Orbiter status</span><span>↗</span></a>
+        <a href="https://science.nasa.gov/mars/curiosity-reaches-1-kilometer-elevation-gain/" target="_blank" rel="noreferrer"><span>NASA · Curiosity elevation milestone</span><span>↗</span></a>
+        <a href="https://www.isro.gov.in/MOM_NationalMeet_2022SEP.html" target="_blank" rel="noreferrer"><span>ISRO · Mars Orbiter Mission status</span><span>↗</span></a>
+        <a href="https://www.esa.int/es/missions/exomars" target="_blank" rel="noreferrer"><span>ESA · Rosalind Franklin mission</span><span>↗</span></a>
+      </div>
+      <p class="dialog-note">Scope is current to 14 Nov 2026. The latest surface object included is the Three Forks depot (2022–23); no successful Mars landing is represented for 2026. ESCAPADE is en route, with arrival planned for Sep 2027; JAXA MMX explores Mars’s moons and is outside this surface-exploration scope. Rosalind Franklin is planned for a later launch. The Three Forks per-tube locations are available from NASA’s linked depot map but are not plotted individually. Schematic globe markers are not sites.</p>
+    </dialog>
+  </body>
+</html>

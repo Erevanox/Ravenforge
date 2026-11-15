@@ -1,0 +1,112 @@
+html.site-nav-enabled body {
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+html.site-nav-enabled body.site-nav-ready {
+  opacity: 1;
+}
+
+html.site-nav-enabled body.site-nav-leaving {
+  opacity: 0;
+}
+
+.site-nav-menu {
+  position: relative;
+  flex: 0 0 auto;
+  color: inherit;
+}
+
+.site-nav-trigger {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 10px;
+  border: 1px solid rgba(148, 181, 207, .26);
+  border-radius: 6px;
+  color: #b7c7d4;
+  background: rgba(8, 17, 27, .88);
+  font: 600 9px/1 "DM Mono", Consolas, monospace;
+  letter-spacing: .08em;
+  cursor: pointer;
+  list-style: none;
+  white-space: nowrap;
+}
+
+.site-nav-trigger::-webkit-details-marker {
+  display: none;
+}
+
+.site-nav-trigger:hover,
+.site-nav-menu[open] > .site-nav-trigger {
+  border-color: #59b8a6;
+  color: #e8f4ff;
+}
+
+.site-nav-links {
+  position: absolute;
+  z-index: 100;
+  top: calc(100% + 8px);
+  right: 0;
+  display: grid;
+  min-width: 154px;
+  gap: 3px;
+  padding: 6px;
+  border: 1px solid rgba(148, 181, 207, .24);
+  border-radius: 7px;
+  background: #080f18f5;
+  box-shadow: 0 12px 34px #0009;
+}
+
+.site-nav-link {
+  display: block;
+  padding: 9px 10px;
+  border-radius: 4px;
+  color: #aab9c7;
+  font: 500 10px/1.2 "DM Mono", Consolas, monospace;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.site-nav-link:hover,
+.site-nav-link:focus-visible,
+.site-nav-link.site-nav-active {
+  outline: none;
+  color: #e8f4ff;
+  background: rgba(89, 184, 166, .16);
+}
+
+.site-nav-link.site-nav-active {
+  box-shadow: inset 2px 0 #59b8a6;
+}
+
+@media (max-width: 620px) {
+  .site-nav-trigger {
+    width: 32px;
+    min-height: 32px;
+    padding: 0;
+  }
+
+  .site-nav-label {
+    overflow: hidden;
+    font-size: 0;
+  }
+
+  .site-nav-label::before {
+    content: "↗";
+    font: 15px/1 "Segoe UI Symbol", sans-serif;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.site-nav-enabled body {
+    opacity: 1;
+    transition: none;
+  }
+
+  html.site-nav-enabled body.site-nav-leaving {
+    opacity: 1;
+  }
+}
