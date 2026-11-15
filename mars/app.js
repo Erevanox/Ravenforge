@@ -360,7 +360,7 @@ let drag = null;
 let previousFrameTime = null;
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 let autoRotation = !prefersReducedMotion.matches;
-let targetZoom = 4.15;
+let targetZoom = 6;
 
 const satelliteBusMaterial = new THREE.MeshStandardMaterial({ color: 0xb9a98b, metalness: .62, roughness: .42 });
 const satellitePanelMaterial = new THREE.MeshStandardMaterial({ color: 0x28517a, metalness: .55, roughness: .48, emissive: 0x0b1d32, emissiveIntensity: .2975 });
@@ -710,7 +710,7 @@ function animate(timestamp = 0) {
 function resetView() {
   mars.rotation.set(0, 0, .13);
   clouds.rotation.copy(mars.rotation);
-  targetZoom = 4.15;
+  targetZoom = 6;
   autoRotation = !prefersReducedMotion.matches;
   updateMarkers();
 }

@@ -261,7 +261,7 @@
     const earth=worldRoot.localToWorld(meshes.get('Earth').position.clone());
     const mars=worldRoot.localToWorld(meshes.get('Mars').position.clone());
     const x=(earth.x+mars.x)/2,y=(earth.y+mars.y)/2;
-    return{x,y:y+1.5,z:22,tx:x,ty:y};
+    return{x,y:y+1.5,z:32,tx:x,ty:y};
   }
   function mobileDestinationsPose(){
     worldRoot.updateMatrixWorld(true);
@@ -274,8 +274,8 @@
     const left=Math.min(...destinations.map(item=>item.left)),right=Math.max(...destinations.map(item=>item.right));
     const bottom=Math.min(...destinations.map(item=>item.bottom)),top=Math.max(...destinations.map(item=>item.top));
     const x=(left+right)/2,y=(bottom+top)/2,tanHalfFov=Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
-    const distance=Math.max((right-left)/(2*camera.aspect*tanHalfFov),(top-bottom)/(2*tanHalfFov))*1.2;
-    return{x,y,z:Math.max(8,distance),tx:x,ty:y};
+    const distance=Math.max((right-left)/(2*camera.aspect*tanHalfFov),(top-bottom)/(2*tanHalfFov))*1.5;
+    return{x,y,z:Math.max(12,distance),tx:x,ty:y};
   }
   function applyCamera(p){camera.position.set(p.x,p.y,p.z);camera.lookTargetX=p.tx;camera.lookTargetY=p.ty;camera.lookAt(p.tx,p.ty,0);}
   if('ResizeObserver'in window)new ResizeObserver(resize).observe(host);else addEventListener('resize',resize);
