@@ -618,13 +618,37 @@ function updateMarkers() {
 
 function setupInteraction() {
   const element = renderer.domElement;
+  const touchPointers = new Map();
+  let pinchDistance = 0;
   element.addEventListener("pointerdown", (event) => {
     if (event.button !== 0 && event.pointerType === "mouse") return;
+    element.setPointerCapture(event.pointerId);
+    if (event.pointerType === "touch") {
+      touchPointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      if (touchPointers.size > 1) {
+        const points = Array.from(touchPointers.values());
+        pinchDistance = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
+        drag = null;
+        autoRotation = false;
+        return;
+      }
+    }
     drag = { x: event.clientX, y: event.clientY, moved: false };
     autoRotation = false;
-    element.setPointerCapture(event.pointerId);
   });
   element.addEventListener("pointermove", (event) => {
+    if (event.pointerType === "touch" && touchPointers.has(event.pointerId)) {
+      touchPointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      if (touchPointers.size > 1) {
+        const points = Array.from(touchPointers.values());
+        const nextDistance = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
+        if (pinchDistance > 0) {
+          targetZoom = THREE.MathUtils.clamp(targetZoom - (nextDistance - pinchDistance) * .008, 2.6, 6);
+        }
+        pinchDistance = nextDistance;
+        return;
+      }
+    }
     if (!drag) return;
     const dx = event.clientX - drag.x, dy = event.clientY - drag.y;
     if (Math.abs(dx) + Math.abs(dy) > 2) drag.moved = true;
@@ -635,7 +659,16 @@ function setupInteraction() {
     clouds.rotation.copy(mars.rotation);
     updateMarkers();
   });
-  const release = () => { autoRotation = !prefersReducedMotion.matches; drag = null; };
+  const release = (event) => {
+    const wasPinching = event.pointerType === "touch" && (touchPointers.size > 1 || pinchDistance > 0);
+    if (event.pointerType === "touch") {
+      touchPointers.delete(event.pointerId);
+      pinchDistance = 0;
+    }
+    autoRotation = touchPointers.size === 0 && !prefersReducedMotion.matches;
+    drag = null;
+    if (wasPinching) event.preventDefault();
+  };
   element.addEventListener("pointerup", release);
   element.addEventListener("pointercancel", release);
   element.addEventListener("wheel", (event) => {

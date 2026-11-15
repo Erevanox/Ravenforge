@@ -158,6 +158,7 @@ body.intro-pending .flight-readout,
 body.intro-pending .planet-label,
 body.intro-pending .destination-prompt,
 body.intro-pending .view-controls,
+body.intro-pending .mobile-zoom-controls,
 body.intro-pending .system-scale,
 body.intro-pending .bottomline { opacity: 0; }
 body.intro-started .space-effects { animation: intro-stars 1.3s ease-out both; }
@@ -170,6 +171,7 @@ body.intro-started .flight-readout { animation: intro-copy .65s ease-out 2.15s b
 body.intro-started .topbar,
 body.intro-started .bottomline,
 body.intro-started .view-controls,
+body.intro-started .mobile-zoom-controls,
 body.intro-started .system-scale {
   animation: none;
   opacity: 1;
@@ -619,6 +621,7 @@ body.intro-started .destination-prompt {
   height: 28px;
   cursor: pointer;
 }
+.mobile-zoom-controls { display: none; }
 .control-separator {
   height: 12px;
   border-left: 1px solid #8cafc644;
@@ -1007,6 +1010,31 @@ body.intro-started .destination-prompt {
   margin-left: 5px;
 }
 @media (max-width: 760px) {
+  .flight-readout {
+    top: auto;
+    bottom: 116px;
+  }
+  .view-controls {
+    top: auto;
+    bottom: 72px;
+  }
+  .mobile-zoom-controls {
+    position: absolute;
+    z-index: 5;
+    right: 16px;
+    bottom: 72px;
+    display: flex;
+    gap: 7px;
+  }
+  .mobile-zoom-controls button {
+    width: 34px;
+    height: 32px;
+    border: 1px solid #91cce32b;
+    color: var(--cyan);
+    background: #0a1721e8;
+    font: 16px var(--mono);
+    cursor: pointer;
+  }
   .topbar {
     height: 62px;
     padding: 0 17px;
@@ -1049,7 +1077,8 @@ body.intro-started .destination-prompt {
     font-size: 10px;
   }
   .flight-readout {
-    top: 34%;
+    top: auto;
+    bottom: 116px;
     left: 18px;
   }
   .destination-card {
@@ -1091,12 +1120,14 @@ body.intro-started .destination-prompt {
     left: 68%;
   }
   .view-controls {
-    top: calc(34% + 44px);
-    bottom: auto;
+    top: auto;
+    bottom: 72px;
     left: 18px;
     transform: none;
     font-size: 8px;
   }
+  .view-controls .drag-hint,
+  .view-controls .scroll-icon { display: none; }
   .system-scale {
     display: none;
   }
@@ -1214,7 +1245,8 @@ body.intro-started .destination-prompt {
     letter-spacing: 1px;
   }
   .flight-readout {
-    top: 37%;
+    top: auto;
+    bottom: 116px;
   }
   .destination-card {
     bottom: 18%;
@@ -1230,8 +1262,8 @@ body.intro-started .destination-prompt {
     left: 18px;
   }
   .view-controls {
-    top: calc(37% + 44px);
-    bottom: auto;
+    top: auto;
+    bottom: 72px;
     left: 18px;
     transform: none;
   }

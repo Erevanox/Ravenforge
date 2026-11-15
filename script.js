@@ -257,21 +257,45 @@
   }
   const overviewPose={x:0,y:0,z:70,tx:0,ty:0};
   function innerSystemPose(){
-    if(mobileFocus&&mobileFlightPose)return mobileFlightPose;
+    if(mobileFocus)return mobileDestinationsPose();
     const earth=worldRoot.localToWorld(meshes.get('Earth').position.clone());
     const mars=worldRoot.localToWorld(meshes.get('Mars').position.clone());
     const x=(earth.x+mars.x)/2,y=(earth.y+mars.y)/2;
     return{x,y:y+1.5,z:22,tx:x,ty:y};
   }
+  function mobileDestinationsPose(){
+    worldRoot.updateMatrixWorld(true);
+    const destinations=['Earth','Moon','Mars'].map(name=>{
+      const world=worlds.find(item=>item.name===name);
+      const position=meshes.get(name).getWorldPosition(new THREE.Vector3());
+      const radius=world.r*baseRootScale;
+      return{left:position.x-radius,right:position.x+radius,bottom:position.y-radius,top:position.y+radius};
+    });
+    const left=Math.min(...destinations.map(item=>item.left)),right=Math.max(...destinations.map(item=>item.right));
+    const bottom=Math.min(...destinations.map(item=>item.bottom)),top=Math.max(...destinations.map(item=>item.top));
+    const x=(left+right)/2,y=(bottom+top)/2,tanHalfFov=Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
+    const distance=Math.max((right-left)/(2*camera.aspect*tanHalfFov),(top-bottom)/(2*tanHalfFov))*1.2;
+    return{x,y,z:Math.max(8,distance),tx:x,ty:y};
+  }
   function applyCamera(p){camera.position.set(p.x,p.y,p.z);camera.lookTargetX=p.tx;camera.lookTargetY=p.ty;camera.lookAt(p.tx,p.ty,0);}
   if('ResizeObserver'in window)new ResizeObserver(resize).observe(host);else addEventListener('resize',resize);
 
-  const openingHold=.45,openingDuration=3;
+  const openingHold=.45,openingDuration=3,mobileOpeningHold=1.5,mobileOpeningDuration=2.4;
   let flightStarted=false,flightTime=0,flightComplete=false,flightEndPose=null,paused=false,selected=null,focusTween=null,dragging=false,dragMoved=false,lastX=0,lastY=0,rotationY=.08,rotationX=.34;
   worldRoot.rotation.set(rotationX,rotationY,0);
   const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();
   const clock=new THREE.Clock();
   resize();
+  const touchPointers=new Map();let pinchDistance=0;
+  function zoomCamera(factor){
+    if(mobileFocus){
+      focusTween=null;
+      if(!flightComplete&&!selected){flightComplete=true;updateDestinationReadiness();}
+    }
+    const minZoom=mobileFocus ? .5 : 5.2;
+    camera.position.z=THREE.MathUtils.clamp(camera.position.z*factor,minZoom,overviewPose.z*1.15);
+    camera.lookAt(camera.lookTargetX||0,camera.lookTargetY||0,0);
+  }
 
   const stageIndex=document.getElementById('stage-index'),stageTitle=document.getElementById('stage-title'),stageCaption=document.getElementById('stage-caption');
   const prompt=document.getElementById('destination-prompt');
@@ -360,6 +384,14 @@
     }
   }
   renderer.domElement.addEventListener('pointermove',event=>{
+    if(event.pointerType==='touch'&&touchPointers.has(event.pointerId)){
+      touchPointers.set(event.pointerId,{x:event.clientX,y:event.clientY});
+      if(touchPointers.size>1){
+        const points=Array.from(touchPointers.values()),distance=Math.hypot(points[0].x-points[1].x,points[0].y-points[1].y);
+        if(pinchDistance>0&&distance>0)zoomCamera(THREE.MathUtils.clamp(pinchDistance/distance,.75,1.3));
+        pinchDistance=distance;dragging=false;dragMoved=true;return;
+      }
+    }
     if(hoverCard.contains(event.target)){clearTimeout(hoverDismissTimer);return;}
     if(dragging){const dx=event.clientX-lastX,dy=event.clientY-lastY;if(Math.abs(dx)+Math.abs(dy)>2)dragMoved=true;rotationY+=dx*.004;rotationX=THREE.MathUtils.clamp(rotationX+dy*.003,-.85,.85);lastX=event.clientX;lastY=event.clientY;worldRoot.rotation.set(rotationX,rotationY,0);return;}
     const rect=renderer.domElement.getBoundingClientRect();pointer.set(((event.clientX-rect.left)/rect.width)*2-1,-((event.clientY-rect.top)/rect.height)*2+1);raycaster.setFromCamera(pointer,camera);
@@ -370,16 +402,33 @@
   renderer.domElement.addEventListener('pointerleave',event=>{if(hoverCard.contains(event.relatedTarget))clearTimeout(hoverDismissTimer);else if(infoWorld)scheduleHoverDismiss();else setHoveredPlanet(null);renderer.domElement.style.cursor='grab';});
   hoverCard.addEventListener('pointerenter',()=>clearTimeout(hoverDismissTimer));
   hoverCard.addEventListener('pointerleave',event=>{if(!renderer.domElement.contains(event.relatedTarget))scheduleHoverDismiss();});
-  renderer.domElement.addEventListener('pointerdown',event=>{dragging=true;dragMoved=false;lastX=event.clientX;lastY=event.clientY;renderer.domElement.setPointerCapture(event.pointerId);});
+  renderer.domElement.addEventListener('pointerdown',event=>{
+    renderer.domElement.setPointerCapture(event.pointerId);
+    if(event.pointerType==='touch'){
+      touchPointers.set(event.pointerId,{x:event.clientX,y:event.clientY});
+      if(touchPointers.size>1){
+        const points=Array.from(touchPointers.values());pinchDistance=Math.hypot(points[0].x-points[1].x,points[0].y-points[1].y);
+        dragging=false;dragMoved=true;return;
+      }
+    }
+    dragging=true;dragMoved=false;lastX=event.clientX;lastY=event.clientY;
+  });
   renderer.domElement.addEventListener('pointerup',event=>{
+    if(event.pointerType==='touch'&&touchPointers.has(event.pointerId)){
+      const wasPinching=touchPointers.size>1||pinchDistance>0;
+      touchPointers.delete(event.pointerId);pinchDistance=0;
+      if(wasPinching){dragging=false;dragMoved=true;return;}
+    }
     if(!dragging)return;dragging=false;if(dragMoved)return;
     const rect=renderer.domElement.getBoundingClientRect();pointer.set(((event.clientX-rect.left)/rect.width)*2-1,-((event.clientY-rect.top)/rect.height)*2+1);raycaster.setFromCamera(pointer,camera);
     const hit=raycaster.intersectObjects(Array.from(meshes.values()).filter(mesh=>mesh.userData.isDestination),false)[0];
     if(hit)chooseDestination(hit.object.userData.world);
   });
   enterDestination.addEventListener('click',()=>{if(infoWorld)chooseDestination(infoWorld);});
-  renderer.domElement.addEventListener('pointercancel',()=>dragging=false);
-  renderer.domElement.addEventListener('wheel',event=>{event.preventDefault();const factor=THREE.MathUtils.clamp(1+event.deltaY*.001,.75,1.3);camera.position.z=THREE.MathUtils.clamp(camera.position.z*factor,5.2,overviewPose.z*1.15);camera.lookAt(camera.lookTargetX||0,camera.lookTargetY||0,0);},{passive:false});
+  renderer.domElement.addEventListener('pointercancel',()=>{touchPointers.clear();pinchDistance=0;dragging=false;});
+  renderer.domElement.addEventListener('wheel',event=>{event.preventDefault();zoomCamera(THREE.MathUtils.clamp(1+event.deltaY*.001,.75,1.3));},{passive:false});
+  document.getElementById('zoom-in-button').addEventListener('click',()=>zoomCamera(.8));
+  document.getElementById('zoom-out-button').addEventListener('click',()=>zoomCamera(1.25));
 
   document.getElementById('explore-button').addEventListener('click',openExplore);
   const creditsDialog=document.getElementById('credits-dialog');
@@ -439,7 +488,7 @@
       sunGlow.material.opacity=.72+Math.sin(clock.elapsedTime*.42)*.07;
       sunGlow.scale.setScalar(13+Math.sin(clock.elapsedTime*.42)*.28);
     }
-    if(!flightComplete&&!selected&&!focusTween){if(flightTime<openingHold&&flightTime+dt>=openingHold)flightEndPose=innerSystemPose();flightTime+=dt;const progress=THREE.MathUtils.clamp((flightTime-openingHold)/openingDuration,0,1);const eased=easeZoom(progress);applyCamera(lerpPose(overviewPose,flightEndPose||innerSystemPose(),eased));
+    if(!flightComplete&&!selected&&!focusTween&&(!mobileFocus||introStarted)){const hold=mobileFocus?mobileOpeningHold:openingHold,duration=mobileFocus?mobileOpeningDuration:openingDuration;if(flightTime<hold&&flightTime+dt>=hold)flightEndPose=innerSystemPose();flightTime+=dt;const progress=THREE.MathUtils.clamp((flightTime-hold)/duration,0,1);const eased=easeZoom(progress);applyCamera(lerpPose(overviewPose,flightEndPose||innerSystemPose(),eased));
       if(progress>.03){document.getElementById('flight-status').innerHTML='<i></i> APPROACHING INNER SYSTEM';setStage('01','INBOUND / INNER SYSTEM','CAMERA FLIGHT · DESTINATIONS WILL BE IN RANGE');}
       if(progress>=1){flightComplete=true;updateDestinationReadiness();}
     }
