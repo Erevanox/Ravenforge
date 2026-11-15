@@ -10,3 +10,44 @@
     flex-basis: 120px;
   }
 }
+
+.telemetry-toggle {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 8px;
+  padding: 0 0 8px;
+  border: 0;
+  border-bottom: 1px solid rgba(100, 116, 139, .1);
+  background: transparent;
+  color: #cbd5e1;
+  font: 600 11px Consolas, monospace;
+  letter-spacing: .08em;
+  text-align: left;
+  text-transform: uppercase;
+}
+.telemetry-icon, .telemetry-chevron { color: #7dd3fc; }
+.telemetry-icon { font-size: 15px; }
+.telemetry-chevron { margin-left: auto; font-size: 17px; }
+.telemetry-data > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(100, 116, 139, .1);
+  color: #718198;
+  font: 10px Consolas, monospace;
+}
+.telemetry-data strong { color: #7dd3fc; font-size: 11px; font-weight: 600; }
+.telemetry.is-collapsed .telemetry-toggle { padding-bottom: 0; border-bottom: 0; }
+.telemetry.is-collapsed .telemetry-data { display: none; }
+
+@media (max-width: 760px) {
+  .brand-copy { min-width: 0; overflow: hidden; }
+  .brand-title { min-width: 0; overflow: hidden; font-size: 13px; text-overflow: ellipsis; }
+  .brand-title > span, .brand-title b, .brand-subtitle { display: none; }
+  .header-actions { gap: 5px; }
+  .header-button { width: 32px; min-height: 32px; padding: 0; font-size: 0; }
+  .header-button > span { font-size: 13px; }
+  .header-actions .icon-button { width: 32px; min-height: 32px; height: 32px; }
+}

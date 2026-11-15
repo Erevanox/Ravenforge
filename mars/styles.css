@@ -99,8 +99,12 @@ main { display: flex; min-height: 0; flex: 1 1 auto; flex-direction: column; pad
 .archive-telemetry { position: absolute; z-index: 5; bottom: 55px; left: 12px; width: min(270px, calc(100% - 24px)); padding: 10px 12px 8px; border: 1px solid #1b2d3d; border-radius: 10px; color: #718397; background: #07101ae8; box-shadow: 0 10px 35px #0007; font: 7px var(--mono); letter-spacing: .04em; }
 .telemetry-title { display: flex; align-items: center; gap: 6px; margin-bottom: 7px; padding-bottom: 6px; border-bottom: 1px solid #172536; color: #b6c7d4; font-size: 8px; letter-spacing: .1em; }
 .telemetry-title span { color: var(--accent); font-size: 12px; }
-.archive-telemetry > div:not(.telemetry-title) { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid #111d29; }
-.archive-telemetry > div:last-child { border-bottom: 0; }
+.telemetry-collapse { margin-left: auto; padding: 0 4px; border: 0; color: var(--accent); background: transparent; font: 14px/1 var(--mono); cursor: pointer; }
+.telemetry-collapse:hover, .telemetry-collapse:focus-visible { color: var(--accent-bright); }
+.archive-telemetry.is-collapsed .telemetry-title { margin-bottom: 0; padding-bottom: 0; border-bottom: 0; }
+.archive-telemetry.is-collapsed #telemetry-details { display: none; }
+#telemetry-details > div { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid #111d29; }
+#telemetry-details > div:last-child { border-bottom: 0; }
 .archive-telemetry strong { color: var(--accent-bright); font: 500 9px var(--mono); }
 
 .mission-panel { position: absolute; z-index: 8; top: 12px; right: 12px; bottom: 12px; display: flex; width: min(350px, calc(100% - 24px)); min-width: 0; flex-direction: column; overflow: hidden; padding: 16px; transform: translate3d(calc(100% + 24px), 0, 0); border: 1px solid #263948; border-radius: 9px; background: linear-gradient(160deg, #0b141df7, #070b10f7 70%); box-shadow: 0 16px 55px #0009; opacity: 0; pointer-events: none; visibility: hidden; transition: transform .42s cubic-bezier(.22, .72, .22, 1), opacity .28s ease, visibility 0s linear .42s; will-change: transform; }
@@ -276,4 +280,14 @@ main { display: flex; min-height: 0; flex: 1 1 auto; flex-direction: column; pad
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
+@media (max-width: 650px) {
+  .brand-copy { min-width: 0; overflow: hidden; }
+  .brand-title-row { min-width: 0; gap: 6px; overflow: hidden; }
+  .brand-name { overflow: hidden; font-size: 15px; text-overflow: ellipsis; }
+  .brand-dot, .brand-badge, .brand-subtitle { display: none; }
+  .topbar-actions { gap: 5px; }
+  .topbar-action { width: 32px; padding: 0; font-size: 0; }
+  .topbar-action span { font-size: 13px; }
 }

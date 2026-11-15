@@ -338,6 +338,8 @@ const endInput = $("#end-year");
 const missionPanel = $("#mission-panel");
 const infoToggle = $("#open-info");
 const missionSearch = $("#mission-search");
+const telemetryPanel = $("#archive-telemetry");
+const telemetryToggle = $("#telemetry-toggle");
 const missionSuggestions = $("#mission-suggestions");
 const eraFilters = $("#era-filters");
 const filtersToggle = $("#filters-toggle");
@@ -361,6 +363,7 @@ let previousFrameTime = null;
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 let autoRotation = !prefersReducedMotion.matches;
 let targetZoom = 6;
+let hasCustomZoom = false;
 
 const satelliteBusMaterial = new THREE.MeshStandardMaterial({ color: 0xb9a98b, metalness: .62, roughness: .42 });
 const satellitePanelMaterial = new THREE.MeshStandardMaterial({ color: 0x28517a, metalness: .55, roughness: .48, emissive: 0x0b1d32, emissiveIntensity: .2975 });
@@ -571,7 +574,21 @@ function resize() {
   renderer.setSize(width, height, false);
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
+  const maxZoomOut = getMaxZoomOut();
+  if (hasCustomZoom) {
+    targetZoom = Math.min(targetZoom, maxZoomOut);
+  } else {
+    targetZoom = maxZoomOut;
+    camera.position.z = maxZoomOut;
+  }
   updateMarkers();
+}
+
+function getMaxZoomOut() {
+  const orbiterCount = missions.filter((mission) => mission.markerType === "orbiter").length;
+  const sceneRadius = 1.02 + Math.max(0, orbiterCount - 1) * .05 + .2;
+  const halfFov = THREE.MathUtils.degToRad(camera.fov / 2);
+  return Math.max(6, sceneRadius * 1.12 / (Math.tan(halfFov) * Math.max(.1, Math.min(camera.aspect, 1))));
 }
 
 function buildMarkerElements() {
@@ -643,7 +660,8 @@ function setupInteraction() {
         const points = Array.from(touchPointers.values());
         const nextDistance = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
         if (pinchDistance > 0) {
-          targetZoom = THREE.MathUtils.clamp(targetZoom - (nextDistance - pinchDistance) * .008, 2.6, 6);
+          hasCustomZoom = true;
+          targetZoom = THREE.MathUtils.clamp(targetZoom - (nextDistance - pinchDistance) * .008, 2.6, getMaxZoomOut());
         }
         pinchDistance = nextDistance;
         return;
@@ -673,7 +691,8 @@ function setupInteraction() {
   element.addEventListener("pointercancel", release);
   element.addEventListener("wheel", (event) => {
     event.preventDefault();
-    targetZoom = THREE.MathUtils.clamp(targetZoom + event.deltaY * .0035, 2.6, 6);
+    hasCustomZoom = true;
+    targetZoom = THREE.MathUtils.clamp(targetZoom + event.deltaY * .0035, 2.6, getMaxZoomOut());
   }, { passive: false });
   element.addEventListener("dblclick", () => resetView());
 }
@@ -710,7 +729,8 @@ function animate(timestamp = 0) {
 function resetView() {
   mars.rotation.set(0, 0, .13);
   clouds.rotation.copy(mars.rotation);
-  targetZoom = 6;
+  hasCustomZoom = false;
+  targetZoom = getMaxZoomOut();
   autoRotation = !prefersReducedMotion.matches;
   updateMarkers();
 }
@@ -910,8 +930,14 @@ document.querySelectorAll(".era-chip").forEach((chip) => {
   chip.addEventListener("click", () => setRange(Number(chip.dataset.start), Number(chip.dataset.end)));
 });
 $("#reset-view").addEventListener("click", resetView);
-$("#zoom-in").addEventListener("click", () => { targetZoom = THREE.MathUtils.clamp(targetZoom - .35, 2.6, 6); });
-$("#zoom-out").addEventListener("click", () => { targetZoom = THREE.MathUtils.clamp(targetZoom + .35, 2.6, 6); });
+telemetryToggle.addEventListener("click", () => {
+  const collapsed = telemetryPanel.classList.toggle("is-collapsed");
+  telemetryToggle.setAttribute("aria-expanded", String(!collapsed));
+  telemetryToggle.setAttribute("aria-label", `${collapsed ? "Expand" : "Collapse"} archive telemetry`);
+  telemetryToggle.textContent = collapsed ? "+" : "−";
+});
+$("#zoom-in").addEventListener("click", () => { hasCustomZoom = true; targetZoom = THREE.MathUtils.clamp(targetZoom - .35, 2.6, getMaxZoomOut()); });
+$("#zoom-out").addEventListener("click", () => { hasCustomZoom = true; targetZoom = THREE.MathUtils.clamp(targetZoom + .35, 2.6, getMaxZoomOut()); });
 filtersToggle.addEventListener("click", () => {
   const expanded = eraFilters.classList.toggle("is-collapsed") === false;
   filtersToggle.setAttribute("aria-expanded", String(expanded));
